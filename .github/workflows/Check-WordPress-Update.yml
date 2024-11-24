@@ -60,3 +60,5 @@ jobs:
           git add wp-latest.zip
           git commit -m "Update WordPress to version $WP_VERSION"
           git push origin main  # 将更改推送到主分支（或根据需要更改分支）
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
