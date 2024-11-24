@@ -1,72 +1,61 @@
-name: Check and Update WordPress Version
+
+name: Check WordPress Update
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 每天运行一次（可以根据需要调整）
-  workflow_dispatch:  # 手动触发工作流
+    - cron: '0 0 * * *' # 每天凌晨检查更新
+  workflow_dispatch: # 手动触发
 
 permissions:
   contents: write
 
+
 jobs:
-  check_wordpress_version:
+  check-wordpress-update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v3
 
-      - name: Set up Python for version comparison
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+    - name: Set up Node.js (to use curl)
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      - name: Download latest WordPress
-        run: |
-          wget https://cn.wordpress.org/latest-zh_CN.zip -O latest.zip
+    - name: Download WordPress Latest
+      run: |
+        # 下载最新版本的 WordPress 中文版
+        curl -sSL -o latest-zh_CN.zip https://cn.wordpress.org/latest-zh_CN.zip
 
-      - name: Extract downloaded WordPress
-        run: |
-          unzip latest.zip -d wordpress
-
-      - name: Debug extracted files
-        run: |
-          ls -l wordpress
-          ls -l wordpress/wp-includes
-          cat wordpress/wp-includes/version.php || echo "version.php not found"
-
-      - name: Get WordPress version
-        id: get_wp_version
-        run: |
-          VERSION=$(cat wordpress/wp-includes/version.php | grep "\$wp_version" | cut -d "'" -f 2)
-          echo "WP_VERSION=$VERSION" >> $GITHUB_ENV
-
-      - name: Check if version has changed
-        run: |
-          if [ -f "last_version.txt" ]; then
-            LAST_VERSION=$(cat last_version.txt)
-            if [ "$LAST_VERSION" != "$WP_VERSION" ]; then
-              echo "New version detected: $WP_VERSION"
-              echo $WP_VERSION > last_version.txt
-              echo "wordpress updated"
-            else
-              echo "No update found"
-              exit 0
-            fi
+    - name: Check if WordPress is Updated
+      id: check_update
+      run: |
+        # 如果 `wp-latest.zip` 文件已经存在，比较它与新下载文件的内容
+        if [ -f wp-latest.zip ]; then
+          if cmp -s wp-latest.zip latest-zh_CN.zip; then
+            echo "WordPress is up to date."
+            echo "update=false" >> $GITHUB_OUTPUT
           else
-            echo $WP_VERSION > last_version.txt
-            echo "First run, version: $WP_VERSION"
-            echo "wordpress updated"
-        continue-on-error: true
+            echo "WordPress is updated."
+            echo "update=true" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "No previous version detected. Treating as an update."
+          echo "update=true" >> $GITHUB_OUTPUT
 
-      - name: Commit new WordPress version if updated
-        if: success()
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@users.noreply.github.com"
-          mv latest.zip wp-latest.zip
-          git add wp-latest.zip
-          git commit -m "Update WordPress to version $WP_VERSION"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save new version if updated
+      if: steps.check_update.outputs.update == 'true'
+      run: |
+        mv latest-zh_CN.zip wp-latest.zip
+
+    - name: Commit and Push Changes
+      if: steps.check_update.outputs.update == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add wp-latest.zip
+        git commit -m "Update WordPress to latest version"
+        git push origin HEAD
