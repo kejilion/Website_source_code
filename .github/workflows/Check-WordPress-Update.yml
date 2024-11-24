@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python for version comparison
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -28,6 +28,12 @@ jobs:
       - name: Extract downloaded WordPress
         run: |
           unzip latest.zip -d wordpress
+
+      - name: Debug extracted files
+        run: |
+          ls -l wordpress
+          ls -l wordpress/wp-includes
+          cat wordpress/wp-includes/version.php || echo "version.php not found"
 
       - name: Get WordPress version
         id: get_wp_version
@@ -54,14 +60,13 @@ jobs:
         continue-on-error: true
 
       - name: Commit new WordPress version if updated
-        if: success() && github.event_name != 'schedule'
+        if: success()
         run: |
-          # Create a new commit with the updated WordPress package
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@users.noreply.github.com"
           mv latest.zip wp-latest.zip
           git add wp-latest.zip
           git commit -m "Update WordPress to version $WP_VERSION"
-          git push origin main  # 将更改推送到主分支（或根据需要更改分支）
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
