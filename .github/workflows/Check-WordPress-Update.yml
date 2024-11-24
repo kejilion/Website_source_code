@@ -1,76 +1,62 @@
-name: Check WordPress Update
+name: Check and Update WordPress Version
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch: # 手动触发
+    - cron: '0 0 * * *'  # 每天运行一次（可以根据需要调整）
+  workflow_dispatch:  # 手动触发工作流
 
 jobs:
-  check-update:
+  check_wordpress_version:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up repository
+      - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Get latest WordPress version
-        id: get_latest_version
+      - name: Set up Python for version comparison
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Download latest WordPress
         run: |
-          # 下载最新的 WordPress ZIP 文件并计算哈希值
-          curl -sLO https://cn.wordpress.org/latest-zh_CN.zip
-          latest_hash=$(sha256sum latest-zh_CN.zip | awk '{print $1}')
-          echo "latest_hash=$latest_hash" >> $GITHUB_ENV
+          wget https://cn.wordpress.org/latest-zh_CN.zip -O latest.zip
 
-          # 如果本地没有存储哈希文件，创建一个
-          if [ ! -f .github/wordpress_hash.txt ]; then
-            echo "Creating hash file"
-            echo "none" > .github/wordpress_hash.txt
-          fi
-
-          # 读取本地保存的哈希值
-          saved_hash=$(cat .github/wordpress_hash.txt)
-          echo "saved_hash=$saved_hash" >> $GITHUB_ENV
-
-      - name: Compare versions
-        id: compare_versions
+      - name: Extract downloaded WordPress
         run: |
-          if [ "$latest_hash" != "$saved_hash" ]; then
-            echo "New version detected"
-            echo "updated=true" >> $GITHUB_ENV
+          unzip latest.zip -d wordpress
+
+      - name: Get WordPress version
+        id: get_wp_version
+        run: |
+          VERSION=$(cat wordpress/wp-includes/version.php | grep "\$wp_version" | cut -d "'" -f 2)
+          echo "WP_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Check if version has changed
+        run: |
+          if [ -f "last_version.txt" ]; then
+            LAST_VERSION=$(cat last_version.txt)
+            if [ "$LAST_VERSION" != "$WP_VERSION" ]; then
+              echo "New version detected: $WP_VERSION"
+              echo $WP_VERSION > last_version.txt
+              echo "wordpress updated"
+            else
+              echo "No update found"
+              exit 0
+            fi
           else
-            echo "No new version"
-            echo "updated=false" >> $GITHUB_ENV
-          fi
+            echo $WP_VERSION > last_version.txt
+            echo "First run, version: $WP_VERSION"
+            echo "wordpress updated"
+        continue-on-error: true
 
-      - name: Save latest version
-        if: env.updated == 'true'
+      - name: Commit new WordPress version if updated
+        if: success() && github.event_name != 'schedule'
         run: |
-          # 在当前仓库创建 wordpress 目录
-          mkdir -p wordpress
-          
-          # 将最新的 WordPress ZIP 文件保存到指定目录
-          mv latest-zh_CN.zip wordpress/latest.zip
-
-          # 更新哈希文件
-          echo "$latest_hash" > .github/wordpress_hash.txt
-
-      - name: Commit and push changes
-        if: env.updated == 'true'
-        run: |
-          # 配置 Git 用户信息
+          # Create a new commit with the updated WordPress package
           git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-
-          # 使用 GITHUB_TOKEN 进行身份验证
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-          # 添加更改并推送到远程仓库
-          git add wordpress/latest.zip .github/wordpress_hash.txt
-          git commit -m "Add latest WordPress version"
-          git push
-
-      - name: Cleanup
-        if: env.updated == 'false'
-        run: |
-          # 删除下载的文件以节省空间
-          rm -f latest-zh_CN.zip
+          git config --global user.email "github-actions@users.noreply.github.com"
+          mv latest.zip wp-latest.zip
+          git add wp-latest.zip
+          git commit -m "Update WordPress to version $WP_VERSION"
+          git push origin main  # 将更改推送到主分支（或根据需要更改分支）
