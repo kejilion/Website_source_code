@@ -1,4 +1,3 @@
-
 name: Check WordPress Update
 
 on:
@@ -8,7 +7,6 @@ on:
 
 permissions:
   contents: write
-
 
 jobs:
   check-wordpress-update:
@@ -43,6 +41,7 @@ jobs:
         else
           echo "No previous version detected. Treating as an update."
           echo "update=true" >> $GITHUB_OUTPUT
+        fi
 
     - name: Save new version if updated
       if: steps.check_update.outputs.update == 'true'
@@ -59,3 +58,6 @@ jobs:
         git add wp-latest.zip
         git commit -m "Update WordPress to latest version"
         git push origin HEAD
+
+
+
