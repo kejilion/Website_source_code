@@ -2,7 +2,6 @@ name: Check WordPress Update
 
 on:
   schedule:
-    # 每天检查一次更新（你可以根据需要调整时间）
     - cron: '0 0 * * *'
   workflow_dispatch: # 手动触发
 
@@ -41,7 +40,7 @@ jobs:
           else
             echo "No new version"
             echo "updated=false" >> $GITHUB_ENV
-          fi  # 这里的 fi 是结束 if 语句块的地方
+          fi
 
       - name: Save latest version
         if: env.updated == 'true'
@@ -58,8 +57,14 @@ jobs:
       - name: Commit and push changes
         if: env.updated == 'true'
         run: |
+          # 配置 Git 用户信息
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
+
+          # 使用 GITHUB_TOKEN 进行身份验证
+          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}".insteadOf "https://github.com"
+          
+          # 添加更改并推送到远程仓库
           git add wordpress/latest.zip .github/wordpress_hash.txt
           git commit -m "Add latest WordPress version"
           git push
