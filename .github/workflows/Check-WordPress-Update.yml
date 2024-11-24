@@ -62,8 +62,8 @@ jobs:
           git config --global user.email "github-actions@github.com"
 
           # 使用 GITHUB_TOKEN 进行身份验证
-          git config --global url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}".insteadOf "https://github.com"
-          
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
           # 添加更改并推送到远程仓库
           git add wordpress/latest.zip .github/wordpress_hash.txt
           git commit -m "Add latest WordPress version"
