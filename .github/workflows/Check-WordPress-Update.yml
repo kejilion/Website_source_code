@@ -1,0 +1,71 @@
+name: Check WordPress Update
+
+on:
+  schedule:
+    # 每天检查一次更新（你可以根据需要调整时间）
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 手动触发
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@v3
+
+      - name: Get latest WordPress version
+        id: get_latest_version
+        run: |
+          # 下载最新的 WordPress ZIP 文件并计算哈希值
+          curl -sLO https://cn.wordpress.org/latest-zh_CN.zip
+          latest_hash=$(sha256sum latest-zh_CN.zip | awk '{print $1}')
+          echo "latest_hash=$latest_hash" >> $GITHUB_ENV
+
+          # 如果本地没有存储哈希文件，创建一个
+          if [ ! -f .github/wordpress_hash.txt ]; then
+            echo "Creating hash file"
+            echo "none" > .github/wordpress_hash.txt
+          fi
+
+          # 读取本地保存的哈希值
+          saved_hash=$(cat .github/wordpress_hash.txt)
+          echo "saved_hash=$saved_hash" >> $GITHUB_ENV
+
+      - name: Compare versions
+        id: compare_versions
+        run: |
+          if [ "$latest_hash" != "$saved_hash" ]; then
+            echo "New version detected"
+            echo "updated=true" >> $GITHUB_ENV
+          else
+            echo "No new version"
+            echo "updated=false" >> $GITHUB_ENV
+          fi  # 这里的 fi 是结束 if 语句块的地方
+
+      - name: Save latest version
+        if: env.updated == 'true'
+        run: |
+          # 在当前仓库创建 wordpress 目录
+          mkdir -p wordpress
+          
+          # 将最新的 WordPress ZIP 文件保存到指定目录
+          mv latest-zh_CN.zip wordpress/latest.zip
+
+          # 更新哈希文件
+          echo "$latest_hash" > .github/wordpress_hash.txt
+
+      - name: Commit and push changes
+        if: env.updated == 'true'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add wordpress/latest.zip .github/wordpress_hash.txt
+          git commit -m "Add latest WordPress version"
+          git push
+
+      - name: Cleanup
+        if: env.updated == 'false'
+        run: |
+          # 删除下载的文件以节省空间
+          rm -f latest-zh_CN.zip
