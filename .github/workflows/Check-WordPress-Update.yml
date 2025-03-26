@@ -11,39 +11,33 @@ permissions:
 jobs:
   check-wordpress-update:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Get latest WordPress version
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+
+    - name: Get Latest WordPress Version
       id: get_version
       run: |
-        LATEST_VERSION=$(curl -s "https://api.github.com/repos/WordPress/WordPress/tags" | grep '"name":' | head -1 | awk -F '"' '{print $4}')
-        echo "Latest version: $LATEST_VERSION"
-        echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+        LATEST_VERSION=$(wget -qO- "https://api.github.com/repos/WordPress/WordPress/tags" | grep '"name":' | head -1 | awk -F '"' '{print $4}')
+        echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+        echo "Latest WordPress version: $LATEST_VERSION"
 
-    - name: Download WordPress Latest
-      id: download
+    - name: Download Latest WordPress
       run: |
-        wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.version }}.zip" -O "wordpress-${{ steps.get_version.outputs.version }}.zip"
-        # 验证文件是否下载成功
-        if [ ! -f "wordpress-${{ steps.get_version.outputs.version }}.zip" ]; then
-          echo "Failed to download WordPress"
-          exit 1
-        fi
+        wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.latest_version }}.zip" -O "wordpress-${{ steps.get_version.outputs.latest_version }}.zip"
 
     - name: Check if WordPress is Updated
       id: check_update
       run: |
-        # 检查当前版本文件是否存在
-        if [ -f current_version.txt ]; then
-          CURRENT_VERSION=$(cat current_version.txt)
-          if [ "$CURRENT_VERSION" == "${{ steps.get_version.outputs.version }}" ]; then
+        if [ -f wp-latest.zip ]; then
+          if cmp -s wp-latest.zip "wordpress-${{ steps.get_version.outputs.latest_version }}.zip"; then
             echo "WordPress is up to date."
             echo "update=false" >> $GITHUB_OUTPUT
           else
-            echo "WordPress has a new version: ${{ steps.get_version.outputs.version }}"
+            echo "WordPress is updated."
             echo "update=true" >> $GITHUB_OUTPUT
           fi
         else
@@ -54,11 +48,7 @@ jobs:
     - name: Save new version if updated
       if: steps.check_update.outputs.update == 'true'
       run: |
-        echo "${{ steps.get_version.outputs.version }}" > current_version.txt
-        # 删除旧的zip文件（如果有）
-        rm -f wordpress-latest.zip
-        # 重命名新下载的文件
-        mv "wordpress-${{ steps.get_version.outputs.version }}.zip" "wordpress-latest.zip"
+        mv "wordpress-${{ steps.get_version.outputs.latest_version }}.zip" wp-latest.zip
 
     - name: Commit and Push Changes
       if: steps.check_update.outputs.update == 'true'
@@ -67,6 +57,6 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add current_version.txt wordpress-latest.zip
-        git commit -m "Update WordPress to version ${{ steps.get_version.outputs.version }}"
+        git add wp-latest.zip
+        git commit -m "Update WordPress to version ${{ steps.get_version.outputs.latest_version }}"
         git push origin HEAD
