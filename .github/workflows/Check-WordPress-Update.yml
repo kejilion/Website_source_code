@@ -25,15 +25,19 @@ jobs:
         echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
         echo "Latest WordPress version: $LATEST_VERSION"
 
-    - name: Download Latest WordPress
+    - name: Download and Prepare WordPress
       run: |
-        wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.latest_version }}.zip" -O "wordpress-${{ steps.get_version.outputs.latest_version }}.zip"
+        wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.latest_version }}.zip" -O wordpress.zip
+        unzip wordpress.zip
+        mv WordPress-${{ steps.get_version.outputs.latest_version }} wordpress
+        zip -r wp-latest.zip wordpress
+        rm -rf wordpress wordpress.zip
 
     - name: Check if WordPress is Updated
       id: check_update
       run: |
         if [ -f wp-latest.zip ]; then
-          if cmp -s wp-latest.zip "wordpress-${{ steps.get_version.outputs.latest_version }}.zip"; then
+          if cmp -s wp-latest.zip wp-latest.zip; then
             echo "WordPress is up to date."
             echo "update=false" >> $GITHUB_OUTPUT
           else
@@ -44,11 +48,6 @@ jobs:
           echo "No previous version detected. Treating as an update."
           echo "update=true" >> $GITHUB_OUTPUT
         fi
-
-    - name: Save new version if updated
-      if: steps.check_update.outputs.update == 'true'
-      run: |
-        mv "wordpress-${{ steps.get_version.outputs.latest_version }}.zip" wp-latest.zip
 
     - name: Commit and Push Changes
       if: steps.check_update.outputs.update == 'true'
