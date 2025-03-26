@@ -24,8 +24,14 @@ jobs:
         echo "version=$LATEST_VERSION" >> $GITHUB_OUTPUT
 
     - name: Download WordPress Latest
+      id: download
       run: |
         wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.version }}.zip" -O "wordpress-${{ steps.get_version.outputs.version }}.zip"
+        # 验证文件是否下载成功
+        if [ ! -f "wordpress-${{ steps.get_version.outputs.version }}.zip" ]; then
+          echo "Failed to download WordPress"
+          exit 1
+        fi
 
     - name: Check if WordPress is Updated
       id: check_update
@@ -49,8 +55,9 @@ jobs:
       if: steps.check_update.outputs.update == 'true'
       run: |
         echo "${{ steps.get_version.outputs.version }}" > current_version.txt
-        # 保留最新的zip文件，可以删除旧的
-        rm -f wordpress-*.zip
+        # 删除旧的zip文件（如果有）
+        rm -f wordpress-latest.zip
+        # 重命名新下载的文件
         mv "wordpress-${{ steps.get_version.outputs.version }}.zip" "wordpress-latest.zip"
 
     - name: Commit and Push Changes
