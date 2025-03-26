@@ -16,20 +16,22 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Node.js (to use curl)
-      uses: actions/setup-node@v4
+    - name: Fetch Latest WordPress Version
+      id: fetch_version
+      run: |
+        LATEST_VERSION=$(wget -qO- "https://api.github.com/repos/WordPress/WordPress/tags" | grep '"name":' | head -1 | awk -F '"' '{print $4}')
+        echo "Latest version: $LATEST_VERSION"
+        echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
     - name: Download WordPress Latest
       run: |
-        # 下载最新版本的 WordPress 中文版
-        curl -sSL -o latest-zh_CN.zip https://cn.wordpress.org/latest-zh_CN.zip
+        wget "https://github.com/WordPress/WordPress/archive/refs/tags/${LATEST_VERSION}.zip" -O "wordpress-${LATEST_VERSION}.zip"
 
     - name: Check if WordPress is Updated
       id: check_update
       run: |
-        # 如果 `wp-latest.zip` 文件已经存在，比较它与新下载文件的内容
-        if [ -f wp-latest.zip ]; then
-          if cmp -s wp-latest.zip latest-zh_CN.zip; then
+        if [ -f wordpress-latest.zip ]; then
+          if cmp -s wordpress-latest.zip "wordpress-${LATEST_VERSION}.zip"; then
             echo "WordPress is up to date."
             echo "update=false" >> $GITHUB_OUTPUT
           else
@@ -44,7 +46,7 @@ jobs:
     - name: Save new version if updated
       if: steps.check_update.outputs.update == 'true'
       run: |
-        mv latest-zh_CN.zip wp-latest.zip
+        mv "wordpress-${LATEST_VERSION}.zip" wordpress-latest.zip
 
     - name: Commit and Push Changes
       if: steps.check_update.outputs.update == 'true'
@@ -53,9 +55,6 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add wp-latest.zip
-        git commit -m "Update WordPress to latest version"
+        git add wordpress-latest.zip
+        git commit -m "Update WordPress to latest version: ${LATEST_VERSION}"
         git push origin HEAD
-
-
-
