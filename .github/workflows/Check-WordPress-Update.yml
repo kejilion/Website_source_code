@@ -29,25 +29,35 @@ jobs:
       run: |
         wget "https://github.com/WordPress/WordPress/archive/refs/tags/${{ steps.get_version.outputs.latest_version }}.zip" -O wordpress.zip
         unzip wordpress.zip
+        # 重命名解压后的目录为统一的wordpress
         mv WordPress-${{ steps.get_version.outputs.latest_version }} wordpress
+        # 压缩重命名后的目录
         zip -r wp-latest.zip wordpress
+        # 清理临时文件
         rm -rf wordpress wordpress.zip
 
     - name: Check if WordPress is Updated
       id: check_update
       run: |
         if [ -f wp-latest.zip ]; then
-          if cmp -s wp-latest.zip wp-latest.zip; then
-            echo "WordPress is up to date."
-            echo "update=false" >> $GITHUB_OUTPUT
+          if [ -f wp-latest-old.zip ]; then
+            if cmp -s wp-latest.zip wp-latest-old.zip; then
+              echo "WordPress is up to date."
+              echo "update=false" >> $GITHUB_OUTPUT
+            else
+              echo "WordPress is updated."
+              echo "update=true" >> $GITHUB_OUTPUT
+            fi
           else
-            echo "WordPress is updated."
+            echo "No previous version to compare. Treating as an update."
             echo "update=true" >> $GITHUB_OUTPUT
           fi
         else
-          echo "No previous version detected. Treating as an update."
-          echo "update=true" >> $GITHUB_OUTPUT
+          echo "Failed to download WordPress."
+          exit 1
         fi
+        # 保留当前版本作为下次比较的基础
+        mv wp-latest.zip wp-latest-old.zip || true
 
     - name: Commit and Push Changes
       if: steps.check_update.outputs.update == 'true'
@@ -56,6 +66,7 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+        mv wp-latest-old.zip wp-latest.zip
         git add wp-latest.zip
         git commit -m "Update WordPress to version ${{ steps.get_version.outputs.latest_version }}"
         git push origin HEAD
