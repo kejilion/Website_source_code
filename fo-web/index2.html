@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>净音禅心 - 佛学音乐传播</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --text-color: #333;
+            --accent-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: var(--secondary-color);
+        }
+
+        .hero {
+            height: 60vh;
+            background: linear-gradient(135deg, #4a90e2 0%, #2c3e50 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            top: -50%;
+            left: -50%;
+            animation: wave 15s infinite linear;
+        }
+
+        @keyframes wave {
+            from { transform: rotate(45deg) translate(-50%, -50%); }
+            to { transform: rotate(405deg) translate(-50%, -50%); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            letter-spacing: 4px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .player-section {
+            max-width: 1200px;
+            margin: -100px auto 0;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .now-playing {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .track-info {
+            margin: 2rem 0;
+        }
+
+        .track-title {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .track-artist {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            margin: 2rem 0;
+            cursor: pointer;
+        }
+
+        .progress {
+            width: 30%;
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .control-button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .control-button:hover {
+            transform: scale(1.1);
+        }
+
+        .play-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: var(--accent-color);
+        }
+
+        .lyrics {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+        }
+
+        .current-lyric {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .next-lyric {
+            font-size: 1.4rem;
+            color: #666;
+            opacity: 0.7;
+        }
+
+        .playlist {
+            margin-top: 4rem;
+        }
+
+        .playlist-title {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .playlist-item:hover {
+            transform: translateX(10px);
+        }
+
+        .playlist-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin-right: 1rem;
+        }
+
+        .playlist-info {
+            flex: 1;
+        }
+
+        .playlist-song-title {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .playlist-song-artist {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            background: var(--accent-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .player-section {
+                margin-top: -50px;
+                padding: 1rem;
+            }
+
+            .controls {
+                gap: 1rem;
+            }
+
+            .control-button {
+                font-size: 1.5rem;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>净音禅心</h1>
+            <p>让心灵沉浸在佛音的海洋</p>
+        </div>
+    </div>
+
+    <section class="player-section">
+        <div class="player-card">
+            <div class="now-playing">
+                <div class="track-info">
+                    <h2 class="track-title">大悲咒</h2>
+                    <p class="track-artist">演唱：慈悲法师</p>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress"></div>
+                </div>
+
+                <div class="controls">
+                    <button class="control-button"><i class="fas fa-backward"></i></button>
+                    <button class="play-button"><i class="fas fa-play"></i></button>
+                    <button class="control-button"><i class="fas fa-forward"></i></button>
+                </div>
+            </div>
+
+            <div class="lyrics">
+                <p class="current-lyric">南无大悲观世音</p>
+                <p class="next-lyric">愿以此功德，庄严佛净土</p>
+            </div>
+        </div>
+
+        <div class="playlist">
+            <h2 class="playlist-title">推荐佛乐</h2>
+            <div class="playlist-item">
+                <img src="https://images.unsplash.com/photo-1465847899084-d164df4dedc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
+                <div class="playlist-info">
+                    <h3 class="playlist-song-title">心经</h3>
+                    <p class="playlist-song-artist">演唱：法喜法师</p>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+
+            <div class="playlist-item">
+                <img src="https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
+                <div class="playlist-info">
+                    <h3 class="playlist-song-title">六字大明咒</h3>
+                    <p class="playlist-song-artist">演唱：智慧法师</p>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+
+            <div class="playlist-item">
+                <img src="https://images.unsplash.com/photo-1501084291732-13b1ba8f0ebc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
+                <div class="playlist-info">
+                    <h3 class="playlist-song-title">南无阿弥陀佛</h3>
+                    <p class="playlist-song-artist">演唱：净空法师</p>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 净音禅心 版权所有</p>
+        <p>联系我们：contact@jingyinchaxin.com</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playButton = document.querySelector('.play-button');
+            const playlistButtons = document.querySelectorAll('.playlist-item i');
+            const progressBar = document.querySelector('.progress');
+            let isPlaying = false;
+
+            playButton.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                isPlaying = !isPlaying;
+                if (isPlaying) {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                } else {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                }
+            });
+
+            playlistButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    playlistButtons.forEach(btn => {
+                        btn.classList.remove('fa-pause');
+                        btn.classList.add('fa-play');
+                    });
+                    if (this.classList.contains('fa-play')) {
+                        this.classList.remove('fa-play');
+                        this.classList.add('fa-pause');
+                    } else {
+                        this.classList.remove('fa-pause');
+                        this.classList.add('fa-play');
+                    }
+                });
+            });
+
+            // 进度条模拟
+            let progress = 30;
+            setInterval(() => {
+                if (isPlaying) {
+                    progress = (progress + 1) % 100;
+                    progressBar.style.width = `${progress}%`;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

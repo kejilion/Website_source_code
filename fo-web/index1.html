@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅音妙韵 - 佛学音乐传播</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #34495e;
+            --text-color: #2c3e50;
+            --bg-color: #f5f6fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            background: url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80') center/cover;
+            position: relative;
+            color: white;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .music-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+
+        .music-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .music-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .music-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .music-info {
+            padding: 1.5rem;
+        }
+
+        .music-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .music-artist {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .play-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .play-button:hover {
+            background: var(--accent-color);
+        }
+
+        .featured-section {
+            background: white;
+            padding: 4rem 0;
+            margin: 2rem 0;
+        }
+
+        .featured-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        .playlist {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s ease;
+        }
+
+        .playlist-item:hover {
+            background: #f8f9fa;
+        }
+
+        .playlist-number {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-right: 1rem;
+            min-width: 40px;
+        }
+
+        .playlist-info {
+            flex: 1;
+        }
+
+        .playlist-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .playlist-duration {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .music-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>禅音妙韵</h1>
+            <p>聆听禅意，感受佛法的智慧与力量</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="music-section">
+            <div class="music-card">
+                <img src="https://images.unsplash.com/photo-1508264165352-258db2ebd59b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
+                <div class="music-info">
+                    <h3 class="music-title">心经颂</h3>
+                    <p class="music-artist">演唱：法喜法师</p>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        立即聆听
+                    </button>
+                </div>
+            </div>
+
+            <div class="music-card">
+                <img src="https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
+                <div class="music-info">
+                    <h3 class="music-title">六字大明咒</h3>
+                    <p class="music-artist">演唱：智慧法师</p>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        立即聆听
+                    </button>
+                </div>
+            </div>
+
+            <div class="music-card">
+                <img src="https://images.unsplash.com/photo-1501084291732-13b1ba8f0ebc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
+                <div class="music-info">
+                    <h3 class="music-title">观音菩萨圣号</h3>
+                    <p class="music-artist">演唱：慈悲法师</p>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                        立即聆听
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured-section">
+            <h2 class="featured-title">精选佛乐</h2>
+            <div class="playlist">
+                <div class="playlist-item">
+                    <span class="playlist-number">01</span>
+                    <div class="playlist-info">
+                        <h3 class="playlist-title">大悲咒</h3>
+                        <span class="playlist-duration">42:30</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <span class="playlist-number">02</span>
+                    <div class="playlist-info">
+                        <h3 class="playlist-title">金刚经</h3>
+                        <span class="playlist-duration">1:15:20</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <span class="playlist-number">03</span>
+                    <div class="playlist-info">
+                        <h3 class="playlist-title">阿弥陀佛圣号</h3>
+                        <span class="playlist-duration">33:15</span>
+                    </div>
+                    <button class="play-button">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2024 禅音妙韵 版权所有</p>
+        <p>联系我们：zen@chanyinyuyin.com</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playButtons = document.querySelectorAll('.play-button');
+            
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-play')) {
+                        icon.classList.remove('fa-play');
+                        icon.classList.add('fa-pause');
+                    } else {
+                        icon.classList.remove('fa-pause');
+                        icon.classList.add('fa-play');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

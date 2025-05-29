@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佛教故事 - 智慧传承</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #5C4033;
+            --secondary-color: #DEB887;
+            --text-color: #3A2618;
+            --background-color: #FFF8DC;
+            --accent-color: #8B7355;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(92, 64, 51, 0.7), rgba(92, 64, 51, 0.7)),
+                        url('https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--background-color);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.6rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(92, 64, 51, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .nav a:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .story-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 2rem;
+        }
+
+        .story-content h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .story-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .moral {
+            font-style: italic;
+            color: var(--accent-color);
+            border-left: 3px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin-top: 1rem;
+        }
+
+        .wisdom-section {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .wisdom-quote {
+            font-size: 1.8rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 2;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .wisdom-quote {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#stories">佛教故事</a></li>
+            <li><a href="#wisdom">智慧启示</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>佛教故事</h1>
+        <p>千年智慧，生命启示</p>
+    </header>
+
+    <section id="stories" class="section">
+        <h2 class="section-title">经典故事</h2>
+        <div class="stories-grid">
+            <div class="story-card">
+                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛陀故事" class="story-image">
+                <div class="story-content">
+                    <h3>须达拏太子的布施</h3>
+                    <p>须达拏太子以其无私的布施精神闻名于世。他不仅将自己的财物布施给需要的人，甚至将自己珍爱的白象也布施出去。</p>
+                    <div class="moral">启示：真正的布施在于无私的奉献之心。</div>
+                </div>
+            </div>
+            <div class="story-card">
+                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="禅宗公案" class="story-image">
+                <div class="story-content">
+                    <h3>庄严国王的忏悔</h3>
+                    <p>一位暴虐的国王遇见佛陀后，深刻认识到自己的过错，从此改过自新，成为一位仁慈的君主。</p>
+                    <div class="moral">启示：觉悟的开始在于认识自己的过错。</div>
+                </div>
+            </div>
+            <div class="story-card">
+                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教寓言" class="story-image">
+                <div class="story-content">
+                    <h3>阿输迦王的转变</h3>
+                    <p>从一位残暴的统治者转变为佛法的护持者，阿输迦王的故事展现了佛法改变人心的力量。</p>
+                    <div class="moral">启示：慈悲与智慧能够转化最顽固的心灵。</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wisdom" class="wisdom-section">
+        <div class="wisdom-quote">
+            <p>「善恶之报，如影随形，三世因果，循环不失。」</p>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>联系我们</h2>
+        <p>地址：佛光市烟云区天云广场</p>
+        <p>电话：996-87654321</p>
+        <p>邮箱：stories@fojiao.com</p>
+    </footer>
+</body>
+</html>

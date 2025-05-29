@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古韵禅心 - 传统佛教文化</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #8B0000;
+            --secondary-color: #DAA520;
+            --text-color: #4A4A4A;
+            --background-color: #FDF5E6;
+            --border-color: #D2691E;
+        }
+
+        body {
+            font-family: 'Ma Shan Zheng', 'STKaiti', cursive;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1" fill="%23DAA520" opacity="0.3"/></svg>');
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(139, 0, 0, 0.6), rgba(139, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            color: #FDF5E6;
+            text-align: center;
+            border-bottom: 8px solid var(--secondary-color);
+        }
+
+        .header h1 {
+            font-size: 4.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(139, 0, 0, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            margin: 0 1rem;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border: 2px solid var(--secondary-color);
+            background-color: rgba(218, 165, 32, 0.1);
+        }
+
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--border-color);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 4rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            padding: 2rem;
+        }
+
+        .culture-item {
+            background-color: white;
+            padding: 2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .culture-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .culture-item h3 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .culture-item p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .quote-section {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .quote {
+            font-size: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .quote::before,
+        .quote::after {
+            content: '"';
+            font-size: 4rem;
+            color: var(--secondary-color);
+            position: absolute;
+        }
+
+        .quote::before {
+            top: -20px;
+            left: -20px;
+        }
+
+        .quote::after {
+            bottom: -40px;
+            right: -20px;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 5px solid var(--secondary-color);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .header p {
+                font-size: 1.3rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .quote {
+                font-size: 1.5rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#culture">文化</a></li>
+            <li><a href="#wisdom">智慧</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>古韵禅心</h1>
+        <p>传承千年智慧，品味禅意人生</p>
+    </header>
+
+    <section id="culture" class="section">
+        <div class="container">
+            <h2 class="section-title">佛教文化</h2>
+            <div class="culture-grid">
+                <div class="culture-item">
+                    <h3>经典传承</h3>
+                    <p>探索佛教经典的深邃智慧，感悟生命的真谛与意义。</p>
+                </div>
+                <div class="culture-item">
+                    <h3>禅修艺术</h3>
+                    <p>通过传统禅修方式，净化心灵，提升精神境界。</p>
+                </div>
+                <div class="culture-item">
+                    <h3>文化传承</h3>
+                    <p>弘扬佛教文化精髓，传承千年智慧火种。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wisdom" class="quote-section">
+        <div class="container">
+            <div class="quote">
+                一花一世界，一叶一菩提。
+                心若无尘，方见本性。
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <p>地址：佛光市南城区古刹街108号</p>
+            <p>电话：996-87654321</p>
+            <p>邮箱：info@guyunchanxin.com</p>
+        </div>
+    </footer>
+</body>
+</html>

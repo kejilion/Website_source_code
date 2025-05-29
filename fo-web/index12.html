@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佛教艺术展览 - 传承千年艺术</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2B48C;
+            --text-color: #2C1810;
+            --background-color: #FDF5E6;
+            --accent-color: #A0522D;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(139, 69, 19, 0.7), rgba(139, 69, 19, 0.7)),
+                        url('https://images.unsplash.com/photo-1552083375-1447ce886485?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #FDF5E6;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3em;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(253, 245, 230, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 8rem 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .art-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .art-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .art-item img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .art-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .art-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .art-item:hover .art-info {
+            transform: translateY(0);
+        }
+
+        .art-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .art-description {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .category-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .art-item {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#gallery">艺术展览</a></li>
+            <li><a href="#about">关于我们</a></li>
+            <li><a href="#contact">联系方式</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>佛教艺术展览</h1>
+        <p>千年艺术，传承文明</p>
+    </header>
+
+    <section id="gallery" class="section">
+        <div class="container">
+            <h2 class="section-title">艺术展览</h2>
+
+            <div class="categories">
+                <button class="category-btn active">全部</button>
+                <button class="category-btn">佛像雕塑</button>
+                <button class="category-btn">壁画</button>
+                <button class="category-btn">建筑</button>
+                <button class="category-btn">书法</button>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="art-item">
+                    <img src="https://images.unsplash.com/photo-1552083375-1447ce886485?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛像雕塑">
+                    <div class="art-info">
+                        <h3 class="art-title">释迦牟尼佛像</h3>
+                        <p class="art-description">唐代 青铜佛像，展现了唐代佛教艺术的巅峰水平。</p>
+                    </div>
+                </div>
+                <div class="art-item">
+                    <img src="https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教建筑">
+                    <div class="art-info">
+                        <h3 class="art-title">大雄宝殿</h3>
+                        <p class="art-description">明代建筑，体现了中国传统建筑艺术的精髓。</p>
+                    </div>
+                </div>
+                <div class="art-item">
+                    <img src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教壁画">
+                    <div class="art-info">
+                        <h3 class="art-title">敦煌壁画</h3>
+                        <p class="art-description">盛唐时期壁画，描绘佛教故事场景。</p>
+                    </div>
+                </div>
+                <div class="art-item">
+                    <img src="https://images.unsplash.com/photo-1464823063530-08f10ed1a2dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教书法">
+                    <div class="art-info">
+                        <h3 class="art-title">心经书法</h3>
+                        <p class="art-description">当代书法大师作品，展现佛教经典之美。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">关于展览</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto;">
+                本展览致力于展示佛教艺术的多样性和深邃内涵，通过精选的艺术品，让观众感受佛教文化的魅力。
+                展品包括历代佛教雕塑、建筑、壁画和书法作品，每件作品都诉说着独特的故事。
+            </p>
+        </div>
+    </section>
+
+    <section id="contact" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">联系方式</h2>
+            <div style="text-align: center;">
+                <p>展览地址：佛光市光明区艺术馆</p>
+                <p>联系电话：996-12345678</p>
+                <p>电子邮箱：art@buddhistexhibition.com</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 分类按钮交互
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // 滚动动画
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

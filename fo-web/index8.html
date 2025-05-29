@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佛教诗词 - 禅意之美</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #95A5A6;
+            --text-color: #34495E;
+            --background-color: #FAFAFA;
+            --accent-color: #7F8C8D;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'STSong', serif;
+            line-height: 2;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)),
+                        url('https://images.unsplash.com/photo-1523287562758-66c7fc08e7af?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5em;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            line-height: 1.5;
+        }
+
+        .header p {
+            font-size: 1.6rem;
+            max-width: 700px;
+            margin: 0 auto;
+            letter-spacing: 0.2em;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(44, 62, 80, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav a:hover {
+            border: 1px solid white;
+        }
+
+        .section {
+            padding: 8rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 5rem;
+            color: var(--primary-color);
+        }
+
+        .poetry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .poetry-item {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .poetry-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .poetry-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .poetry-item p {
+            font-size: 1.2rem;
+            line-height: 2;
+            margin-bottom: 1rem;
+        }
+
+        .poetry-item .author {
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .calligraphy-section {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .calligraphy {
+            font-size: 2rem;
+            line-height: 2.5;
+            max-width: 800px;
+            margin: 0 auto;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            height: 400px;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .calligraphy {
+                font-size: 1.5rem;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#poetry">诗词</a></li>
+            <li><a href="#calligraphy">书法</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>禅心诗韵</h1>
+        <p>以诗书写禅意，以墨绘制心境</p>
+    </header>
+
+    <section id="poetry" class="section">
+        <h2 class="section-title">佛教诗词</h2>
+        <div class="poetry-grid">
+            <div class="poetry-item">
+                <h3>《访道》</h3>
+                <p>一山飞峡出，千里涨溪来。</p>
+                <p>山色遥连水，天光近接台。</p>
+                <p>白云生翠谷，明月落青苔。</p>
+                <p>何处寻知己，松门最可开。</p>
+                <p class="author">——王维</p>
+            </div>
+            <div class="poetry-item">
+                <h3>《禅院》</h3>
+                <p>柳色新疏雨，花光欲尽时。</p>
+                <p>春风几日到，禅院好相知。</p>
+                <p class="author">——白居易</p>
+            </div>
+            <div class="poetry-item">
+                <h3>《送僧归日本》</h3>
+                <p>上国随缘住，来途若梦行。</p>
+                <p>浮天沧海远，去世法舟轻。</p>
+                <p>水月通禅寂，鱼龙听梵声。</p>
+                <p>惟怜一灯影，万里眼中明。</p>
+                <p class="author">——张九龄</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="calligraphy" class="calligraphy-section">
+        <div class="calligraphy">
+            <p>心似已灰之木，身如不系之舟。</p>
+            <p>万缘放下，一念不生。</p>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>联系我们</h2>
+        <p>地址：佛光市法云寺</p>
+        <p>电话：996-87654321</p>
+        <p>邮箱：poetry@chanxin.com</p>
+    </footer>
+</body>
+</html>

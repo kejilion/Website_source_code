@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梵音书苑 - 佛教文学殿堂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8B6B4E;
+            --secondary-color: #D4C1A9;
+            --text-color: #2C2420;
+            --background-color: #F7F3EE;
+            --accent-color: #B49B7F;
+            --white: #FFFFFF;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(247, 243, 238, 0.95);
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(
+                45deg,
+                var(--primary-color),
+                #A68A64,
+                #C4B299,
+                #8B6B4E,
+                #D4C1A9
+            );
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero-content {
+            color: var(--white);
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 2s ease-out;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: var(--white);
+            opacity: 0.6;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            line-height: 1.6;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .sections {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .articles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+
+        .article-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .article-excerpt {
+            font-size: 1rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .article-meta {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .featured-quote {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--primary-color);
+            color: var(--white);
+            margin: 0;
+        }
+
+        .quote-text {
+            font-size: 2rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+
+        .quote-author {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .footer {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-link {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+        }
+
+        .footer-text {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .quote-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-dharmachakra"></i>
+                梵音书苑
+            </a>
+            <ul class="nav-links">
+                <li><a href="#classics" class="nav-link">经典文献</a></li>
+                <li><a href="#stories" class="nav-link">禅宗故事</a></li>
+                <li><a href="#poetry" class="nav-link">佛教诗词</a></li>
+                <li><a href="#about" class="nav-link">关于我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">梵音书苑</h1>
+            <p class="hero-subtitle">探索佛教文学的无尽智慧，感受千年传承的精神力量</p>
+        </div>
+    </section>
+
+    <section id="classics" class="sections">
+        <div class="section">
+            <h2 class="section-title">经典文献</h2>
+            <div class="articles">
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">《金刚经》赏析</h3>
+                        <p class="article-excerpt">探讨《金刚经》中"应无所住而生其心"的深刻含义，解读般若智慧的现代价值。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-book-reader"></i> 经典解读</span>
+                            <span><i class="fas fa-clock"></i> 20分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">《心经》导读</h3>
+                        <p class="article-excerpt">《般若波罗蜜多心经》核心思想解析，领悟"色即是空，空即是色"的智慧。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-book-reader"></i> 经典解读</span>
+                            <span><i class="fas fa-clock"></i> 15分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">《法华经》精要</h3>
+                        <p class="article-excerpt">《妙法莲华经》的核心教义与现代启示，感悟一乘佛法的究竟真理。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-book-reader"></i> 经典解读</span>
+                            <span><i class="fas fa-clock"></i> 25分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="stories" class="sections">
+        <div class="section">
+            <h2 class="section-title">禅宗故事</h2>
+            <div class="articles">
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">六祖慧能的顿悟</h3>
+                        <p class="article-excerpt">探讨惠能大师"菩提本无树，明镜亦非台"的顿悟公案，理解禅宗顿悟的真谛。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-bookmark"></i> 禅宗公案</span>
+                            <span><i class="fas fa-clock"></i> 10分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">赵州禅师问答</h3>
+                        <p class="article-excerpt">解读赵州禅师"吃茶去"的公案，领会禅宗日常生活中的智慧。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-bookmark"></i> 禅宗公案</span>
+                            <span><i class="fas fa-clock"></i> 8分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">马祖道一的开示</h3>
+                        <p class="article-excerpt">探讨马祖道一"平常心是道"的禅法，理解禅宗对生活的根本态度。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-bookmark"></i> 禅宗公案</span>
+                            <span><i class="fas fa-clock"></i> 12分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="poetry" class="sections">
+        <div class="section">
+            <h2 class="section-title">佛教诗词</h2>
+            <div class="articles">
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">王维《终南别业》</h3>
+                        <p class="article-excerpt">细读王维"中岁颇好道，晚家南山陲"的诗意，感受诗人对禅意生活的追求。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-feather-alt"></i> 诗词赏析</span>
+                            <span><i class="fas fa-clock"></i> 5分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">寒山子诗集选</h3>
+                        <p class="article-excerpt">解读寒山子"独自上高峰，远看石谷间"的诗句，体会禅诗的超然境界。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-feather-alt"></i> 诗词赏析</span>
+                            <span><i class="fas fa-clock"></i> 7分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-content">
+                        <h3 class="article-title">白居易佛诗选</h3>
+                        <p class="article-excerpt">品读白居易"心似已灰之木，身如不系之舟"的诗句，感悟诗人的禅意人生。</p>
+                        <div class="article-meta">
+                            <span><i class="fas fa-feather-alt"></i> 诗词赏析</span>
+                            <span><i class="fas fa-clock"></i> 6分钟阅读</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="featured-quote">
+        <p class="quote-text">"一花一世界，一叶一菩提"</p>
+        <p class="quote-author">- 华严经义</p>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">关于我们</a>
+                <a href="#" class="footer-link">联系方式</a>
+                <a href="#" class="footer-link">隐私政策</a>
+                <a href="#" class="footer-link">使用条款</a>
+            </div>
+            <p class="footer-text">© 2024 梵音书苑. 保留所有权利</p>
+        </div>
+    </footer>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.padding = '0.5rem 1rem';
+            } else {
+                nav.style.padding = '1rem';
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

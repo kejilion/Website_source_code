@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅意空间 - 简约之美</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #333;
+            --secondary-color: #666;
+            --background-color: #f5f5f5;
+            --text-color: #2c2c2c;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+                        url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: 0.5em;
+            margin-bottom: 2rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav a:hover {
+            border: 1px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 8rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            margin-bottom: 4rem;
+        }
+
+        .zen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+        }
+
+        .zen-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .zen-item h3 {
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        .zen-item p {
+            line-height: 2;
+            color: var(--secondary-color);
+        }
+
+        .meditation {
+            background-color: #fff;
+            text-align: center;
+            padding: 8rem 0;
+        }
+
+        .meditation-quote {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            line-height: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#about">关于</a></li>
+            <li><a href="#practice">修行</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>禅意空间</h1>
+        <p>寂静中见本性，空明处得自在</p>
+    </header>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">禅修之道</h2>
+            <div class="zen-grid">
+                <div class="zen-item">
+                    <h3>正念</h3>
+                    <p>专注当下，觉知呼吸，安住当前一刻的体验。</p>
+                </div>
+                <div class="zen-item">
+                    <h3>静心</h3>
+                    <p>放下妄想，回归本心，体验内在的宁静与和谐。</p>
+                </div>
+                <div class="zen-item">
+                    <h3>智慧</h3>
+                    <p>透过禅修，开启智慧之眼，了悟生命真谛。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="practice" class="meditation">
+        <div class="container">
+            <h2 class="section-title">禅语</h2>
+            <div class="meditation-quote">
+                <p>「万法归一，一归何处？」</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <p>地址：佛光市光明区静心禅院</p>
+            <p>电话：996-12345678</p>
+            <p>邮箱：contact@zenspace.com</p>
+        </div>
+    </footer>
+</body>
+</html>

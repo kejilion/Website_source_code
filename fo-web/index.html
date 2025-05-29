@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梵音悠扬 - 佛学音乐传播</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2B48C;
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --accent-color: #c1a57b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.6;
+            color: var(--light-text);
+            background-color: var(--dark-bg);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInDown 1.5s ease-out;
+        }
+
+        .header p {
+            font-size: 1.8rem;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1.5s ease-out;
+            color: var(--accent-color);
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .section {
+            padding: 5rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--accent-color);
+        }
+
+        .music-player {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .control-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+
+        .progress {
+            width: 30%;
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 5px;
+            transition: width 0.1s linear;
+        }
+
+        .song-list {
+            max-width: 800px;
+            margin: 3rem auto;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .song-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .song-artist {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .lyrics-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            line-height: 2;
+        }
+
+        .current-lyric {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .next-lyric {
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .player-controls {
+                gap: 1rem;
+            }
+
+            .control-btn {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#player">音乐播放</a></li>
+            <li><a href="#songs">歌曲列表</a></li>
+            <li><a href="#about">关于我们</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>梵音悠扬</h1>
+        <p>聆听佛音，净化心灵</p>
+    </header>
+
+    <section id="player" class="section">
+        <h2 class="section-title">正在播放</h2>
+        <div class="music-player">
+            <div class="lyrics-container">
+                <div class="current-lyric">心若无尘 清净自在</div>
+                <div class="next-lyric">万法皆空 随缘自在</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div class="player-controls">
+                <button class="control-btn"><i class="fas fa-backward"></i></button>
+                <button class="control-btn"><i class="fas fa-play"></i></button>
+                <button class="control-btn"><i class="fas fa-forward"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section id="songs" class="section">
+        <h2 class="section-title">佛音精选</h2>
+        <div class="song-list">
+            <div class="song-item">
+                <div class="song-info">
+                    <div class="song-title">般若波罗蜜多心经</div>
+                    <div class="song-artist">妙音法师</div>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="song-item">
+                <div class="song-info">
+                    <div class="song-title">大悲咒</div>
+                    <div class="song-artist">慈悲法师</div>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="song-item">
+                <div class="song-info">
+                    <div class="song-title">南无阿弥陀佛</div>
+                    <div class="song-artist">净空法师</div>
+                </div>
+                <i class="fas fa-play"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <h2 class="section-title">关于我们</h2>
+        <div class="music-player">
+            <p style="text-align: center; margin-bottom: 1rem;">
+                梵音悠扬致力于传播优质的佛教音乐，让更多人通过音乐感受佛法的智慧与力量。
+                我们精心收集和制作各类佛教音乐作品，希望能为您的修行之路增添一份祥和与宁静。
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <p>联系方式：contact@fanyinyouyang.com</p>
+        <p>地址：佛光市光明区和平里北街</p>
+        <p>© 2024 梵音悠扬 版权所有</p>
+    </footer>
+
+    <script>
+        // 简单的播放器状态管理
+        document.addEventListener('DOMContentLoaded', function() {
+            const playButtons = document.querySelectorAll('.fa-play');
+            const progressBar = document.querySelector('.progress');
+            let isPlaying = false;
+
+            playButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    isPlaying = !isPlaying;
+                    if (isPlaying) {
+                        this.classList.remove('fa-play');
+                        this.classList.add('fa-pause');
+                    } else {
+                        this.classList.remove('fa-pause');
+                        this.classList.add('fa-play');
+                    }
+                });
+            });
+
+            // 进度条模拟
+            let progress = 30;
+            setInterval(() => {
+                if (isPlaying) {
+                    progress = (progress + 1) % 100;
+                    progressBar.style.width = `${progress}%`;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅心静修 - 寻找内在的平静</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A5D23;
+            --secondary-color: #8FA362;
+            --text-color: #2C3E50;
+            --background-color: #F4F8F2;
+            --accent-color: #7D8471;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 2;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(74, 93, 35, 0.7), rgba(74, 93, 35, 0.7)),
+                        url('https://images.unsplash.com/photo-1507692049790-de58290a4334?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #F4F8F2;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3em;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(244, 248, 242, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .practice-item {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .practice-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .practice-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .method-section {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .method-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .method-steps {
+            margin-top: 4rem;
+        }
+
+        .method-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .experience-section {
+            background: linear-gradient(rgba(244, 248, 242, 0.9), rgba(244, 248, 242, 0.9)),
+                        url('https://images.unsplash.com/photo-1519834785169-98be25ec3f84?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .experience-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .experience-quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            margin: 3rem 0;
+            line-height: 1.8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .practice-item {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#practice">修行实践</a></li>
+            <li><a href="#method">禅修方法</a></li>
+            <li><a href="#experience">修行体会</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>禅心静修</h1>
+        <p>在宁静中寻找自我，在修行中超越自我</p>
+    </header>
+
+    <section id="practice" class="section">
+        <div class="container">
+            <h2 class="section-title">修行实践</h2>
+            <div class="practice-grid">
+                <div class="practice-item">
+                    <h3>正念行走</h3>
+                    <p>每一步都是修行的机会，将注意力放在脚步上，感受与大地接触的每一个瞬间。在行走中体验当下，让身心合一。</p>
+                </div>
+                <div class="practice-item">
+                    <h3>茶禅一味</h3>
+                    <p>品茶时保持觉知，观察茶汤的色香味，感受茶水的温度变化。在沏茶、饮茶的过程中，体会生命的韵味。</p>
+                </div>
+                <div class="practice-item">
+                    <h3>静心书写</h3>
+                    <p>以正念书写，每一笔都是修行。观察笔画的起承转合，体会字迹的变化。在书写中培养定力，在笔墨中寻找内心的平静。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="method" class="section method-section">
+        <div class="method-content">
+            <h2 class="section-title">禅修方法</h2>
+            <div class="method-steps">
+                <div class="method-step">
+                    <h3>初阶：安住当下</h3>
+                    <p>选择一个安静的环境，采用舒适的坐姿。将注意力集中在呼吸上，感受呼吸的自然节奏。当心念散乱时，温和地将注意力带回呼吸。</p>
+                </div>
+                <div class="method-step">
+                    <h3>中阶：观察念头</h3>
+                    <p>保持对呼吸的觉知，同时开始观察念头的生起和消失。不追逐念头，不排斥念头，只是以旁观者的角度静静地观察。</p>
+                </div>
+                <div class="method-step">
+                    <h3>深阶：空性体验</h3>
+                    <p>在稳定的定力基础上，观察一切现象的无常、无我。体验念头的本质是空，感受者与被感受的都是缘起的显现。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="section experience-section">
+        <div class="experience-content">
+            <h2 class="section-title">修行体会</h2>
+            <div class="experience-quote">
+                <p>"心如止水，万物皆映；念起念灭，不取不舍。"</p>
+            </div>
+            <p>修行不在远方，就在当下。每个呼吸，每个脚步，每个当下都是修行的机会。保持觉知，保持正念，在日常生活中体现禅的智慧。</p>
+            <p>通过持续的修行，我们会发现内心的宁静不是外在环境给予的，而是源于对自心的了解和放下。在这个过程中，我们逐渐发现生命的真实意义。</p>
+        </div>
+    </section>
+</body>
+</html>

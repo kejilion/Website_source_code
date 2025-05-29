@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>禅修指导 - 寻找内心的宁静</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3C4C3C;
+            --secondary-color: #8BA88B;
+            --text-color: #2C3E2C;
+            --background-color: #F5F8F5;
+            --accent-color: #5B795B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(60, 76, 60, 0.7), rgba(60, 76, 60, 0.7)),
+                        url('https://images.unsplash.com/photo-1507692049790-de58290a4334?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.2em;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(245, 248, 245, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        .meditation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .meditation-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .meditation-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .meditation-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .meditation-content {
+            padding: 2rem;
+        }
+
+        .meditation-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .meditation-description {
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .meditation-time {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .schedule {
+            margin-top: 4rem;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--background-color);
+        }
+
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .schedule-table tr:hover {
+            background-color: var(--background-color);
+        }
+
+        .instructor {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .instructor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .schedule-table {
+                font-size: 0.9rem;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#courses">禅修课程</a></li>
+            <li><a href="#schedule">课程安排</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>禅修指导</h1>
+        <p>寻找内心的宁静，体验生命的真谛</p>
+    </header>
+
+    <section id="courses" class="section">
+        <div class="container">
+            <h2 class="section-title">禅修课程</h2>
+            <div class="meditation-grid">
+                <div class="meditation-card">
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="初级禅修" class="meditation-image">
+                    <div class="meditation-content">
+                        <h3 class="meditation-title">初级禅修课程</h3>
+                        <p class="meditation-description">适合禅修初学者，学习基本的呼吸法和静坐技巧。</p>
+                        <div class="meditation-time">
+                            <i class="fas fa-clock"></i>
+                            <span>课程时长：2小时/次</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meditation-card">
+                    <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="进阶禅修" class="meditation-image">
+                    <div class="meditation-content">
+                        <h3 class="meditation-title">进阶禅修课程</h3>
+                        <p class="meditation-description">深入学习禅修技巧，提升心灵觉知能力。</p>
+                        <div class="meditation-time">
+                            <i class="fas fa-clock"></i>
+                            <span>课程时长：3小时/次</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meditation-card">
+                    <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="专题禅修" class="meditation-image">
+                    <div class="meditation-content">
+                        <h3 class="meditation-title">专题禅修课程</h3>
+                        <p class="meditation-description">针对特定主题的深度禅修指导。</p>
+                        <div class="meditation-time">
+                            <i class="fas fa-clock"></i>
+                            <span>课程时长：4小时/次</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="schedule" class="section" style="background-color: white;">
+        <div class="container">
+            <h2 class="section-title">课程安排</h2>
+            <div class="schedule">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>课程</th>
+                            <th>指导法师</th>
+                            <th>地点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>周一 09:00-11:00</td>
+                            <td>初级禅修</td>
+                            <td>
+                                <div class="instructor">
+                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="智慧法师" class="instructor-avatar">
+                                    <span>智慧法师</span>
+                                </div>
+                            </td>
+                            <td>禅修室A</td>
+                        </tr>
+                        <tr>
+                            <td>周三 14:00-17:00</td>
+                            <td>进阶禅修</td>
+                            <td>
+                                <div class="instructor">
+                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="觉悟法师" class="instructor-avatar">
+                                    <span>觉悟法师</span>
+                                </div>
+                            </td>
+                            <td>禅修室B</td>
+                        </tr>
+                        <tr>
+                            <td>周六 09:00-13:00</td>
+                            <td>专题禅修</td>
+                            <td>
+                                <div class="instructor">
+                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="慈悲法师" class="instructor-avatar">
+                                    <span>慈悲法师</span>
+                                </div>
+                            </td>
+                            <td>大禅堂</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">联系我们</h2>
+            <div style="text-align: center;">
+                <p>地址：佛光市光明区禅修中心</p>
+                <p>电话：996-87654321</p>
+                <p>邮箱：meditation@temple.com</p>
+                <p style="margin-top: 2rem; color: var(--accent-color);">
+                    开放时间：周一至周日 08:00-18:00
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(245, 248, 245, 0.98)';
+            } else {
+                nav.style.background = 'rgba(245, 248, 245, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佛教经典文学 - 智慧之源</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #4A3B24;
+            --secondary-color: #C4A484;
+            --text-color: #2C1810;
+            --background-color: #F9F3E9;
+            --accent-color: #8B7355;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'SimSun', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(74, 59, 36, 0.7), rgba(74, 59, 36, 0.7)),
+                        url('https://images.unsplash.com/photo-1599254500021-a0c9934c3a66?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #F9F3E9;
+        }
+
+        .header h1 {
+            font-size: 3.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.6rem;
+            max-width: 700px;
+            margin: 0 auto;
+            letter-spacing: 0.1em;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(74, 59, 36, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--background-color);
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            margin: 1rem auto;
+        }
+
+        .classics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .classic-item {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .classic-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .classic-item h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .classic-item p {
+            color: var(--text-color);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .quote-section {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .quote {
+            font-size: 1.8rem;
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 2;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .section {
+                padding: 4rem 1rem;
+            }
+
+            .quote {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#classics">经典著作</a></li>
+            <li><a href="#quotes">经典名句</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>佛教经典文学</h1>
+        <p>千年智慧，照亮人心</p>
+    </header>
+
+    <section id="classics" class="section">
+        <h2 class="section-title">经典著作</h2>
+        <div class="classics-grid">
+            <div class="classic-item">
+                <h3>《金刚经》</h3>
+                <p>佛教最重要的经典之一，阐述般若波罗蜜多的精髓，揭示诸法实相的真理。</p>
+                <p>一切有为法，如梦幻泡影，如露亦如电，应作如是观。</p>
+            </div>
+            <div class="classic-item">
+                <h3>《心经》</h3>
+                <p>佛教最简短而精深的经典，包含般若智慧的核心教义。</p>
+                <p>色不异空，空不异色；色即是空，空即是色。</p>
+            </div>
+            <div class="classic-item">
+                <h3>《法华经》</h3>
+                <p>大乘佛教重要经典，阐述一乘佛教思想，展现佛陀的究竟教化。</p>
+                <p>诸法从本来，常自寂灭相。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="quotes" class="quote-section">
+        <div class="quote">
+            <p>「诸恶莫作，众善奉行，自净其意，是诸佛教。」</p>
+            <p style="font-size: 1.2rem; margin-top: 1rem;">——《法句经》</p>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>联系我们</h2>
+        <p>地址：佛光市南城区法源寺街</p>
+        <p>电话：996-87654321</p>
+        <p>邮箱：info@fojingdian.com</p>
+    </footer>
+</body>
+</html>

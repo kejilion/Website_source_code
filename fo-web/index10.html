@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵净土 - 寻找内心的宁静</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6B4423;
+            --secondary-color: #C8B6A6;
+            --text-color: #2C1810;
+            --background-color: #FDF6E3;
+            --accent-color: #8B7355;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 2;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .scroll-container {
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(107, 68, 35, 0.7), rgba(107, 68, 35, 0.7)),
+                        url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #FDF6E3;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5em;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(253, 246, 227, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 8rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .meditation-section {
+            background-color: #fff;
+        }
+
+        .meditation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .meditation-item {
+            padding: 2rem;
+            background: var(--background-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .meditation-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .wisdom-section {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        .wisdom-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .wisdom-quote {
+            font-size: 2rem;
+            margin: 3rem 0;
+            line-height: 1.8;
+        }
+
+        .practice-section {
+            background: linear-gradient(rgba(253, 246, 227, 0.9), rgba(253, 246, 227, 0.9)),
+                        url('https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .practice-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .practice-steps {
+            margin-top: 3rem;
+        }
+
+        .practice-step {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 3rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#meditation">禅修心得</a></li>
+            <li><a href="#wisdom">智慧开示</a></li>
+            <li><a href="#practice">修行方法</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>心灵净土</h1>
+        <p>在寂静中寻找内心的安宁，在修行中体悟生命的真谛</p>
+    </header>
+
+    <section id="meditation" class="section meditation-section">
+        <div class="container">
+            <h2 class="section-title">禅修心得</h2>
+            <div class="meditation-grid">
+                <div class="meditation-item">
+                    <h3>呼吸观照</h3>
+                    <p>通过专注呼吸，让心回归当下。每一次呼吸都是新的开始，每一刻觉知都是修行。在呼吸中找到内心的平静，在觉知中体验生命的流动。</p>
+                </div>
+                <div class="meditation-item">
+                    <h3>身心合一</h3>
+                    <p>保持正念，观察身体的感受。让身心在静坐中慢慢沉淀，体会身心合一的状态。通过持续的练习，培养稳定的定力。</p>
+                </div>
+                <div class="meditation-item">
+                    <h3>放下执着</h3>
+                    <p>观察念头的生起和消失，不执着于任何想法。学会放下，让心像明镜一样清澈，反映一切而不染着。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wisdom" class="section wisdom-section">
+        <div class="wisdom-content">
+            <h2 class="section-title">智慧开示</h2>
+            <div class="wisdom-quote">
+                <p>"心若无事，便是禅定；念若不起，便是智慧。"</p>
+            </div>
+            <p>在日常生活中修行，每个当下都是修行的机会。保持觉知，观察内心的变化，在生活中体现佛法的智慧。</p>
+        </div>
+    </section>
+
+    <section id="practice" class="section practice-section">
+        <div class="practice-content">
+            <h2 class="section-title">修行方法</h2>
+            <div class="practice-steps">
+                <div class="practice-step">
+                    <h3>1. 调身</h3>
+                    <p>选择安静的环境，采用舒适的坐姿。保持脊背挺直，双手自然放置，让身体放松但保持警觉。</p>
+                </div>
+                <div class="practice-step">
+                    <h3>2. 调息</h3>
+                    <p>关注呼吸，让呼吸自然平和。不刻意改变呼吸的节奏，只是保持觉知。感受气息的出入，体会呼吸的微妙变化。</p>
+                </div>
+                <div class="practice-step">
+                    <h3>3. 调心</h3>
+                    <p>将注意力集中于呼吸，当心念散乱时，温和地将它带回呼吸。保持耐心和慈悲，不对妄念产生厌恶或执着。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

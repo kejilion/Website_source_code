@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慈善活动 - 传递爱与善</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #E67E22;
+            --secondary-color: #F39C12;
+            --text-color: #2C3E50;
+            --background-color: #FFF9F2;
+            --accent-color: #D35400;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(230, 126, 34, 0.7), rgba(230, 126, 34, 0.7)),
+                        url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 249, 242, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        .charity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .charity-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .charity-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .charity-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .charity-content {
+            padding: 2rem;
+        }
+
+        .charity-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .charity-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .donate-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .impact-section {
+            background-color: white;
+            padding: 6rem 2rem;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .impact-item {
+            padding: 2rem;
+        }
+
+        .impact-number {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .impact-text {
+            color: var(--text-color);
+        }
+
+        .volunteer-section {
+            background: linear-gradient(rgba(230, 126, 34, 0.1), rgba(230, 126, 34, 0.1));
+        }
+
+        .volunteer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .charity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .impact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#projects">慈善项目</a></li>
+            <li><a href="#impact">影响力</a></li>
+            <li><a href="#volunteer">志愿者</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>慈善活动</h1>
+        <p>传递爱与善，共建美好世界</p>
+    </header>
+
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">慈善项目</h2>
+            <div class="charity-grid">
+                <div class="charity-card">
+                    <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="助学计划" class="charity-image">
+                    <div class="charity-content">
+                        <h3 class="charity-title">慈善助学计划</h3>
+                        <p class="charity-description">帮助贫困地区的学生完成学业，为他们的未来点亮希望之光。</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 75%"></div>
+                        </div>
+                        <p style="margin-bottom: 1rem;">已筹集：¥75,000 / ¥100,000</p>
+                        <a href="#" class="donate-btn">立即捐助</a>
+                    </div>
+                </div>
+
+                <div class="charity-card">
+                    <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="医疗援助" class="charity-image">
+                    <div class="charity-content">
+                        <h3 class="charity-title">医疗援助项目</h3>
+                        <p class="charity-description">为贫困地区提供医疗援助，改善基层医疗条件。</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 60%"></div>
+                        </div>
+                        <p style="margin-bottom: 1rem;">已筹集：¥120,000 / ¥200,000</p>
+                        <a href="#" class="donate-btn">立即捐助</a>
+                    </div>
+                </div>
+
+                <div class="charity-card">
+                    <img src="https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="环保项目" class="charity-image">
+                    <div class="charity-content">
+                        <h3 class="charity-title">环保公益项目</h3>
+                        <p class="charity-description">推广环保理念，保护自然环境，建设生态文明。</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 40%"></div>
+                        </div>
+                        <p style="margin-bottom: 1rem;">已筹集：¥40,000 / ¥100,000</p>
+                        <a href="#" class="donate-btn">立即捐助</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="impact" class="impact-section">
+        <div class="container">
+            <h2 class="section-title">我们的影响力</h2>
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="impact-number">1000+</div>
+                    <div class="impact-text">受助学生</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">50+</div>
+                    <div class="impact-text">援助项目</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">100万+</div>
+                    <div class="impact-text">善款金额</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-number">5000+</div>
+                    <div class="impact-text">志愿者</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="volunteer" class="section volunteer-section">
+        <div class="container">
+            <h2 class="section-title">加入我们</h2>
+            <div class="volunteer-content">
+                <p style="margin-bottom: 2rem;">
+                    我们诚邀您加入我们的志愿者团队，用行动传递爱心，用善心温暖他人。
+                    无论您能付出多少时间，您的每一份努力都将带来改变。
+                </p>
+                <a href="#" class="donate-btn">成为志愿者</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(255, 249, 242, 0.98)';
+            } else {
+                nav.style.background = 'rgba(255, 249, 242, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>

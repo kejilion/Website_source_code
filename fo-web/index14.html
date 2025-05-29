@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>佛学讲座 - 智慧传承</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4B0082;
+            --secondary-color: #9370DB;
+            --text-color: #2C1810;
+            --background-color: #F8F4FF;
+            --accent-color: #663399;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .header {
+            height: 100vh;
+            background: linear-gradient(rgba(75, 0, 130, 0.7), rgba(75, 0, 130, 0.7)),
+                        url('https://images.unsplash.com/photo-1470549638415-0a0755be0619?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 2s ease-out 0.5s backwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(248, 244, 255, 0.95);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 1rem auto;
+        }
+
+        .lecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .lecture-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .lecture-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .lecture-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .lecture-content {
+            padding: 2rem;
+        }
+
+        .lecture-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .lecture-info {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .lecture-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .speaker-section {
+            background-color: white;
+            padding: 6rem 2rem;
+        }
+
+        .speaker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .speaker-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background-color);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .speaker-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .speaker-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+            object-fit: cover;
+        }
+
+        .speaker-name {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .speaker-title {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .register-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .register-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.2rem;
+            }
+
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav a {
+                margin: 0.5rem 0;
+            }
+
+            .lecture-grid,
+            .speaker-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#lectures">讲座信息</a></li>
+            <li><a href="#speakers">讲师介绍</a></li>
+            <li><a href="#contact">联系我们</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="header">
+        <h1>佛学讲座</h1>
+        <p>传承智慧，启迪心灵</p>
+    </header>
+
+    <section id="lectures" class="section">
+        <div class="container">
+            <h2 class="section-title">近期讲座</h2>
+            <div class="lecture-grid">
+                <div class="lecture-card">
+                    <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="心经讲解" class="lecture-image">
+                    <div class="lecture-content">
+                        <h3 class="lecture-title">《心经》深度解读</h3>
+                        <div class="lecture-info">
+                            <p><i class="fas fa-calendar-alt"></i> 2024年3月15日</p>
+                            <p><i class="fas fa-clock"></i> 14:00-16:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 大讲堂</p>
+                        </div>
+                        <p class="lecture-description">通过深入浅出的讲解，带您领悟《心经》的精髓要义。</p>
+                        <a href="#" class="register-btn">报名参加</a>
+                    </div>
+                </div>
+
+                <div class="lecture-card">
+                    <img src="https://images.unsplash.com/photo-1470549638415-0a0755be0619?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="禅修开示" class="lecture-image">
+                    <div class="lecture-content">
+                        <h3 class="lecture-title">禅修与生活</h3>
+                        <div class="lecture-info">
+                            <p><i class="fas fa-calendar-alt"></i> 2024年3月20日</p>
+                            <p><i class="fas fa-clock"></i> 19:00-21:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 禅修中心</p>
+                        </div>
+                        <p class="lecture-description">探讨如何将禅修的智慧运用到日常生活中。</p>
+                        <a href="#" class="register-btn">报名参加</a>
+                    </div>
+                </div>
+
+                <div class="lecture-card">
+                    <img src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教艺术" class="lecture-image">
+                    <div class="lecture-content">
+                        <h3 class="lecture-title">佛教艺术赏析</h3>
+                        <div class="lecture-info">
+                            <p><i class="fas fa-calendar-alt"></i> 2024年3月25日</p>
+                            <p><i class="fas fa-clock"></i> 15:00-17:00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 艺术馆</p>
+                        </div>
+                        <p class="lecture-description">品味佛教艺术之美，感受千年文化传承。</p>
+                        <a href="#" class="register-btn">报名参加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="speakers" class="speaker-section">
+        <div class="container">
+            <h2 class="section-title">主讲法师</h2>
+            <div class="speaker-grid">
+                <div class="speaker-card">
+                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="智慧法师" class="speaker-avatar">
+                    <h3 class="speaker-name">智慧法师</h3>
+                    <p class="speaker-title">佛学研究院院长</p>
+                    <p>专注于佛教经典研究与讲解，著有多部佛学著作。</p>
+                </div>
+
+                <div class="speaker-card">
+                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="觉悟法师" class="speaker-avatar">
+                    <h3 class="speaker-name">觉悟法师</h3>
+                    <p class="speaker-title">禅修指导中心主任</p>
+                    <p>致力于禅修教学与实践指导，具有丰富的禅修经验。</p>
+                </div>
+
+                <div class="speaker-card">
+                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="慈悲法师" class="speaker-avatar">
+                    <h3 class="speaker-name">慈悲法师</h3>
+                    <p class="speaker-title">佛教艺术研究员</p>
+                    <p>专注于佛教艺术研究与鉴赏，对佛教艺术有独到见解。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">联系我们</h2>
+            <div style="text-align: center;">
+                <p>地址：佛光市南城区佛学讲堂</p>
+                <p>电话：996-98765432</p>
+                <p>邮箱：lecture@temple.com</p>
+                <p style="margin-top: 2rem; color: var(--accent-color);">
+                    讲座报名时间：周一至周五 09:00-17:00
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(248, 244, 255, 0.98)';
+            } else {
+                nav.style.background = 'rgba(248, 244, 255, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>
