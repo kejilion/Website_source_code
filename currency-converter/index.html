@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实时多币种汇率转换器</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px; margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden; backdrop-filter: blur(10px);
+    }
+    .header {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white; text-align: center; padding: 30px;
+    }
+    .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+    .header p { font-size: 1.2em; opacity: 0.9; }
+    .content { padding: 30px; }
+    .status { text-align: center; margin-bottom: 20px; padding: 15px; border-radius: 10px; font-weight: 500; }
+    .status.loading { background: #e3f2fd; color: #1976d2; }
+    .status.success { background: #e8f5e8; color: #2e7d32; }
+    .status.error { background: #ffebee; color: #c62828; }
+    .currency-list { display: flex; flex-direction: column; gap: 15px; }
+    .currency-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: white; border-radius: 12px; padding: 15px 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 2px solid transparent; transition: all 0.3s ease;
+    }
+    .currency-item:hover { border-color: #4facfe; transform: translateY(-2px); }
+    .currency-left { display: flex; align-items: center; gap: 12px; }
+    .flag { width: 36px; height: 24px; border-radius: 4px; object-fit: cover; }
+    .currency-info { display: flex; flex-direction: column; }
+    .currency-code { font-size: 1.2em; font-weight: 700; }
+    .currency-name { font-size: 0.85em; color: #666; }
+    .currency-middle { flex: 1; text-align: center; font-size: 0.9em; color: #444; cursor: pointer; }
+    .currency-middle:hover { color: #4facfe; }
+    .currency-right { flex-shrink: 0; width: 180px; }
+    .currency-input {
+      width: 100%; padding: 10px 14px; font-size: 1.1em;
+      border: 2px solid #e0e0e0; border-radius: 8px;
+      background: #fafafa; text-align: right; font-weight: 600;
+    }
+    .currency-input:focus {
+      outline: none; border-color: #4facfe; background: white;
+      box-shadow: 0 0 0 3px rgba(79,172,254,0.15);
+    }
+    .last-updated {
+      text-align: center; color: #666; font-size: 0.9em;
+      margin-top: 20px; padding: 12px; background: #f5f5f5; border-radius: 8px;
+    }
+    .refresh-btn {
+      display: block; margin: 20px auto 0; padding: 12px 30px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white; border: none; border-radius: 25px;
+      font-size: 1em; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(79,172,254,0.3);
+    }
+    .refresh-btn:hover { transform: translateY(-2px); }
+    .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid #fff; border-radius: 50%;
+      border-top-color: transparent; animation: spin 1s linear infinite;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .history-modal {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center;
+      z-index:1000; opacity:0; visibility:hidden; transition:0.3s;
+    }
+    .history-modal.active { opacity:1; visibility:visible; }
+    .modal-content {
+      background:#fff; padding:25px; border-radius:15px;
+      width:90%; max-width:600px; transform:scale(0.9); transition:0.3s;
+    }
+    .history-modal.active .modal-content { transform:scale(1); }
+    .modal-header { display:flex; justify-content:space-between; margin-bottom:15px; }
+    .modal-close { border:none; background:none; font-size:1.5em; cursor:pointer; color:#999; }
+    @media(max-width:768px){
+      .currency-item{flex-direction:column;align-items:flex-start;}
+      .currency-middle{text-align:left;margin:8px 0;}
+      .currency-right{width:100%;}
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💱 实时汇率转换器</h1>
+      <p>支持多币种实时转换，数据来源于多个权威汇率API</p>
+    </div>
+    <div class="content">
+      <div id="status" class="status loading"><div class="spinner"></div> 正在获取最新汇率数据...</div>
+      <div id="currencyList" class="currency-list"></div>
+      <div id="lastUpdated" class="last-updated">汇率数据更新时间: 获取中...</div>
+      <button id="refreshBtn" class="refresh-btn" onclick="refreshRates()">🔄 刷新汇率</button>
+    </div>
+  </div>
+
+  <div id="historyModal" class="history-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle"></h2>
+        <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+      </div>
+      <div style="height:300px"><canvas id="historyChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    const currencies = {
+      USD:{name:'美元',country:'us'}, EUR:{name:'欧元',country:'eu'},
+      CNY:{name:'人民币',country:'cn'}, JPY:{name:'日元',country:'jp'},
+      GBP:{name:'英镑',country:'gb'}, AUD:{name:'澳元',country:'au'},
+      CAD:{name:'加元',country:'ca'}, CHF:{name:'瑞士法郎',country:'ch'},
+      HKD:{name:'港币',country:'hk'}, SGD:{name:'新加坡元',country:'sg'},
+      KRW:{name:'韩元',country:'kr'}, INR:{name:'印度卢比',country:'in'}
+    };
+    let exchangeRates={}, baseCurrency='USD', isUpdating=false, myChart=null;
+
+    const rateSources=[{url:'https://api.exchangerate-api.com/v4/latest/USD',parseRates:d=>d.rates}];
+    const historyApi={
+      url:'https://api.frankfurter.app',
+      fetchHistory:async(base,target,days)=>{
+        const end=new Date(), start=new Date(); start.setDate(end.getDate()-days);
+        const s=start.toISOString().split('T')[0], e=end.toISOString().split('T')[0];
+        if(base==='EUR'){
+          const r=await fetch(`${historyApi.url}/${s}..${e}?from=${base}&to=${target}`);
+          const d=await r.json(); return Object.keys(d.rates).map(dt=>({date:dt,rate:d.rates[dt][target]}));
+        }else{
+          const rt=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${target}`);
+          const dt=await rt.json(); const rb=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${base}`);
+          const db=await rb.json();
+          return Object.keys(dt.rates).map(dtKey=>{
+            if(dt.rates[dtKey][target]&&db.rates[dtKey][base])
+              return {date:dtKey,rate:dt.rates[dtKey][target]/db.rates[dtKey][base]};
+          }).filter(Boolean);
+        }
+      }
+    };
+
+    function createCurrencyItems(){
+      const list=document.getElementById('currencyList'); list.innerHTML='';
+      Object.entries(currencies).forEach(([code,info])=>{
+        list.innerHTML+=`
+          <div class="currency-item">
+            <div class="currency-left">
+              <img src="https://flagcdn.com/w40/${info.country}.png" class="flag" alt="${code}">
+              <div class="currency-info"><div class="currency-code">${code}</div><div class="currency-name">${info.name}</div></div>
+            </div>
+            <div class="currency-middle" id="rate-${code}" onclick="showHistoryChart('${code}')">汇率: 加载中...</div>
+            <div class="currency-right"><input type="number" id="input-${code}" class="currency-input" placeholder="0.00"
+              oninput="onInputChange('${code}')" onfocus="onInputFocus('${code}')"></div>
+          </div>`;
+      });
+    }
+
+    async function fetchExchangeRates(){
+      updateStatus('loading','正在获取最新汇率数据...');
+      try{
+        const r=await fetch(rateSources[0].url); const d=await r.json();
+        exchangeRates=rateSources[0].parseRates(d); exchangeRates['USD']=1;
+        updateStatus('success','汇率数据获取成功'); updateRateDisplays();
+        document.getElementById('lastUpdated').textContent=`汇率数据更新时间: ${new Date().toLocaleString('zh-CN')}`;
+      }catch{useSimulatedRates();}
+    }
+
+    function useSimulatedRates(){
+      exchangeRates={USD:1,EUR:0.85,CNY:7.25,JPY:148.5,GBP:0.78,AUD:1.52,CAD:1.36,CHF:0.91,HKD:7.8,SGD:1.35,KRW:1320,INR:83.2};
+      updateStatus('success','汇率数据加载完成 (模拟数据)'); updateRateDisplays();
+      document.getElementById('lastUpdated').textContent=`汇率数据更新时间: ${new Date().toLocaleString('zh-CN')} (模拟)`;
+    }
+
+    function updateStatus(t,m){const el=document.getElementById('status');el.className=`status ${t}`;el.innerHTML=t==='loading'?`<div class="spinner"></div>${m}`:m;}
+    function updateRateDisplays(){
+      Object.keys(currencies).forEach(c=>{
+        const el=document.getElementById(`rate-${c}`);
+        if(c===baseCurrency) el.textContent='汇率: 1.0000 (基准) (点击查看)';
+        else{const r=exchangeRates[c]/exchangeRates[baseCurrency]; el.textContent=r?`汇率: ${r.toFixed(4)} (点击查看)`:'汇率: 数据不可用';}
+      });
+    }
+
+    function onInputChange(c){
+      if(isUpdating||!exchangeRates[c])return;
+      const val=parseFloat(document.getElementById(`input-${c}`).value)||0;
+      baseCurrency=c; updateRateDisplays(); isUpdating=true;
+      Object.keys(currencies).forEach(k=>{
+        if(k!==c){document.getElementById(`input-${k}`).value=(val*exchangeRates[k]/exchangeRates[c]).toFixed(2);}
+      });
+      isUpdating=false;
+    }
+    function onInputFocus(c){baseCurrency=c;updateRateDisplays();}
+
+    async function refreshRates(){
+      const b=document.getElementById('refreshBtn');b.disabled=true;b.innerHTML='<div class="spinner"></div>刷新中...';
+      await fetchExchangeRates();
+      const act=Object.keys(currencies).find(k=>parseFloat(document.getElementById(`input-${k}`).value)>0);
+      if(act)onInputChange(act);
+      b.disabled=false;b.innerHTML='🔄 刷新汇率';
+    }
+
+    async function showHistoryChart(t){
+      if(myChart)myChart.destroy();
+      const modal=document.getElementById('historyModal'); modal.classList.add('active');
+      const ctx=document.getElementById('historyChart').getContext('2d');
+      if(t===baseCurrency){ctx.clearRect(0,0,400,300);ctx.fillText('基准货币恒定为1',200,150);return;}
+      try{
+        const data=await historyApi.fetchHistory(baseCurrency,t,30);
+        const labels=data.map(d=>new Date(d.date).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'}));
+        const rates=data.map(d=>d.rate.toFixed(4));
+        myChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:`${baseCurrency}→${t}`,data:rates,borderColor:'#4facfe',fill:true,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false}});
+      }catch{ctx.fillText('历史数据获取失败',200,150);}
+    }
+    function closeHistoryModal(){document.getElementById('historyModal').classList.remove('active'); if(myChart){myChart.destroy();myChart=null;}}
+    window.onload=()=>{createCurrencyItems();fetchExchangeRates();};
+  </script>
+</body>
+</html>
