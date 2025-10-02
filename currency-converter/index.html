@@ -1,230 +1,899 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实时多币种汇率转换器</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      max-width: 900px; margin: 0 auto;
-      background: rgba(255,255,255,0.95);
-      border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      overflow: hidden; backdrop-filter: blur(10px);
-    }
-    .header {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white; text-align: center; padding: 30px;
-    }
-    .header h1 { font-size: 2.5em; margin-bottom: 10px; }
-    .header p { font-size: 1.2em; opacity: 0.9; }
-    .content { padding: 30px; }
-    .status { text-align: center; margin-bottom: 20px; padding: 15px; border-radius: 10px; font-weight: 500; }
-    .status.loading { background: #e3f2fd; color: #1976d2; }
-    .status.success { background: #e8f5e8; color: #2e7d32; }
-    .status.error { background: #ffebee; color: #c62828; }
-    .currency-list { display: flex; flex-direction: column; gap: 15px; }
-    .currency-item {
-      display: flex; align-items: center; justify-content: space-between;
-      background: white; border-radius: 12px; padding: 15px 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      border: 2px solid transparent; transition: all 0.3s ease;
-    }
-    .currency-item:hover { border-color: #4facfe; transform: translateY(-2px); }
-    .currency-left { display: flex; align-items: center; gap: 12px; }
-    .flag { width: 36px; height: 24px; border-radius: 4px; object-fit: cover; }
-    .currency-info { display: flex; flex-direction: column; }
-    .currency-code { font-size: 1.2em; font-weight: 700; }
-    .currency-name { font-size: 0.85em; color: #666; }
-    .currency-middle { flex: 1; text-align: center; font-size: 0.9em; color: #444; cursor: pointer; }
-    .currency-middle:hover { color: #4facfe; }
-    .currency-right { flex-shrink: 0; width: 180px; }
-    .currency-input {
-      width: 100%; padding: 10px 14px; font-size: 1.1em;
-      border: 2px solid #e0e0e0; border-radius: 8px;
-      background: #fafafa; text-align: right; font-weight: 600;
-    }
-    .currency-input:focus {
-      outline: none; border-color: #4facfe; background: white;
-      box-shadow: 0 0 0 3px rgba(79,172,254,0.15);
-    }
-    .last-updated {
-      text-align: center; color: #666; font-size: 0.9em;
-      margin-top: 20px; padding: 12px; background: #f5f5f5; border-radius: 8px;
-    }
-    .refresh-btn {
-      display: block; margin: 20px auto 0; padding: 12px 30px;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: white; border: none; border-radius: 25px;
-      font-size: 1em; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(79,172,254,0.3);
-    }
-    .refresh-btn:hover { transform: translateY(-2px); }
-    .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .spinner {
-      display: inline-block; width: 16px; height: 16px;
-      border: 2px solid #fff; border-radius: 50%;
-      border-top-color: transparent; animation: spin 1s linear infinite;
-      margin-right: 6px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .history-modal {
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center;
-      z-index:1000; opacity:0; visibility:hidden; transition:0.3s;
-    }
-    .history-modal.active { opacity:1; visibility:visible; }
-    .modal-content {
-      background:#fff; padding:25px; border-radius:15px;
-      width:90%; max-width:600px; transform:scale(0.9); transition:0.3s;
-    }
-    .history-modal.active .modal-content { transform:scale(1); }
-    .modal-header { display:flex; justify-content:space-between; margin-bottom:15px; }
-    .modal-close { border:none; background:none; font-size:1.5em; cursor:pointer; color:#999; }
-    @media(max-width:768px){
-      .currency-item{flex-direction:column;align-items:flex-start;}
-      .currency-middle{text-align:left;margin:8px 0;}
-      .currency-right{width:100%;}
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时多币种汇率转换器</title>
+    <script>
+        const THEME_KEY = 'preferredTheme'; // possible values: 'system' | 'dark' | 'light'
+
+        function getSystemTheme(){
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme){
+            // theme: 'system'|'dark'|'light'
+            const effective = theme === 'system' ? getSystemTheme() : theme;
+            document.documentElement.setAttribute('data-theme', effective);
+        }
+
+        function loadThemeImmediately(){
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            applyTheme(saved);
+        }
+
+        loadThemeImmediately();
+    </script>
+    <style>
+      /* 主题变量：在 :root 中定义浅色默认值，使用 [data-theme="dark"] 覆盖深色 */
+      :root{
+        /* 浅色主题：淡蓝色主调 */
+        --bg-gradient-1: #e6f4ff;
+        --bg-gradient-2: #ffffff;
+        --header-grad-1: #6eb1da;
+        --header-grad-2: #3382cc;
+        --text-color: #24374a;
+        --muted: #5a6f82;
+        --card-bg: #ffffff;
+        --card-border: #d6e8f7;
+        --input-bg: #f2f8fd;
+        --accent: #3a8edb;
+        --status-loading-bg: #e9f4ff;
+        --status-loading-color: #1e6bb8;
+        --status-success-bg: #ebf9f0;
+        --status-success-color: #2e7d32;
+        --status-error-bg: #fdecea;
+        --status-error-color: #c62828;
+        --spinner-border: #3a8edb;
+        --shadow: rgba(0,0,0,0.08);
+        --handle-color: #a0a0a0; /* 拖拽手柄颜色 */
+        /* 新增：统计数据颜色 */
+        --stat-positive: #2e7d32;
+        --stat-negative: #c62828;
+        --stat-neutral: #5a6f82;
+      }
+
+      /* 深色主题：黑金色 */
+      [data-theme="dark"]{
+        --bg-gradient-1: #000000;
+        --bg-gradient-2: #1a1a1a;
+        --header-grad-1: rgb(46, 36, 5);
+        --header-grad-2: #1a1600ff;
+        --text-color: #f0d479;  /* 金色字体 */
+        --muted: #bda65d;  /* 柔和金色 */
+        --card-bg: #111111;
+        --card-border: rgba(255,215,0,0.15);
+        --input-bg: #1b1b1b;
+        --accent: #ffd700;  /* 金色点缀 */
+        --status-loading-bg: rgba(255,215,0,0.08);
+        --status-loading-color: #ffd700;
+        --status-success-bg: rgba(46,125,50,0.15);
+        --status-success-color: #7bd38a;
+        --status-error-bg: rgba(198,40,40,0.15);
+        --status-error-color: #ff8a80;
+        --spinner-border: #ffd700;
+        --shadow: rgba(0,0,0,0.7);
+        --handle-color: #bda65d; /* 拖拽手柄颜色 */
+        /* 新增：统计数据颜色 */
+        --stat-positive: #7bd38a;
+        --stat-negative: #ff8a80;
+        --stat-neutral: #bda65d;
+      }
+
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: var(--text-color);
+        -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+        transition: background 300ms ease, color 300ms ease;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border-radius: 18px;
+        box-shadow: 0 10px 25px var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--card-border);
+        transition: background 300ms ease, border-color 300ms ease;
+      }
+      .header {
+        background: linear-gradient(135deg, var(--header-grad-1) 0%, var(--header-grad-2) 100%);
+        color: white;
+        text-align: center;
+        padding: 30px;
+        position: relative;
+      }
+
+      .header .refresh-btn {
+          margin: 15px auto 0;
+          padding: 8px 20px;
+          font-size: 0.95em;
+          border-radius: 20px;
+      }
+
+      .header h1 { font-size: 2.3em; margin-bottom: 8px; }
+      .header p { font-size: 1.1em; opacity: 0.95; }
+
+      /* 右上角主题切换按钮 */
+      .theme-toggle {
+        position: absolute; right: 18px; top: 18px;
+        background: rgba(255,255,255,0.12); border: none; color: white;
+        padding: 8px 12px; border-radius: 12px; cursor: pointer;
+        display:flex; align-items:center; gap:8px; font-weight:600;
+        backdrop-filter: blur(6px);
+        transition: transform .18s ease, background .18s ease;
+      }
+      .theme-toggle:hover{ transform: translateY(-3px); }
+      [data-theme="dark"] .theme-toggle{ background: rgba(255,255,255,0.06); }
+
+      .content { padding: 30px; }
+      .status {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 14px;
+        border-radius: 10px;
+        font-weight: 500;
+      }
+      .status.loading { background: var(--status-loading-bg); color: var(--status-loading-color); }
+      .status.success { background: var(--status-success-bg); color: var(--status-success-color); }
+      .status.error { background: var(--status-error-bg); color: var(--status-error-color); }
+      .currency-list { display: flex; flex-direction: column; gap: 15px; }
+      .currency-item {
+        display: flex; align-items: center; justify-content: space-between;
+        background: var(--card-bg); border-radius: 12px; padding: 15px 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+        border: 1px solid var(--card-border); transition: all 0.25s ease;
+        cursor: default; /* 默认不可拖拽 */
+      }
+      /* 可拖拽手柄样式 */
+      .drag-handle {
+          cursor: grab;
+          font-size: 1.2em;
+          color: var(--handle-color);
+          margin-right: 15px;
+          flex-shrink: 0;
+      }
+      .drag-handle:active {
+          cursor: grabbing;
+      }
+      /* 拖拽时的样式（SortableJS 类） */
+      .currency-item.sortable-ghost {
+          opacity: 0.2;
+          background-color: var(--accent);
+          border: 1px dashed var(--accent);
+      }
+      .currency-item:hover {
+        border-color: var(--accent);
+        background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+        /* transform: translateY(-2px); /* 移除 hover 动画以避免与拖拽冲突 */
+      }
+      .currency-left { display: flex; align-items: center; gap: 12px; }
+      .flag { width: 36px; height: 24px; border-radius: 4px; object-fit: cover; }
+      .currency-info { display: flex; flex-direction: column; }
+      .currency-code { font-size: 1.1em; font-weight: 700; }
+      .currency-name { font-size: 0.85em; color: var(--muted); }
+      .currency-middle {
+        flex: 1; text-align: center; font-size: 0.9em;
+        color: var(--text-color); cursor: pointer;
+      }
+      .currency-middle:hover { color: var(--accent); }
+      .currency-right { flex-shrink: 0; width: 180px; }
+      .currency-input {
+        width: 100%; padding: 10px 14px; font-size: 1.05em;
+        border: 1px solid var(--card-border); border-radius: 8px;
+        background: var(--input-bg); text-align: right; font-weight: 600;
+        transition: 0.2s;
+        color: var(--text-color);
+      }
+      .currency-input::placeholder{ color: var(--muted); }
+      .currency-input:focus {
+        outline: none; border-color: var(--accent); background: var(--card-bg);
+        box-shadow: 0 0 0 3px rgba(109,213,237,0.08);
+      }
+      .last-updated {
+        text-align: center; color: var(--muted); font-size: 0.9em;
+        margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px;
+      }
+      .refresh-btn {
+        display: block; margin: 20px auto 0; padding: 12px 30px;
+        background: linear-gradient(135deg, var(--header-grad-1) 0%, var(--header-grad-2) 100%);
+        color: white; border: none; border-radius: 25px;
+        font-size: 1em; font-weight: 600; cursor: pointer;
+        box-shadow: 0 4px 12px rgba(33,147,176,0.25);
+        transition: transform 0.2s ease;
+      }
+      .refresh-btn:hover { transform: translateY(-2px); }
+      .refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+      .spinner {
+        display: inline-block; width: 16px; height: 16px;
+        border: 2px solid var(--spinner-border); border-radius: 50%;
+        border-top-color: transparent; animation: spin 1s linear infinite;
+        margin-right: 6px;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .history-modal {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        background: rgba(0,0,0,0.45);
+        display:flex; justify-content:center; align-items:center;
+        z-index:1000; opacity:0; visibility:hidden; transition:0.3s;
+      }
+      .history-modal.active {
+        opacity: 1; visibility: visible; backdrop-filter: blur(6px);
+      }
+      .modal-content {
+        background:var(--card-bg); padding:25px; border-radius:15px;
+        width:90%; max-width:750px; transform:scale(0.9); transition:0.3s; /* 扩大模态框宽度 */
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        border: 1px solid var(--card-border);
+        color: var(--text-color);
+      }
+      .history-modal.active .modal-content { transform:scale(1); }
+      .modal-header {
+        display:flex; justify-content:space-between;
+        align-items:center; margin-bottom:15px;
+      }
+      .modal-close {
+        border:none; background:none; font-size:1.5em;
+        cursor:pointer; color:var(--muted); transition: 0.2s;
+      }
+      .modal-close:hover { color:var(--accent); }
+
+      /* 新增样式：时间范围按钮 */
+      .time-range-buttons {
+        display: flex; gap: 10px; margin-bottom: 20px;
+        justify-content: center;
+      }
+      .time-range-buttons button {
+        padding: 8px 15px; border-radius: 15px; border: 1px solid var(--card-border);
+        background: var(--input-bg); color: var(--text-color);
+        cursor: pointer; font-weight: 500; transition: background 0.2s, border-color 0.2s;
+      }
+      .time-range-buttons button:hover {
+        border-color: var(--accent);
+      }
+      .time-range-buttons button.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      /* 新增样式：统计数据 */
+      .history-stats {
+        display: flex; justify-content: space-around;
+        text-align: center; margin-top: 15px;
+        padding: 10px 0; border-top: 1px solid var(--card-border);
+        font-size: 0.9em;
+      }
+      .stat-item { flex: 1; padding: 0 5px; }
+      .stat-value { font-size: 1.1em; font-weight: 700; margin-top: 3px; }
+      .stat-high { color: var(--stat-positive); }
+      .stat-low { color: var(--stat-negative); }
+      .stat-change-up { color: var(--stat-positive); }
+      .stat-change-down { color: var(--stat-negative); }
+      .stat-change-neutral { color: var(--stat-neutral); }
+
+
+      @media(max-width:768px){
+        .currency-item{flex-direction:column;align-items:flex-start;}
+        .currency-middle{text-align:left;margin:8px 0;}
+        .currency-right{width:100%;}
+        .theme-toggle{ right: 12px; top: 12px; }
+        .history-stats{flex-wrap: wrap;}
+        .stat-item{width: 50%; margin-bottom: 10px;}
+        .time-range-buttons{flex-wrap: wrap;}
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>💱 实时汇率转换器</h1>
-      <p>支持多币种实时转换，数据来源于多个权威汇率API</p>
-    </div>
-    <div class="content">
-      <div id="status" class="status loading"><div class="spinner"></div> 正在获取最新汇率数据...</div>
-      <div id="currencyList" class="currency-list"></div>
-      <div id="lastUpdated" class="last-updated">汇率数据更新时间: 获取中...</div>
-      <button id="refreshBtn" class="refresh-btn" onclick="refreshRates()">🔄 刷新汇率</button>
-    </div>
-  </div>
+    <div class="container">
+        <div class="header">
+            <h1>💱 实时汇率转换器</h1>
+            <p>支持多币种实时转换，数据来源于多个权威汇率API</p>
 
-  <div id="historyModal" class="history-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle"></h2>
-        <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
-      </div>
-      <div style="height:300px"><canvas id="historyChart"></canvas></div>
+            <button id="themeToggle" class="theme-toggle" aria-label="切换主题" title="单击切换主题（跟随系统 → 深色 → 浅色）">🖥️ 跟随系统</button>
+
+            <button id="refreshBtn" class="refresh-btn" onclick="refreshRates()">🔄 刷新汇率</button>
+        </div>
+        <div class="content">
+            <div id="status" class="status loading"><div class="spinner"></div> 正在获取最新汇率数据...</div>
+            <div id="currencyList" class="currency-list"></div>
+            <div id="lastUpdated" class="last-updated">汇率数据更新时间: 获取中...</div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const currencies = {
-      USD:{name:'美元',country:'us'}, EUR:{name:'欧元',country:'eu'},
-      CNY:{name:'人民币',country:'cn'}, JPY:{name:'日元',country:'jp'},
-      GBP:{name:'英镑',country:'gb'}, AUD:{name:'澳元',country:'au'},
-      CAD:{name:'加元',country:'ca'}, CHF:{name:'瑞士法郎',country:'ch'},
-      HKD:{name:'港币',country:'hk'}, SGD:{name:'新加坡元',country:'sg'},
-      KRW:{name:'韩元',country:'kr'}, INR:{name:'印度卢比',country:'in'}
-    };
-    let exchangeRates={}, baseCurrency='USD', isUpdating=false, myChart=null;
+    <div id="historyModal" class="history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" onclick="closeHistoryModal()">&times;</button>
+            </div>
 
-    const rateSources=[{url:'https://api.exchangerate-api.com/v4/latest/USD',parseRates:d=>d.rates}];
-    const historyApi={
-      url:'https://api.frankfurter.app',
-      fetchHistory:async(base,target,days)=>{
-        const end=new Date(), start=new Date(); start.setDate(end.getDate()-days);
-        const s=start.toISOString().split('T')[0], e=end.toISOString().split('T')[0];
-        if(base==='EUR'){
-          const r=await fetch(`${historyApi.url}/${s}..${e}?from=${base}&to=${target}`);
-          const d=await r.json(); return Object.keys(d.rates).map(dt=>({date:dt,rate:d.rates[dt][target]}));
-        }else{
-          const rt=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${target}`);
-          const dt=await rt.json(); const rb=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${base}`);
-          const db=await rb.json();
-          return Object.keys(dt.rates).map(dtKey=>{
-            if(dt.rates[dtKey][target]&&db.rates[dtKey][base])
-              return {date:dtKey,rate:dt.rates[dtKey][target]/db.rates[dtKey][base]};
-          }).filter(Boolean);
+            <div class="time-range-buttons" id="timeRangeButtons">
+                <button data-days="5" onclick="loadHistory(currentTarget, 5)">5天</button>
+                <button data-days="30" class="active" onclick="loadHistory(currentTarget, 30)">30天</button>
+                <button data-days="365" onclick="loadHistory(currentTarget, 365)">1年</button>
+                <button data-days="1825" onclick="loadHistory(currentTarget, 1825)">5年</button>
+            </div>
+
+            <div style="height:350px;"><canvas id="historyChart"></canvas></div>
+
+            <div id="historyStats" class="history-stats"></div>
+        </div>
+    </div>
+
+    <script>
+// 替换后的 <script> 内容
+
+      /* ------------------- 主题控制（UI 更新） ------------------- */
+      // getSystemTheme, applyTheme, THEME_KEY 在 head 中定义
+
+      function updateThemeToggleUI(savedTheme, effective){
+        const btn = document.getElementById('themeToggle');
+        let label = '';
+        if(savedTheme === 'system') label = '🖥️ 跟随系统';
+        else if(savedTheme === 'dark') label = '🌙 深色';
+        else label = '🌞 浅色';
+        btn.innerText = label;
+        btn.title = `当前: ${label}（显示: ${effective === 'dark' ? '深色' : '浅色'}）。单击切换主题（跟随系统 → 深色 → 浅色）`;
+      }
+
+      function loadThemeUI(){
+          const saved = localStorage.getItem(THEME_KEY) || 'system';
+          const effective = saved === 'system' ? getSystemTheme() : saved;
+          updateThemeToggleUI(saved, effective);
+      }
+
+      function cycleTheme(){
+        const cur = localStorage.getItem(THEME_KEY) || 'system';
+        const next = cur === 'system' ? 'dark' : cur === 'dark' ? 'light' : 'system';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next); // 调用头部的 applyTheme
+        const effective = next === 'system' ? getSystemTheme() : next;
+        updateThemeToggleUI(next, effective); // 更新 UI
+      }
+
+      // 当系统深浅色模式改变时，如果用户选择的是跟随系统（system），就自动更新
+      const mediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+      if(mediaQuery){
+        try{ mediaQuery.addEventListener('change', () => {
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            if(saved === 'system') {
+                applyTheme('system');
+                loadThemeUI(); // 系统模式变化时也要更新 UI
+            }
+        }); }
+        catch(e){ /* 老浏览器 */ mediaQuery.addListener(() => {
+            const saved = localStorage.getItem(THEME_KEY) || 'system';
+            if(saved === 'system') {
+                applyTheme('system');
+                loadThemeUI(); // 系统模式变化时也要更新 UI
+            }
+        }); }
+      }
+
+      // 确保 DOM 加载后再添加事件监听器
+      window.addEventListener('load', () => {
+        document.getElementById('themeToggle').addEventListener('click', cycleTheme);
+      });
+
+      /* ------------------- 核心程序（汇率 & 拖拽排序） ------------------- */
+      const CURRENCY_ORDER_KEY = 'currencyOrder'; // 新增：用于存储排序的 LocalStorage Key
+
+      // 原始币种列表（现在是一个映射，用于查找详细信息）
+      const allCurrenciesMap = {
+        USD:{name:'美元',country:'us'}, EUR:{name:'欧元',country:'eu'}, CNY:{name:'人民币',country:'cn'},
+        JPY:{name:'日元',country:'jp'}, GBP:{name:'英镑',country:'gb'}, AUD:{name:'澳元',country:'au'},
+        CAD:{name:'加元',country:'ca'}, CHF:{name:'瑞士法郎',country:'ch'}, HKD:{name:'港币',country:'hk'},
+        SGD:{name:'新加坡元',country:'sg'}, KRW:{name:'韩元',country:'kr'}, INR:{name:'印度卢比',country:'in'},
+        THB:{name:'泰铢',country:'th'}, VND:{name:'越南盾',country:'vn'}, RUB:{name:'俄罗斯卢布',country:'ru'},
+        ZAR:{name:'南非兰特',country:'za'}, TWD:{name:'新台币',country:'tw'}, IDR:{name:'印尼盾',country:'id'},
+        MYR:{name:'马来西亚林吉特',country:'my'}, PHP:{name:'菲律宾比索',country:'ph'},
+        TRY:{name:'土耳其里拉',country:'tr'}
+      };
+
+      let currentCurrencyCodes = Object.keys(allCurrenciesMap); // 存储当前展示的币种代码数组（用于排序）
+      let exchangeRates = {}, baseCurrency = 'USD', isUpdating = false, myChart = null;
+      let currentTarget = null; // 新增：存储当前查看历史数据的目标货币代码
+
+      // 实时汇率数据源队列：按优先级排序
+      const rateSources = [
+        // Source 1: ExchangeRate-API (USD Base) - 你的原始源，优先尝试
+        {
+          name: 'ExchangeRate-API',
+          url: 'https://api.exchangerate-api.com/v4/latest/USD',
+          parseRates: d => d.rates,
+          isUSD: true
+        },
+        // Source 2: Frankfurter (EUR Base) - 备用源
+        {
+          name: 'Frankfurter',
+          url: 'https://api.frankfurter.app/latest',
+          parseRates: d => d.rates,
+          isUSD: false // 基础货币是 EUR
+        }
+      ];
+
+      // 历史数据 API (目前仅保留 Frankfurter)
+      const historyApi = {
+        url:'https://api.frankfurter.app',
+        // 优化后的 fetchHistory: 一次性获取指定日期范围数据
+        fetchHistory:async(base,target,days)=>{
+          const today = new Date();
+          // Frankfurter API 不支持当天数据，所以 endDate 设为昨天
+          const end = new Date(); end.setDate(today.getDate()-1);
+          const start = new Date(); start.setDate(today.getDate()-days);
+          const s=start.toISOString().split('T')[0], e=end.toISOString().split('T')[0];
+
+          try{
+            // 1. 获取目标货币兑 EUR 的历史数据 (EUR -> Target)
+            const rt=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${target}`);
+            if(!rt.ok) throw new Error("Target history fetch failed");
+            const dt=await rt.json();
+            const targetRates = dt.rates;
+
+            let finalRates = [];
+
+            if(base==='EUR'){
+              // Case 1: Base is EUR
+              finalRates = Object.keys(targetRates).map(dtKey=>{
+                return {date:dtKey, rate:targetRates[dtKey][target]};
+              }).filter(d=>d.rate).sort((a,b)=>new Date(a.date)-new Date(b.date)); // 排序确保时间顺序
+
+            }else{
+              // Case 2: Base is not EUR, calculate using EUR intermediary: (EUR -> Target) / (EUR -> Base)
+              // 2. 获取基准货币兑 EUR 的历史数据 (EUR -> Base)
+              const rb=await fetch(`${historyApi.url}/${s}..${e}?from=EUR&to=${base}`);
+              if(!rb.ok) throw new Error("Base history fetch failed");
+              const db=await rb.json();
+              const baseRates = db.rates;
+
+              finalRates = Object.keys(targetRates).map(dtKey=>{
+                const targetRate = targetRates[dtKey] ? targetRates[dtKey][target] : null;
+                const baseRate = baseRates[dtKey] ? baseRates[dtKey][base] : null;
+
+                if(targetRate && baseRate){
+                  return {date:dtKey, rate:targetRate/baseRate};
+                }
+                return null;
+              }).filter(Boolean).sort((a,b)=>new Date(a.date)-new Date(b.date));
+            }
+
+            // 补充当天的实时数据作为最后一个点 (如果有的话)
+            const currentRate = exchangeRates[target] / exchangeRates[base];
+            if(currentRate && finalRates.length > 0){
+                finalRates.push({
+                    date: today.toISOString().split('T')[0],
+                    rate: currentRate
+                });
+            }
+
+            return finalRates;
+
+          }catch(e){
+            console.error("历史数据获取失败:", e);
+            throw new Error("历史数据获取失败");
+          }
+        }
+      };
+
+      // --- 拖拽排序相关逻辑 ---
+
+      // 加载缓存的排序
+      function loadOrder(){
+        const savedOrder = localStorage.getItem(CURRENCY_ORDER_KEY);
+        if(savedOrder){
+          try{
+            const savedCodes = JSON.parse(savedOrder);
+            // 过滤掉不再支持的币种，并确保包含所有当前币种
+            const newOrder = savedCodes.filter(code => allCurrenciesMap[code]);
+            const missingCodes = Object.keys(allCurrenciesMap).filter(code => !newOrder.includes(code));
+            currentCurrencyCodes = [...newOrder, ...missingCodes];
+          }catch(e){
+            console.error("加载排序失败，使用默认顺序:", e);
+            currentCurrencyCodes = Object.keys(allCurrenciesMap);
+          }
+        } else {
+            currentCurrencyCodes = Object.keys(allCurrenciesMap);
         }
       }
-    };
 
-    function createCurrencyItems(){
-      const list=document.getElementById('currencyList'); list.innerHTML='';
-      Object.entries(currencies).forEach(([code,info])=>{
-        list.innerHTML+=`
-          <div class="currency-item">
-            <div class="currency-left">
-              <img src="https://flagcdn.com/w40/${info.country}.png" class="flag" alt="${code}">
-              <div class="currency-info"><div class="currency-code">${code}</div><div class="currency-name">${info.name}</div></div>
-            </div>
-            <div class="currency-middle" id="rate-${code}" onclick="showHistoryChart('${code}')">汇率: 加载中...</div>
-            <div class="currency-right"><input type="number" id="input-${code}" class="currency-input" placeholder="0.00"
-              oninput="onInputChange('${code}')" onfocus="onInputFocus('${code}')"></div>
-          </div>`;
-      });
-    }
+      // 保存当前排序
+      function saveOrder(){
+        // currentCurrencyCodes 已经是在 onEnd 事件中更新后的顺序
+        localStorage.setItem(CURRENCY_ORDER_KEY, JSON.stringify(currentCurrencyCodes));
+      }
 
-    async function fetchExchangeRates(){
-      updateStatus('loading','正在获取最新汇率数据...');
-      try{
-        const r=await fetch(rateSources[0].url); const d=await r.json();
-        exchangeRates=rateSources[0].parseRates(d); exchangeRates['USD']=1;
-        updateStatus('success','汇率数据获取成功'); updateRateDisplays();
-        document.getElementById('lastUpdated').textContent=`汇率数据更新时间: ${new Date().toLocaleString('zh-CN')}`;
-      }catch{useSimulatedRates();}
-    }
+      // 初始化 SortableJS
+      function initSortable(){
+        const list = document.getElementById('currencyList');
+        Sortable.create(list, {
+          animation: 150,
+          handle: '.drag-handle', // 拖拽手柄类名
+          ghostClass: 'sortable-ghost', // 拖拽时幽灵元素的类名 (CSS 中已定义)
+          onEnd: function (evt) {
+            // 更新 currentCurrencyCodes 数组
+            const item = currentCurrencyCodes[evt.oldIndex];
+            currentCurrencyCodes.splice(evt.oldIndex, 1);
+            currentCurrencyCodes.splice(evt.newIndex, 0, item);
 
-    function useSimulatedRates(){
-      exchangeRates={USD:1,EUR:0.85,CNY:7.25,JPY:148.5,GBP:0.78,AUD:1.52,CAD:1.36,CHF:0.91,HKD:7.8,SGD:1.35,KRW:1320,INR:83.2};
-      updateStatus('success','汇率数据加载完成 (模拟数据)'); updateRateDisplays();
-      document.getElementById('lastUpdated').textContent=`汇率数据更新时间: ${new Date().toLocaleString('zh-CN')} (模拟)`;
-    }
+            saveOrder(); // 保存新的排序到 LocalStorage
 
-    function updateStatus(t,m){const el=document.getElementById('status');el.className=`status ${t}`;el.innerHTML=t==='loading'?`<div class="spinner"></div>${m}`:m;}
-    function updateRateDisplays(){
-      Object.keys(currencies).forEach(c=>{
-        const el=document.getElementById(`rate-${c}`);
-        if(c===baseCurrency) el.textContent='汇率: 1.0000 (基准) (点击查看)';
-        else{const r=exchangeRates[c]/exchangeRates[baseCurrency]; el.textContent=r?`汇率: ${r.toFixed(4)} (点击查看)`:'汇率: 数据不可用';}
-      });
-    }
+            // 重新计算汇率（确保基准货币仍然有效）
+            updateRateDisplays();
+            const activeInputCode = currentCurrencyCodes.find(k=>{
+              const val = document.getElementById(`input-${k}`).value.replace(/,/g,'');
+              return parseFloat(val) > 0;
+            });
+            if(activeInputCode) onInputChange(activeInputCode);
+          },
+        });
+      }
 
-    function onInputChange(c){
-      if(isUpdating||!exchangeRates[c])return;
-      const val=parseFloat(document.getElementById(`input-${c}`).value)||0;
-      baseCurrency=c; updateRateDisplays(); isUpdating=true;
-      Object.keys(currencies).forEach(k=>{
-        if(k!==c){document.getElementById(`input-${k}`).value=(val*exchangeRates[k]/exchangeRates[c]).toFixed(2);}
-      });
-      isUpdating=false;
-    }
-    function onInputFocus(c){baseCurrency=c;updateRateDisplays();}
+      // --- 汇率转换及渲染逻辑 ---
 
-    async function refreshRates(){
-      const b=document.getElementById('refreshBtn');b.disabled=true;b.innerHTML='<div class="spinner"></div>刷新中...';
-      await fetchExchangeRates();
-      const act=Object.keys(currencies).find(k=>parseFloat(document.getElementById(`input-${k}`).value)>0);
-      if(act)onInputChange(act);
-      b.disabled=false;b.innerHTML='🔄 刷新汇率';
-    }
+      function formatNumber(num){
+        if(isNaN(num)) return '';
+        return num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
 
-    async function showHistoryChart(t){
-      if(myChart)myChart.destroy();
-      const modal=document.getElementById('historyModal'); modal.classList.add('active');
-      const ctx=document.getElementById('historyChart').getContext('2d');
-      if(t===baseCurrency){ctx.clearRect(0,0,400,300);ctx.fillText('基准货币恒定为1',200,150);return;}
-      try{
-        const data=await historyApi.fetchHistory(baseCurrency,t,30);
-        const labels=data.map(d=>new Date(d.date).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'}));
-        const rates=data.map(d=>d.rate.toFixed(4));
-        myChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:`${baseCurrency}→${t}`,data:rates,borderColor:'#4facfe',fill:true,tension:0.2}]},options:{responsive:true,maintainAspectRatio:false}});
-      }catch{ctx.fillText('历史数据获取失败',200,150);}
-    }
-    function closeHistoryModal(){document.getElementById('historyModal').classList.remove('active'); if(myChart){myChart.destroy();myChart=null;}}
-    window.onload=()=>{createCurrencyItems();fetchExchangeRates();};
-  </script>
+      function createCurrencyItems(){
+        const list=document.getElementById('currencyList'); list.innerHTML='';
+        // 使用 currentCurrencyCodes 数组进行渲染
+        currentCurrencyCodes.forEach(code=>{
+          const info = allCurrenciesMap[code];
+          if(!info) return; // 略过无效币种
+
+          list.innerHTML+=`
+            <div class="currency-item" data-code="${code}">
+              <span class="drag-handle" title="拖拽以重新排序">⋮⋮</span> <div class="currency-left">
+                <img src="https://flagcdn.com/w40/${info.country}.png" class="flag" alt="${code}">
+                <div class="currency-info"><div class="currency-code">${code}</div><div class="currency-name">${info.name}</div></div>
+              </div>
+              <div class="currency-middle" id="rate-${code}" onclick="showHistoryChart('${code}')">汇率: 加载中...</div>
+              <div class="currency-right"><input type="text" id="input-${code}" class="currency-input" placeholder="0.00"
+                oninput="onInputChange('${code}')" onfocus="onInputFocus('${code}')"></div>
+            </div>`;
+        });
+
+        // 渲染完成后初始化拖拽功能
+        initSortable();
+      }
+
+      async function fetchExchangeRates(){
+        updateStatus('loading', '<div class="spinner"></div> 正在获取最新汇率数据...');
+        const refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.disabled = true;
+
+        for (const source of rateSources) {
+          try {
+            const r = await fetch(source.url);
+            if (!r.ok) throw new Error(`Fetch failed for ${source.name}`);
+
+            const d = await r.json();
+            let rates = source.parseRates(d);
+
+            if (!source.isUSD) {
+              // 转换为 USD 基准
+              const eurToUsdRate = rates['USD'];
+              if (!eurToUsdRate) throw new Error("Missing USD rate for conversion.");
+
+              const usdRates = {};
+              for (const code in rates) {
+                usdRates[code] = rates[code] / eurToUsdRate;
+              }
+              exchangeRates = usdRates;
+            } else {
+              exchangeRates = rates;
+            }
+
+            exchangeRates['USD'] = 1; // 确保基准是 1
+
+            updateStatus('success', `汇率数据获取成功 (来源: ${source.name})`);
+            updateRateDisplays();
+            document.getElementById('lastUpdated').textContent = `汇率数据更新时间: ${new Date().toLocaleString('zh-CN')} (来源: ${source.name})`;
+            refreshBtn.disabled = false;
+            refreshBtn.innerHTML='🔄 刷新汇率';
+            return; // 成功后退出循环
+
+          } catch (e) {
+            console.error(`尝试从 ${source.name} 获取失败:`, e);
+            // 继续尝试下一个源
+          }
+        }
+
+        // 所有源都失败了
+        useSimulatedRates();
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML='🔄 刷新汇率';
+      }
+
+      function useSimulatedRates(){
+        exchangeRates = {
+          USD:1, EUR:0.85, CNY:7.25, JPY:148.5, GBP:0.78, AUD:1.52,
+          CAD:1.36, CHF:0.91, HKD:7.8, SGD:1.35, KRW:1320, INR:83.2,
+          THB:34.1, VND:23600,
+          RUB:90.5, ZAR:19.7, TWD:30.5, IDR:15500, MYR:4.7, PHP:56.2,
+          TRY:27.0
+        };
+
+        updateStatus('error','汇率数据获取失败，使用本地模拟数据');
+        updateRateDisplays();
+        document.getElementById('lastUpdated').textContent=`汇率数据更新时间: ${new Date().toLocaleString('zh-CN')} (模拟)`;
+      }
+
+      function updateStatus(t,m){const el=document.getElementById('status');el.className=`status ${t}`;el.innerHTML=m;}
+      function updateRateDisplays(){
+        currentCurrencyCodes.forEach(c=>{
+          const el=document.getElementById(`rate-${c}`);
+          if(!el) return; // 跳过未渲染的元素
+
+          if(c===baseCurrency) el.textContent='汇率: 1.0000 (基准) (点击查看)';
+          else{
+            if(!exchangeRates[baseCurrency] || !exchangeRates[c]) {
+                el.textContent = '汇率: 数据不可用';
+                return;
+            }
+            const r=exchangeRates[c]/exchangeRates[baseCurrency];
+            el.textContent=r?`汇率: ${r.toFixed(4)} (点击查看)`:'汇率: 数据不可用';
+          }
+        });
+      }
+
+      function onInputChange(c){
+        if(isUpdating || !exchangeRates[c]) return;
+        const val=parseFloat(document.getElementById(`input-${c}`).value.replace(/,/g,'')) || 0;
+        baseCurrency=c; updateRateDisplays(); isUpdating=true;
+        currentCurrencyCodes.forEach(k=>{
+          if(k!==c){
+            if(!exchangeRates[k] || !exchangeRates[c]) {
+                document.getElementById(`input-${k}`).value = ''; // 数据不可用则清空
+                return;
+            }
+            const converted = val*exchangeRates[k]/exchangeRates[c];
+            document.getElementById(`input-${k}`).value = formatNumber(converted);
+          }
+        });
+        isUpdating=false;
+      }
+
+      function onInputFocus(c){
+        baseCurrency=c; updateRateDisplays();
+        const input = document.getElementById(`input-${c}`);
+        input.value = input.value.replace(/,/g,''); // 去掉千分位方便编辑
+      }
+
+      async function refreshRates(){
+        const b=document.getElementById('refreshBtn');b.disabled=true;b.innerHTML='<div class="spinner"></div>刷新中...';
+        await fetchExchangeRates();
+        // 刷新后，重新计算当前输入的货币
+        const activeInputCode = currentCurrencyCodes.find(k=>{
+            const val = document.getElementById(`input-${k}`).value.replace(/,/g,'');
+            return parseFloat(val) > 0;
+        });
+        if(activeInputCode) onInputChange(activeInputCode);
+        else if (document.getElementById(`input-${baseCurrency}`).value.length > 0) onInputChange(baseCurrency);
+
+        b.disabled=false;b.innerHTML='🔄 刷新汇率';
+      }
+
+      // ------------------- 历史图表逻辑优化 -------------------
+
+      // 辅助函数：根据天数计算起始日期
+      function getDaysFromToday(days) {
+          if (days === 0) return 0; // 0 days means today for current rate
+          const d = new Date();
+          // Frankfurter API 不支持当天数据，所以历史数据应至少从昨天开始
+          if (days > 0) d.setDate(d.getDate() - days);
+          return d;
+      }
+
+      // 封装：显示历史图表模态框
+      function showHistoryChart(targetCode, days = 30){
+          currentTarget = targetCode; // 保存当前目标货币
+
+          if(targetCode === baseCurrency){
+              // 对于基准货币，无需请求 API，直接显示提示
+              document.getElementById('modalTitle').textContent = `${baseCurrency} (基准)`;
+              const ctx = document.getElementById('historyChart').getContext('2d');
+              if(myChart) myChart.destroy();
+              ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); // 清空画布
+              ctx.font = '16px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#24374a';
+              ctx.fillText('基准货币恒定为1，无历史波动', ctx.canvas.width/2, ctx.canvas.height/2);
+              document.getElementById('historyStats').innerHTML = '';
+              document.getElementById('historyModal').classList.add('active');
+
+              // 确保按钮选中状态正确
+              document.querySelectorAll('#timeRangeButtons button').forEach(btn => {
+                  btn.classList.remove('active');
+              });
+
+              return;
+          }
+
+          const modal=document.getElementById('historyModal');
+          modal.addEventListener('click', (e) => { if (e.target === modal) closeHistoryModal(); });
+          modal.classList.add('active');
+
+          loadHistory(targetCode, days);
+      }
+
+      // 封装：加载历史数据和渲染图表
+      async function loadHistory(targetCode, days){
+          const modalTitle = document.getElementById('modalTitle');
+          const chartCanvas = document.getElementById('historyChart');
+          const ctx=chartCanvas.getContext('2d');
+          const statsDiv = document.getElementById('historyStats');
+
+          if(myChart) myChart.destroy();
+          ctx.clearRect(0,0,chartCanvas.width,chartCanvas.height); // 清空画布
+
+          // ************ 修复：更新按钮选中状态 ************
+          document.querySelectorAll('#timeRangeButtons button').forEach(btn => {
+              btn.classList.remove('active');
+              if(parseInt(btn.dataset.days) === days) {
+                  btn.classList.add('active');
+              }
+          });
+          // **********************************************
+
+          // 临时显示加载中
+          modalTitle.textContent = `${baseCurrency} 到 ${targetCode} 历史汇率 (正在加载...)`;
+          statsDiv.innerHTML = `<div class="status loading" style="width:100%"><div class="spinner"></div> 正在获取历史数据...</div>`;
+
+          try{
+              const data=await historyApi.fetchHistory(baseCurrency, targetCode, days);
+
+              if(data.length === 0){
+                  modalTitle.textContent = `${baseCurrency} 到 ${targetCode} 历史汇率 (近${days}天)`;
+                  statsDiv.innerHTML = '';
+                  ctx.font = '16px sans-serif';
+                  ctx.textAlign = 'center';
+                  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--status-error-color').trim() || '#c62828';
+                  ctx.fillText('历史数据获取失败或无数据', chartCanvas.width/2, chartCanvas.height/2);
+                  return;
+              }
+
+              // 1. 数据准备
+              const labels=data.map(d=>new Date(d.date).toLocaleDateString('zh-CN',{month:'numeric',day:'numeric', year: days >= 365 ? '2-digit' : undefined}));
+              const rates=data.map(d=>d.rate);
+
+              // 2. 统计数据
+              const minRate = Math.min(...rates);
+              const maxRate = Math.max(...rates);
+              const firstRate = rates[0];
+              const lastRate = rates[rates.length - 1];
+              const change = lastRate - firstRate;
+              const changePercent = (change / firstRate) * 100;
+
+              // 查找最高点和最低点索引
+              const minIndex = rates.indexOf(minRate);
+              const maxIndex = rates.indexOf(maxRate);
+
+              // Chart.js 配置：标记点
+              const pointBackgroundColors = rates.map((rate, index) => {
+                  if (index === minIndex) return getComputedStyle(document.documentElement).getPropertyValue('--stat-negative').trim() || '#c62828'; // 最低点红色
+                  if (index === maxIndex) return getComputedStyle(document.documentElement).getPropertyValue('--stat-positive').trim() || '#2e7d32'; // 最高点绿色
+                  return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3a8edb'; // 其他点
+              });
+              const pointRadii = rates.map((rate, index) => {
+                  if (index === minIndex || index === maxIndex) return 6; // 突出显示
+                  return 3;
+              });
+
+              // 3. 渲染图表
+              const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#3a8edb';
+              const chartColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#24374a';
+
+              myChart=new Chart(ctx,{
+                type:'line',
+                data:{
+                    labels,
+                    datasets:[{
+                        label:`${baseCurrency}→${targetCode}`,
+                        data:rates,
+                        borderColor:accent,
+                        backgroundColor:accent+'30',
+                        fill:true,
+                        tension:0.2,
+                        pointRadius: pointRadii,
+                        pointBackgroundColor: pointBackgroundColors,
+                    }]
+                },
+                options:{
+                    responsive:true,
+                    maintainAspectRatio:false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: chartColor,
+                                maxTicksLimit: 10 // 限制横坐标标签数量，尤其对1年/5年图表
+                            },
+                            grid: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--card-border').trim()
+                            }
+                        },
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) { return value.toFixed(4); },
+                                color: chartColor
+                            },
+                            grid: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--card-border').trim()
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` 汇率: ${context.parsed.y.toFixed(4)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+              });
+              
+              // 4. 渲染统计数据
+              const changeClass = change > 0 ? 'stat-change-up' : change < 0 ? 'stat-change-down' : change === 0 ? 'stat-change-neutral' : '';
+              const changeSign = change > 0 ? '↑' : change < 0 ? '↓' : '';
+
+              const statHtml = `
+                  <div class="stat-item">
+                      <div>起始汇率 (${labels[0]}):</div>
+                      <div class="stat-value">${firstRate.toFixed(4)}</div>
+                  </div>
+                  <div class="stat-item">
+                      <div>结束汇率 (${labels[labels.length-1]}):</div>
+                      <div class="stat-value">${lastRate.toFixed(4)}</div>
+                  </div>
+                  <div class="stat-item">
+                      <div>${days}天变化:</div>
+                      <div class="stat-value ${changeClass}">${changeSign} ${Math.abs(change).toFixed(4)} (${changePercent.toFixed(2)}%)</div>
+                  </div>
+                  <div class="stat-item">
+                      <div>最高汇率 (${labels[maxIndex]}):</div>
+                      <div class="stat-value stat-high">${maxRate.toFixed(4)}</div>
+                  </div>
+                  <div class="stat-item">
+                      <div>最低汇率 (${labels[minIndex]}):</div>
+                      <div class="stat-value stat-low">${minRate.toFixed(4)}</div>
+                  </div>
+              `;
+              statsDiv.innerHTML = statHtml;
+              modalTitle.textContent = `${baseCurrency} 到 ${targetCode} 历史汇率 (近${days}天)`;
+
+
+          }catch(e){
+              console.error("Chart Error:", e);
+              modalTitle.textContent = `${baseCurrency} 到 ${targetCode} 历史汇率`;
+              statsDiv.innerHTML = '';
+              ctx.font = '16px sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--status-error-color').trim() || '#c62828';
+              ctx.fillText('历史数据获取失败，请稍后重试', chartCanvas.width/2, chartCanvas.height/2);
+          }
+      }
+
+      function closeHistoryModal(){document.getElementById('historyModal').classList.remove('active'); if(myChart){myChart.destroy(); myChart=null; currentTarget=null;}}
+
+      window.onload=()=>{
+        loadThemeUI();
+        loadOrder(); // 页面加载时先读取缓存的排序
+        createCurrencyItems(); // 根据排序渲染列表
+        fetchExchangeRates();
+      };
+    </script>
 </body>
 </html>
