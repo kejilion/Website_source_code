@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <script defer src="https://umami.lion123.eu.org/script.js" data-website-id="771d72c4-8506-4524-8e33-2d73370d8618"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kejilion.sh 开发者应用入驻指南</title>
+    <meta name="description" content="kejilion.sh 第三方应用开发与入驻官方指南">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Code Block Styling */
+        .code-preview {
+            counter-reset: line;
+        }
+        .code-line::before {
+            counter-increment: line;
+            content: counter(line);
+            display: inline-block;
+            width: 2rem;
+            margin-right: 1rem;
+            text-align: right;
+            color: #64748b;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans antialiased">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="terminal" class="h-8 w-8 text-primary-600 dark:text-primary-500"></i>
+                    <span class="font-bold text-xl tracking-tight">kejilion<span class="text-primary-600 dark:text-primary-500">.sh</span></span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="langToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium">
+                        <i data-lucide="languages" class="w-5 h-5"></i>
+                        <span id="langLabel">English</span>
+                    </button>
+                    <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-yellow-500 dark:text-blue-400">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-30 dark:opacity-20">
+            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary-500 blur-3xl mix-blend-multiply filter"></div>
+            <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-purple-500 blur-3xl mix-blend-multiply filter"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-medium mb-6 animate-fade-in-up">
+                <span class="flex h-2 w-2 rounded-full bg-primary-500 mr-2"></span>
+                <span data-key="hero.badge">Open Source Contribution</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+                <span data-key="hero.title1">Developer App</span><br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600 dark:from-primary-400 dark:to-purple-400" data-key="hero.title2">Onboarding Guide</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400" data-key="hero.desc">
+                Welcome to contribute to kejilion.sh! Create a simple configuration file to integrate your application into the script's ecosystem.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#quick-start" class="px-8 py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-lg shadow-primary-500/30 transition-all transform hover:-translate-y-1" data-key="btn.start">
+                    Quick Start
+                </a>
+                <a href="#template" class="px-8 py-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold transition-all" data-key="btn.template">
+                    View Template
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pb-24">
+        <!-- NEW SECTION: Why Join? -->
+        <section id="why-join" class="animate-fade-in-up">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4" data-key="why.title">Why Join kejilion.sh?</h2>
+                <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto" data-key="why.subtitle">Join the leading server management ecosystem and reach unlimited possibilities.</p>
+            </div>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Stat Card 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all transform hover:-translate-y-1 text-center group">
+                        <div class="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="download" class="w-6 h-6"></i>
+                        </div>
+                        <div class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 mb-2">400k+</div>
+                        <div class="font-bold text-gray-800 dark:text-white mb-1" data-key="why.stat1.label">Total Installs</div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" data-key="why.stat1.desc">Massive user base waiting for your app.</p>
+                    </div>
+                    <!-- Stat Card 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all transform hover:-translate-y-1 text-center group">
+                        <div class="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                            <i data-lucide="layout-grid" class="w-6 h-6"></i>
+                        </div>
+                        <div class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-2">100+</div>
+                        <div class="font-bold text-gray-800 dark:text-white mb-1" data-key="why.stat2.label">Top Projects</div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" data-key="why.stat2.desc">Stand alongside Nginx, Docker, Alist...</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Benefit Card 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all transform hover:-translate-y-1 group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="rocket" class="w-6 h-6 text-orange-500"></i>
+                            <h3 class="font-bold text-gray-800 dark:text-white" data-key="why.ben1.title">Zero Friction</h3>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed" data-key="why.ben1.desc">
+                            Users install your app with a single command. Remove the complexity of deployment and let users focus on using your product.
+                        </p>
+                    </div>
+                    <!-- Benefit Card 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all transform hover:-translate-y-1 group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-lucide="users" class="w-6 h-6 text-green-500"></i>
+                            <h3 class="font-bold text-gray-800 dark:text-white" data-key="why.ben2.title">Dev Community</h3>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed" data-key="why.ben2.desc">
+                            Join a thriving open-source community. Gain exposure, feedback, and contribution from thousands of VPS enthusiasts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Step 1: Quick Start -->
+        <section id="quick-start" class="scroll-mt-24">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center gap-3">
+                        <span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-lg">1</span>
+                        <span data-key="step1.title">Quick Start</span>
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-6" data-key="step1.desc">
+                        Create a configuration file named after your application in the <code class="text-pink-500 font-mono text-sm bg-pink-50 dark:bg-pink-900/20 px-1 py-0.5 rounded">apps/</code> directory.
+                    </p>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+                        <div class="flex items-center gap-2 mb-2 text-sm text-gray-500 dark:text-gray-400 font-mono">
+                            <i data-lucide="folder-open" class="w-4 h-4"></i>
+                            <span>Project Structure</span>
+                        </div>
+                        <ul class="space-y-2 font-mono text-sm">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="folder-open" class="w-4 h-4 text-blue-400"></i>
+                                <span>apps/</span>
+                            </li>
+                            <li class="flex items-center gap-2 ml-4 text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded w-fit animate-pulse">
+                                <i data-lucide="file-code" class="w-4 h-4"></i>
+                                <span>myapp.conf</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex-1 w-full">
+                    <!-- Illustration could go here, or just balanced space -->
+                    <div class="bg-gradient-to-br from-primary-50 to-purple-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
+                        <h3 class="font-bold mb-4" data-key="step1.tips.title">Pro Tip</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5"></i>
+                                <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="step1.tips.1">File name becomes the App ID automatically.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mt-0.5"></i>
+                                <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="step1.tips.2">Use lowercase letters and hyphens only (e.g., my-app.conf).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Step 2: Configuration Template -->
+        <section id="template" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-lg">2</span>
+                <span data-key="step2.title">Configuration Template</span>
+            </h2>
+            <p class="mb-6 text-gray-600 dark:text-gray-300" data-key="step2.desc">
+                Copy this template exactly. Follow the naming conventions for variables and functions.
+            </p>
+            <div class="relative group rounded-xl overflow-hidden bg-[#1e293b] shadow-2xl ring-1 ring-white/10">
+                <div class="flex justify-between items-center px-4 py-3 bg-[#0f172a] border-b border-gray-700">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span class="text-gray-400 text-xs font-mono">myapp.conf</span>
+                    <button onclick="copyCode()" class="text-gray-400 hover:text-white transition-colors p-1">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="p-4 overflow-x-auto">
+<pre id="codeTemplate" class="text-sm font-mono leading-relaxed text-gray-300">
+<span class="text-gray-500"># --- 基础信息 / Basic Information ---</span>
+<span class="text-purple-400">local</span> app_id=<span class="text-green-400">"1000+"</span> <span class="text-gray-500"># 1000以上 / Or any unique number</span>
+<span class="text-purple-400">local</span> app_name=<span class="text-green-400">"My App Name"</span> <span class="text-gray-500"># 应用显示名称</span>
+<span class="text-purple-400">local</span> app_text=<span class="text-green-400">"A brief description"</span> <span class="text-gray-500"># 一句话简介，说明应用用途</span>
+<span class="text-purple-400">local</span> app_url=<span class="text-green-400">"https://github.com/..."</span> <span class="text-gray-500"># 官网链接 / Official URL</span>
+<span class="text-purple-400">local</span> docker_name=<span class="text-green-400">"myapp_container"</span> <span class="text-gray-500"># 容器启动后的名称 / Container Name</span>
+<span class="text-purple-400">local</span> docker_port=<span class="text-green-400">"8080"</span> <span class="text-gray-500"># 默认访问端口 / Default Port</span>
+<span class="text-purple-400">local</span> app_size=<span class="text-green-400">"1"</span> <span class="text-gray-500"># 占用空间大小(GB) / Size in GB required (1-10)</span>
+<span class="text-gray-500"># --- 核心逻辑 / Core Logic ---</span>
+<span class="text-blue-400">docker_app_install()</span> {
+    <span class="text-gray-500"># 必须在 /home/docker/ 下创建应用目录 / Directory creation (Mandatory)</span>
+    mkdir -p /home/docker/myapp && cd /home/docker/myapp
+    <span class="text-gray-500"># 下载并配置 compose 文件 / Download compose file</span>
+    <span class="text-gray-500"># 务必使用 gh_proxy 变量 / Use gh_proxy for China access</span>
+    curl -L -o docker-compose.yml <span class="text-green-400">"${gh_proxy}https://raw.githubusercontent.com/..."</span>
+    <span class="text-gray-500"># 端口处理（使用变量以便用户自定义）/ Port configuration (Customizable)</span>
+    sed -i <span class="text-green-400">"s/8080:8080/${docker_port}:8080/g"</span> docker-compose.yml
+    <span class="text-gray-500"># 启动容器 / Start container</span>
+    docker compose up -d
+    echo <span class="text-green-400">"安装完成 / Install Complete"</span>
+}
+<span class="text-blue-400">docker_app_update()</span> {
+    cd /home/docker/myapp
+    docker compose pull
+    docker compose up -d
+    echo <span class="text-green-400">"更新完成 / Update Complete"</span>
+}
+<span class="text-blue-400">docker_app_uninstall()</span> {
+    cd /home/docker/myapp
+    <span class="text-gray-500"># 停止并删除镜像 / Stop and remove images</span>
+    docker compose down --rmi all
+    <span class="text-gray-500"># 彻底物理删除目录 / Clean up directory</span>
+    rm -rf /home/docker/myapp
+    echo <span class="text-green-400">"卸载完成 / Uninstall Complete"</span>
+}
+<span class="text-gray-500"># --- 注册 (必须包含) / Registration (Mandatory) ---</span>
+docker_app_plus
+</pre>
+                </div>
+            </div>
+        </section>
+        <!-- Step 3: Rules & Principles -->
+        <section id="rules" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-lg">3</span>
+                <span data-key="step3.title">Mandatory Rules & Principles</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                            <i data-lucide="hard-drive" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-key="rules.path.title">Directory Standards</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex gap-2">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.path.must"><strong class="text-gray-900 dark:text-white">MUST:</strong> All data in <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">/home/docker/[app_name]</code></span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i data-lucide="x" class="w-5 h-5 text-red-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.path.ban"><strong class="text-gray-900 dark:text-white">BAN:</strong> No data in /root, /etc, /var/lib</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400">
+                            <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-key="rules.lifecycle.title">Lifecycle</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex gap-2">
+                            <i data-lucide="power" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.lifecycle.restart">Compose must include <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">restart: always</code></span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i data-lucide="trash-2" class="w-5 h-5 text-red-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.lifecycle.uninstall">Uninstall must be clean (rm images & folder)</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-yellow-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg text-yellow-600 dark:text-yellow-400">
+                            <i data-lucide="code" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-key="rules.vars.title">Syntax & Variables</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex gap-2">
+                            <i data-lucide="shield" class="w-5 h-5 text-green-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.vars.local">Use <code class="text-purple-600 dark:text-purple-400">local</code> keyword for all variables</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <i data-lucide="hash" class="w-5 h-5 text-gray-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.vars.id">App ID can be arbitrary; filename is key</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border-l-4 border-green-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400">
+                            <i data-lucide="globe" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold" data-key="rules.net.title">Network</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex gap-2">
+                            <i data-lucide="zap" class="w-5 h-5 text-yellow-500 flex-shrink-0"></i>
+                            <span class="text-gray-600 dark:text-gray-300 text-sm" data-key="rules.net.proxy">Use <code class="text-pink-600 dark:text-pink-400">${gh_proxy}</code> for Github URLs</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- Step 4: Quick Launch -->
+        <section id="launch" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 flex items-center gap-3">
+                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-lg">4</span>
+                <span data-key="step4.title">Quick Launch & Call</span>
+            </h2>
+            <p class="mb-6 text-gray-600 dark:text-gray-300" data-key="step4.desc">
+                Once merged, your app appears in the "Third Party" module. You can also provide a one-line install command for users:
+            </p>
+            <div class="bg-gray-900 rounded-lg p-6 shadow-xl relative group">
+                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="copyInstallCmd()" class="text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded text-xs flex items-center gap-2">
+                        <i data-lucide="copy" class="w-3 h-3"></i> <span data-key="btn.copy">Copy</span>
+                    </button>
+                </div>
+                <h4 class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2" data-key="step4.cmdLabel">Installation Command</h4>
+                <code class="text-green-400 font-mono text-lg break-all" id="installCmd">
+                    bash <(curl -sL kejilion.sh) app <span class="text-yellow-400">[filename]</span>
+                </code>
+                <p class="mt-4 text-gray-500 text-sm">
+                    <span data-key="step4.example">Example:</span> <span class="font-mono text-gray-400">bash <(curl -sL kejilion.sh) app myapp</span>
+                </p>
+            </div>
+        </section>
+        <!-- Step 5: Process -->
+        <section id="process" class="scroll-mt-24 mb-24">
+            <h2 class="text-3xl font-bold mb-10 flex items-center gap-3">
+                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-lg">5</span>
+                <span data-key="step5.title">Onboarding Process</span>
+            </h2>
+            <div class="relative">
+                <!-- Line -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 z-0"></div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 text-center">
+                        <div class="w-12 h-12 mx-auto bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4 font-bold text-xl">1</div>
+                        <h3 class="font-bold text-lg mb-2" data-key="process.1.title">Self Test</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-key="process.1.desc">Run install/update/uninstall on your VPS. Ensure zero errors.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 text-center">
+                        <div class="w-12 h-12 mx-auto bg-purple-100 dark:bg-purple-900/50 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-400 mb-4 font-bold text-xl">2</div>
+                        <h3 class="font-bold text-lg mb-2" data-key="process.2.title">Audit Path</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-key="process.2.desc">Check /home/docker/ for correct generation. No file overflow.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 text-center">
+                        <div class="w-12 h-12 mx-auto bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400 mb-4 font-bold text-xl">3</div>
+                        <h3 class="font-bold text-lg mb-2" data-key="process.3.title">Submit PR</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-key="process.3.desc">Submit your .conf file to sh/apps/ directory via Pull Request.</p>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 text-center">
+                        <div class="w-12 h-12 mx-auto bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4 font-bold text-xl">4</div>
+                        <h3 class="font-bold text-lg mb-2" data-key="process.4.title">Publish</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-key="process.4.desc">Maintainers review logic safety. Once merged, it's live.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="terminal" class="h-6 w-6 text-gray-400"></i>
+                <span class="font-bold text-gray-700 dark:text-gray-200">kejilion.sh</span>
+            </div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+                &copy; <span id="year"></span> Open Source Community.
+            </p>
+            <div class="flex gap-4">
+                <a href="#" class="text-gray-400 hover:text-primary-500 transition-colors">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+                    <i data-lucide="twitter" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-24 transition-transform duration-300 z-50">
+        <div class="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
+            <span id="toastMsg">Copied!</span>
+        </div>
+    </div>
+    <script>
+        // Translations
+        const i18n = {
+            zh: {
+                "hero.badge": "开源共建",
+                "hero.title1": "开发者应用",
+                "hero.title2": "入驻指南",
+                "hero.desc": "欢迎为 kejilion.sh 贡献应用！只需创建一个简单的配置文件，您的应用即可自动集成到脚本的应用市场中。",
+                "btn.start": "快速开始",
+                "btn.template": "查看模板",
+                "why.title": "为什么要入驻？",
+                "why.subtitle": "加入全球领先的服务器管理脚本生态，让您的应用触达无限可能。",
+                "why.stat1.label": "累计装机量",
+                "why.stat1.desc": "海量用户基础，瞬间引爆流量。",
+                "why.stat2.label": "知名项目适配",
+                "why.stat2.desc": "与 n8n, dify, openlist 等顶尖应用并肩。",
+                "why.ben1.title": "零门槛分发",
+                "why.ben1.desc": "一行代码即可安装，极大降低用户部署难度，让用户专注于您的产品体验。",
+                "why.ben2.title": "开源共荣",
+                "why.ben2.desc": "加入活跃的开发者社区，获得持续曝光、技术反馈，与数万 VPS 爱好者共同成长。",
+                "step1.title": "快速开始",
+                "step1.desc": "在 <a href=\"https://github.com/kejilion/apps\" class=\"text-blue-500 hover:underline\">kejilion/apps 仓库</a> 的 <code class=\"text-pink-500 font-mono text-sm bg-pink-50 dark:bg-pink-900/20 px-1 py-0.5 rounded\">apps/</code> 目录下创建一个以应用名命名的配置文件。",
+                "step1.tips.title": "开发小贴士",
+                "step1.tips.1": "文件名将自动作为应用的唯一 ID 标识。",
+                "step1.tips.2": "请使用小写字母和连字符（如 my-app.conf）。",
+                "step2.title": "配置文件模板",
+                "step2.desc": "每个配置文件应严格遵循以下结构，确保变量和函数命名规范：",
+                "step3.title": "强制规范与原则",
+                "rules.path.title": "目录路径规范",
+                "rules.lifecycle.title": "容器生命周期",
+                "rules.vars.title": "变量与语法",
+                "rules.net.title": "网络优化",
+                "rules.path.must": "【必须】：所有持久化数据必须存储在 /home/docker/[应用名] 目录下。",
+                "rules.path.ban": "【禁止】：严禁将数据存放在 /root、/etc、/var/lib 等目录。",
+                "rules.lifecycle.restart": "生成的 docker-compose.yml 中必须包含 restart: always 或 restart: unless-stopped。",
+                "rules.lifecycle.uninstall": "卸载函数必须执行闭环操作（停止删除容器、删除镜像、物理删除目录）。",
+                "rules.vars.local": "请务必保留 local 声明，防止变量污染全局环境。",
+                "rules.vars.id": "App ID 可省略或填任意数值，主要以 .conf 文件名作为唯一识别。",
+                "rules.net.proxy": "下载 GitHub 资源时，请务必在 URL 前加上 ${gh_proxy} 变量。",
+                "step4.title": "快捷启动与调用",
+                "step4.desc": "一旦您的 .conf 文件被合入仓库，该应用将自动进入 “第三方应用入驻” 模块。此外，您可以向用户提供专属的极简安装指令：",
+                "step4.cmdLabel": "快捷安装指令",
+                "btn.copy": "复制",
+                "step4.example": "示例：",
+                "step5.title": "入驻流程",
+                "process.1.title": "本地自测",
+                "process.1.desc": "在 VPS 上完整运行安装、更新、卸载流程，确保无报错。",
+                "process.2.title": "路径审计",
+                "process.2.desc": "检查 /home/docker/ 目录下是否正确生成应用文件夹，无文件溢出。",
+                "process.3.title": "提交申请",
+                "process.3.desc": "将 [应用名].conf 文件通过 Pull Request 提交至本仓库 apps/ 目录。",
+                "process.4.title": "审核发布",
+                "process.4.desc": "维护者审核逻辑安全后，您的应用将正式上线。",
+                "langLabel": "中文"
+            },
+            en: {
+                "hero.badge": "Open Source Contribution",
+                "hero.title1": "Developer App",
+                "hero.title2": "Onboarding Guide",
+                "hero.desc": "Welcome to contribute to kejilion.sh! Create a simple configuration file to integrate your application into the script's ecosystem.",
+                "btn.start": "Quick Start",
+                "btn.template": "View Template",
+                "why.title": "Why Join kejilion.sh?",
+                "why.subtitle": "Join the leading server management ecosystem and reach unlimited possibilities.",
+                "why.stat1.label": "Total Installs",
+                "why.stat1.desc": "Massive user base waiting for your app.",
+                "why.stat2.label": "Top Projects",
+                "why.stat2.desc": "Stand alongside n8n, dify, openlist...",
+                "why.ben1.title": "Zero Friction",
+                "why.ben1.desc": "Users install your app with a single command. Remove the complexity of deployment and let users focus on using your product.",
+                "why.ben2.title": "Dev Community",
+                "why.ben2.desc": "Join a thriving open-source community. Gain exposure, feedback, and contribution from thousands of VPS enthusiasts.",
+                "step1.title": "Quick Start",
+                "step1.desc": "Create a configuration file named after your application in the <code class=\"text-pink-500 font-mono text-sm bg-pink-50 dark:bg-pink-900/20 px-1 py-0.5 rounded\">apps/</code> directory of the <a href=\"https://github.com/kejilion/apps\" class=\"text-blue-500 hover:underline\">kejilion/apps repository</a>.",
+                "step1.tips.title": "Pro Tip",
+                "step1.tips.1": "File name becomes the App ID automatically.",
+                "step1.tips.2": "Use lowercase letters and hyphens only (e.g., my-app.conf).",
+                "step2.title": "Configuration Template",
+                "step2.desc": "Copy this template exactly. Follow the naming conventions for variables and functions.",
+                "step3.title": "Mandatory Rules & Principles",
+                "rules.path.title": "Directory Standards",
+                "rules.lifecycle.title": "Container Lifecycle",
+                "rules.vars.title": "Syntax & Variables",
+                "rules.net.title": "Network Optimization",
+                "rules.path.must": "MUST: All data must be stored in /home/docker/[app_name].",
+                "rules.path.ban": "BAN: No data in /root, /etc, /var/lib, etc.",
+                "rules.lifecycle.restart": "Compose file must include 'restart: always' or 'unless-stopped'.",
+                "rules.lifecycle.uninstall": "Uninstall must be clean (stop containers, remove images, delete directory).",
+                "rules.vars.local": "Use 'local' keyword to prevent variable pollution.",
+                "rules.vars.id": "App ID can be arbitrary; the filename is the unique identifier.",
+                "rules.net.proxy": "Always prepend ${gh_proxy} to GitHub URLs for better connectivity.",
+                "step4.title": "Quick Launch & Call",
+                "step4.desc": "Once merged, your app appears in the 'Third Party' module. You can also provide a one-line install command for users:",
+                "step4.cmdLabel": "Installation Command",
+                "btn.copy": "Copy",
+                "step4.example": "Example:",
+                "step5.title": "Onboarding Process",
+                "process.1.title": "Self Test",
+                "process.1.desc": "Run install/update/uninstall on your VPS. Ensure zero errors.",
+                "process.2.title": "Audit Path",
+                "process.2.desc": "Check /home/docker/ for correct generation. No file overflow.",
+                "process.3.title": "Submit PR",
+                "process.3.desc": "Submit your .conf file to sh/apps/ directory via Pull Request.",
+                "process.4.title": "Publish",
+                "process.4.desc": "Maintainers review logic safety. Once merged, it's live.",
+                "langLabel": "English"
+            }
+        };
+        // Initialize Icons
+        lucide.createIcons();
+        // State
+        let currentLang = 'en';
+        let isDark = false;
+        // Elements
+        const html = document.documentElement;
+        const langBtn = document.getElementById('langToggle');
+        const themeBtn = document.getElementById('themeToggle');
+        const langLabel = document.getElementById('langLabel');
+        // Functions
+        function setLanguage(lang) {
+            currentLang = lang;
+            langLabel.textContent = i18n[lang].langLabel;
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (i18n[lang][key]) {
+                    el.innerHTML = i18n[lang][key];
+                }
+            });
+        }
+        function toggleTheme() {
+            isDark = !isDark;
+            if (isDark) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+        }
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.textContent = msg;
+            toast.classList.remove('translate-y-24');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24');
+            }, 2000);
+        }
+        function copyCode() {
+            const code = document.getElementById('codeTemplate').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast(currentLang === 'zh' ? '代码已复制' : 'Code Copied');
+            });
+        }
+        function copyInstallCmd() {
+            const cmd = "bash <(curl -sL kejilion.sh) app [filename]";
+            navigator.clipboard.writeText(cmd).then(() => {
+                showToast(currentLang === 'zh' ? '指令已复制' : 'Command Copied');
+            });
+        }
+        // Setup Listeners
+        langBtn.addEventListener('click', () => {
+            setLanguage(currentLang === 'zh' ? 'en' : 'zh');
+        });
+        themeBtn.addEventListener('click', toggleTheme);
+        // Init Logic
+        document.getElementById('year').textContent = new Date().getFullYear();
+        // Detect Browser Lang
+        const browserLang = navigator.language || navigator.userLanguage;
+        if (browserLang.toLowerCase().startsWith('zh')) {
+            setLanguage('zh');
+        } else {
+            setLanguage('en');
+        }
+        // Detect System Theme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            toggleTheme();
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            isDark = !event.matches; // Toggle function flips it back
+            toggleTheme();
+        });
+    </script>
+</body>
+</html>
