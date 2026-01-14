@@ -1,227 +1,530 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SNI 技术简介 | sni0.com</title>
-  <meta name="description" content="Server Name Indication（SNI）技术原理、应用场景与安全影响的简要介绍。" />
-  <style>
-    :root {
-      --bg: #0b0f14;
-      --panel: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #38bdf8;
-      --border: #1f2937;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNI0.COM - 下一代加密传输协议标准</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-base: #020205;
+            --accent-primary: #6366f1;
+            --accent-cyan: #06b6d4;
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(15, 15, 20, 0.6);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        .mono { font-family: 'JetBrains Mono', monospace; }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(180deg, #020617 0%, #020617 40%, #020617 100%);
-      color: var(--text);
-      line-height: 1.6;
-    }
+        /* 极光背景特效 */
+        .aurora-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            filter: blur(100px);
+        }
 
-    header {
-      padding: 80px 24px 60px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-    }
+        /* 网格纹理 */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
 
-    header h1 {
-      font-size: 42px;
-      margin: 0 0 16px;
-      letter-spacing: 0.5px;
-    }
+        /* 渐变文本 */
+        .text-glow {
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    header p {
-      max-width: 720px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 18px;
-    }
+        /* Bento 卡片 */
+        .bento-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 2rem;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .bento-item:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+        }
 
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 64px 24px 96px;
-    }
+        /* 动态滚动进度 */
+        #scroll-tracker {
+            position: fixed;
+            top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+            z-index: 1000;
+            width: 0%;
+            transition: width 0.1s;
+        }
 
-    section {
-      margin-bottom: 64px;
-    }
+        /* 入场动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    section h2 {
-      font-size: 28px;
-      margin-bottom: 16px;
-      border-left: 4px solid var(--accent);
-      padding-left: 12px;
-    }
+        /* 模拟终端闪烁 */
+        .blink { animation: blinker 1s step-end infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
 
-    section p {
-      max-width: 800px;
-      color: var(--text);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .card {
-      background: linear-gradient(180deg, #020617, #020617);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 20px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .code {
-      background: #020617;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px 20px;
-      font-family: "JetBrains Mono", Consolas, monospace;
-      font-size: 14px;
-      color: #e5e7eb;
-      overflow-x: auto;
-      margin-top: 16px;
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 24px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    footer span {
-      color: var(--accent);
-    }
-
-    @media (max-width: 640px) {
-      header h1 {
-        font-size: 32px;
-      }
-      header p {
-        font-size: 16px;
-      }
-    }
-  </style>
+        /* Canvas 背景容器 */
+        #particle-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Server Name Indication（SNI）</h1>
-    <p>
-      SNI 是 TLS 协议中的一项关键扩展，用于在同一 IP 地址上安全托管多个域名，
-      是现代 HTTPS 基础设施的重要组成部分。
-    </p>
-  </header>
 
-  <main>
-    <section>
-      <h2>什么是 SNI</h2>
-      <p>
-        Server Name Indication（服务器名称指示）是 TLS 握手阶段的一个扩展字段。
-        客户端在建立加密连接之前，会将目标域名以明文形式发送给服务器，
-        使服务器能够选择正确的证书完成 TLS 握手。
-      </p>
+    <div id="scroll-tracker"></div>
+    <div class="aurora-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- 导航 -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/40 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-8 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="shield-half" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="font-extrabold text-xl tracking-tighter">SNI0<span class="text-indigo-500">.COM</span></span>
+            </div>
+            <div class="hidden lg:flex gap-12 text-sm font-medium text-zinc-400">
+                <a href="#vision" class="hover:text-white transition-colors">技术愿景</a>
+                <a href="#infrastructure" class="hover:text-white transition-colors">基础设施</a>
+                <a href="#security" class="hover:text-white transition-colors">安全机制</a>
+                <a href="#roadmap" class="hover:text-white transition-colors">路线图</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="px-5 py-2 rounded-full bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-all">
+                    控制台入口
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <canvas id="particle-canvas"></canvas>
+        <div class="relative z-10 max-w-5xl mx-auto px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-8 reveal">
+                <i data-lucide="sparkles" class="w-3 h-3"></i> 
+                SNI0 V3.0 下一代握手架构现已发布
+            </div>
+            <h1 class="text-6xl md:text-9xl font-extrabold tracking-tighter mb-8 leading-[0.9] reveal">
+                <span class="text-glow">构建绝对隐私</span><br>
+                <span class="text-zinc-600">的连接未来</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-zinc-400 max-w-3xl mx-auto mb-12 font-light leading-relaxed reveal">
+                突破明文传输瓶颈。SNI0.COM 通过全球 Anycast 网络与 ECH 加密技术，
+                为每一笔 TLS 握手提供金融级隐私保护。
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6 reveal">
+                <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-5 rounded-2xl font-bold transition-all shadow-[0_0_50px_-10px_rgba(99,102,241,0.5)] flex items-center justify-center gap-3">
+                    立即部署集群 <i data-lucide="zap" class="w-5 h-5"></i>
+                </button>
+                <button class="bg-zinc-900/80 hover:bg-zinc-800 text-white px-10 py-5 rounded-2xl font-bold transition-all border border-white/10 backdrop-blur-md flex items-center justify-center gap-3">
+                    查看白皮书 <i data-lucide="file-text" class="w-5 h-5 text-zinc-500"></i>
+                </button>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>为什么需要 SNI</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>虚拟主机</h3>
-          <p>
-            在同一 IP 地址上部署多个 HTTPS 站点时，SNI 允许服务器区分不同域名并返回对应证书。
-          </p>
+    <!-- 数据面板面板 -->
+    <section id="infrastructure" class="max-w-7xl mx-auto px-8 py-32 space-y-24">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end gap-8 reveal">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">全时段网络性能监测</h2>
+                <p class="text-zinc-500 text-lg">我们的边缘节点遍布全球 120 个国家，平均握手延迟低于 20ms。</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="text-right">
+                    <div class="text-3xl font-mono text-cyan-400 font-bold">99.999%</div>
+                    <div class="text-[10px] text-zinc-600 uppercase tracking-widest">可靠性达标</div>
+                </div>
+                <div class="w-px h-10 bg-white/10"></div>
+                <div class="text-right">
+                    <div class="text-3xl font-mono text-indigo-400 font-bold">0.02s</div>
+                    <div class="text-[10px] text-zinc-600 uppercase tracking-widest">平均响应</div>
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <h3>IPv4 资源紧张</h3>
-          <p>
-            SNI 显著减少了对独立 IPv4 地址的依赖，是大规模部署 HTTPS 的现实解决方案。
-          </p>
+
+        <!-- Bento Grid 布局 -->
+        <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6 auto-rows-[300px]">
+            
+            <!-- 流量大图表 -->
+            <div class="bento-item md:col-span-6 lg:col-span-8 row-span-2 flex flex-col reveal">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold mb-1">吞吐量趋势分析</h3>
+                        <p class="text-xs text-zinc-500">Real-time SNI distribution metrics</p>
+                    </div>
+                    <select class="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-[10px] text-zinc-400">
+                        <option>过去 24 小时</option>
+                        <option>过去 7 天</option>
+                    </select>
+                </div>
+                <div class="flex-1 w-full min-h-0">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 技术细节：ECH -->
+            <div class="bento-item md:col-span-3 lg:col-span-4 reveal">
+                <div class="h-full flex flex-col justify-between">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-4">
+                        <i data-lucide="shield-check" class="text-cyan-400 w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">ECH 深度加密</h3>
+                        <p class="text-sm text-zinc-500 leading-relaxed">Encrypted Client Hello 确保第三方无法通过 SNI 域名嗅探流量去向。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 状态快照 -->
+            <div class="bento-item md:col-span-3 lg:col-span-4 reveal">
+                <div class="space-y-6">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-600">节点健康状况</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-zinc-400">北美 (N. America)</span>
+                            <span class="text-xs text-green-500 font-mono">● Online</span>
+                        </div>
+                        <div class="w-full bg-zinc-800 h-1 rounded-full"><div class="bg-green-500 h-full w-[95%]"></div></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-zinc-400">东亚 (E. Asia)</span>
+                            <span class="text-xs text-green-500 font-mono">● Online</span>
+                        </div>
+                        <div class="w-full bg-zinc-800 h-1 rounded-full"><div class="bg-green-500 h-full w-[98%]"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 开发者控制台模拟 -->
+            <div class="bento-item md:col-span-6 lg:col-span-12 row-span-1 reveal group bg-black/80">
+                <div class="flex flex-col md:flex-row gap-8 h-full">
+                    <div class="md:w-1/3 space-y-4">
+                        <h3 class="text-2xl font-bold">开发者级调试能力</h3>
+                        <p class="text-zinc-500 text-sm">直观的握手跟踪工具，支持所有主流协议栈。</p>
+                        <div class="flex gap-2">
+                            <div class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[10px] mono">TLS_AES_256_GCM</div>
+                            <div class="px-2 py-1 rounded bg-white/5 border border-white/10 text-[10px] mono">X25519</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-zinc-950 rounded-2xl p-6 mono text-xs text-zinc-500 border border-white/5 relative">
+                        <div class="absolute top-4 right-6 flex gap-2">
+                            <div class="w-2 h-2 rounded-full bg-red-500/40"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-500/40"></div>
+                            <div class="w-2 h-2 rounded-full bg-green-500/40"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <p><span class="text-zinc-700"># 初始化 SNI0 诊断服务...</span></p>
+                            <p><span class="text-indigo-500">➜</span> sni0 --trace <span class="text-indigo-300">https://cluster-a.sni0.io</span></p>
+                            <p>[OK] TCP握手完成: 延迟 12.4ms</p>
+                            <p>[OK] TLS版本验证: TLS 1.3 (Draft 28+)</p>
+                            <p>[WARN] 检测到明文SNI头，建议启用 <span class="text-cyan-400">--ech-mode</span></p>
+                            <p><span class="text-indigo-500">➜</span> 应用安全补丁中<span class="blink">_</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="card">
-          <h3>现代浏览器支持</h3>
-          <p>
-            主流浏览器和操作系统均已支持 SNI，使其成为事实上的行业标准。
-          </p>
-        </div>
-      </div>
     </section>
 
-    <section>
-      <h2>SNI 工作流程（简化）</h2>
-      <div class="code">
-ClientHello
-  ├─ TLS Version
-  ├─ Cipher Suites
-  └─ Server Name: example.com
-
-ServerHello
-  ├─ Selected Certificate (example.com)
-  └─ TLS Handshake Continue
-      </div>
+    <!-- 技术原理图解 (篇幅长展示) -->
+    <section id="security" class="max-w-7xl mx-auto px-8 py-32 border-t border-white/5 reveal">
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+            <div class="relative">
+                <div class="absolute -inset-10 bg-indigo-500/20 blur-[100px] rounded-full opacity-30"></div>
+                <div class="relative p-10 bg-zinc-900 rounded-[40px] border border-white/10">
+                    <!-- 模拟协议栈 -->
+                    <div class="space-y-4">
+                        <div class="p-6 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <i data-lucide="layers" class="text-indigo-400"></i>
+                                <span class="font-bold">应用层 (HTTP/3)</span>
+                            </div>
+                            <i data-lucide="lock" class="w-4 h-4 text-zinc-600"></i>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                            <i data-lucide="arrow-down" class="text-zinc-700"></i>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-cyan-600/10 border border-cyan-500/30 flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <i data-lucide="shield" class="text-cyan-400"></i>
+                                <span class="font-bold">加密握手 (ECH)</span>
+                            </div>
+                            <span class="text-[10px] font-mono text-cyan-400">AES-128-GCM</span>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                            <i data-lucide="arrow-down" class="text-zinc-700"></i>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-zinc-800/50 border border-white/5 flex items-center justify-between">
+                            <div class="flex items-center gap-4 text-zinc-500">
+                                <i data-lucide="server"></i>
+                                <span class="font-bold">传输层 (Anycast IP)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-5xl font-bold mb-8 leading-tight">重新构想<br>传输层的完整性</h2>
+                <p class="text-zinc-400 text-lg mb-8 leading-relaxed">
+                    在传统的 SNI 环境下，域名是明文传输的，这就像是在信封上写信的内容。SNI0.COM 改变了这一点，我们通过双重信封机制（Inner/Outer Client Hello），让中间节点只看到一个通用的入口地址，从而实现端到端的流量隐身。
+                </p>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="space-y-3">
+                        <div class="text-indigo-400 font-bold flex items-center gap-2">
+                             <i data-lucide="check-circle-2" class="w-4 h-4"></i> 完美向前安全性
+                        </div>
+                        <p class="text-sm text-zinc-500 italic">即使主私钥被破解，过往的握手记录依然安全。</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="text-cyan-400 font-bold flex items-center gap-2">
+                             <i data-lucide="check-circle-2" class="w-4 h-4"></i> 多径 TCP 支持
+                        </div>
+                        <p class="text-sm text-zinc-500 italic">自动在 Wi-Fi 与移动数据间无缝切换，不断连。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>安全与隐私</h2>
-      <p>
-        由于传统 SNI 信息在 TLS 握手阶段是明文的，可能被用于流量分析。
-        为此，TLS 1.3 引入了 ESNI / ECH（Encrypted Client Hello）等机制，
-        用于加密服务器名称字段，进一步提升隐私保护能力。
-      </p>
+    <!-- 演进路线 -->
+    <section id="roadmap" class="max-w-7xl mx-auto px-8 py-32 border-t border-white/5 reveal">
+        <h2 class="text-3xl font-bold mb-16 text-center">协议演进路线图</h2>
+        <div class="relative space-y-12">
+            <div class="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-800 -translate-x-1/2 hidden md:block"></div>
+            
+            <div class="relative md:flex items-center group">
+                <div class="md:w-1/2 md:pr-16 text-right mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">Q1 2024: 全球节点倍增</h3>
+                    <p class="text-zinc-500 text-sm italic">完成南美洲与非洲核心路由中心的部署。</p>
+                </div>
+                <div class="w-4 h-4 rounded-full bg-zinc-800 border-4 border-indigo-600 absolute left-1/2 -translate-x-1/2 z-10 group-hover:scale-150 transition-transform hidden md:block"></div>
+                <div class="md:w-1/2 md:pl-16">
+                    <span class="text-zinc-600 font-mono text-xs">已完成 (Phase 1)</span>
+                </div>
+            </div>
+
+            <div class="relative md:flex items-center group flex-row-reverse">
+                <div class="md:w-1/2 md:pl-16 mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">Q4 2025: 后量子加密测试</h3>
+                    <p class="text-zinc-500 text-sm italic">实验性支持 Kyber/Dilithium 混合密钥交换协议。</p>
+                </div>
+                <div class="w-4 h-4 rounded-full bg-zinc-800 border-4 border-cyan-500 absolute left-1/2 -translate-x-1/2 z-10 group-hover:scale-150 transition-transform hidden md:block shadow-[0_0_10px_#06b6d4]"></div>
+                <div class="md:w-1/2 md:pr-16 text-right">
+                    <span class="text-cyan-400 font-mono text-xs">进行中 (Active)</span>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>应用场景</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>CDN 与云服务</h3>
-          <p>在同一边缘节点上承载大量域名，实现高效的 HTTPS 分发。</p>
+    <footer class="bg-zinc-950 pt-20 pb-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-20">
+                <div class="max-w-xs">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                            <span class="text-white font-bold text-xs">S</span>
+                        </div>
+                        <span class="font-bold text-lg">SNI0.COM</span>
+                    </div>
+                    <p class="text-sm text-zinc-500 leading-relaxed">
+                        引领互联网基础设施进入隐私加密时代，保护每一位用户的数字足迹。
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-16">
+                    <div class="space-y-4 text-sm">
+                        <h4 class="font-bold text-zinc-300">技术中心</h4>
+                        <ul class="space-y-2 text-zinc-600">
+                            <li><a href="#" class="hover:text-white transition">ECH 标准文档</a></li>
+                            <li><a href="#" class="hover:text-white transition">边缘计算节点</a></li>
+                            <li><a href="#" class="hover:text-white transition">TLS 1.3 最佳实践</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4 text-sm">
+                        <h4 class="font-bold text-zinc-300">开源生态</h4>
+                        <ul class="space-y-2 text-zinc-600">
+                            <li><a href="#" class="hover:text-white transition">GitHub Repo</a></li>
+                            <li><a href="#" class="hover:text-white transition">贡献指南</a></li>
+                            <li><a href="#" class="hover:text-white transition">Bug Bounty</a></li>
+                        </ul>
+                    </div>
+                    <div class="hidden sm:block space-y-4 text-sm">
+                        <h4 class="font-bold text-zinc-300">公司</h4>
+                        <ul class="space-y-2 text-zinc-600">
+                            <li><a href="#" class="hover:text-white transition">关于我们</a></li>
+                            <li><a href="#" class="hover:text-white transition">职业机会</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-6 pt-10 border-t border-white/5">
+                <div class="text-[10px] text-zinc-700 uppercase tracking-widest font-mono">
+                    System Epoch: 2026.01.14 // Latency: 1ms // Status: Operational
+                </div>
+                <div class="flex gap-6">
+                    <i data-lucide="twitter" class="w-4 h-4 text-zinc-600 hover:text-white transition"></i>
+                    <i data-lucide="github" class="w-4 h-4 text-zinc-600 hover:text-white transition"></i>
+                    <i data-lucide="message-square" class="w-4 h-4 text-zinc-600 hover:text-white transition"></i>
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <h3>反向代理</h3>
-          <p>基于 SNI 将流量路由至不同后端服务或容器。</p>
-        </div>
-        <div class="card">
-          <h3>网络安全研究</h3>
-          <p>分析 TLS 握手元数据，用于安全监测与协议演进研究。</p>
-        </div>
-      </div>
-    </section>
-  </main>
+    </footer>
 
-  <footer>
-    <div>
-      © <span>sni0.com</span> · SNI 技术静态展示页面
-    </div>
-  </footer>
+    <script>
+        // 1. 初始化 Lucide 图标
+        lucide.createIcons();
+
+        // 2. 页面入场 Reveal 动画
+        const revealCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+        const observer = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3. 滚动进度条
+        window.onscroll = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-tracker").style.width = scrolled + "%";
+        };
+
+        // 4. Chart.js 动态吞吐量图表
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, 0, 400);
+        grad.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+        grad.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        const mainChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(24).fill(''),
+                datasets: [{
+                    label: '吞吐量 (Gbps)',
+                    data: Array(24).fill(0).map(() => Math.random() * 50 + 150),
+                    borderColor: '#6366f1',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    backgroundColor: grad,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { 
+                        grid: { color: 'rgba(255,255,255,0.02)', drawBorder: false },
+                        ticks: { color: '#444', font: { family: 'JetBrains Mono' } }
+                    }
+                }
+            }
+        });
+
+        // 定时更新图表
+        setInterval(() => {
+            mainChart.data.datasets[0].data.push(Math.random() * 50 + 150);
+            mainChart.data.datasets[0].data.shift();
+            mainChart.update('none');
+        }, 1500);
+
+        // 5. Canvas 粒子背景系统
+        const canvas = document.getElementById('particle-canvas');
+        const pCtx = canvas.getContext('2d');
+        let particles = [];
+        
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        window.onresize = resize;
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+            }
+            draw() {
+                pCtx.fillStyle = 'rgba(99, 102, 241, 0.4)';
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fill();
+            }
+        }
+
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+
+        const animate = () => {
+            pCtx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        };
+        animate();
+    </script>
 </body>
 </html>
