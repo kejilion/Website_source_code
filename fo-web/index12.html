@@ -1,323 +1,270 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>佛教艺术展览 - 传承千年艺术</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>SNI - Server Name Indication Technical Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #8B4513;
-            --secondary-color: #D2B48C;
-            --text-color: #2C1810;
-            --background-color: #FDF5E6;
-            --accent-color: #A0522D;
+            --lab-blue: #0066ff;
+            --lab-gray: #f2f2f7;
+            --lab-text: #1d1d1f;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: var(--lab-text);
+            line-height: 1.6;
         }
-
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(139, 69, 19, 0.7), rgba(139, 69, 19, 0.7)),
-                        url('https://images.unsplash.com/photo-1552083375-1447ce886485?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #FDF5E6;
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        .header h1 {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            letter-spacing: 0.3em;
-            animation: fadeIn 2s ease-out;
+        .tech-grid {
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeIn 2s ease-out 0.5s backwards;
+        .glass-blur {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .section-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--lab-gray);
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #86868b;
         }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(253, 245, 230, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-
-        .nav a:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .section {
-            padding: 8rem 2rem;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            color: var(--primary-color);
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 1rem auto;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .art-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .art-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .art-item img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .art-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .art-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            color: white;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .art-item:hover .art-info {
-            transform: translateY(0);
-        }
-
-        .art-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .art-description {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .categories {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .category-btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            background: var(--secondary-color);
-            color: var(--text-color);
-            border-radius: 25px;
-            cursor: pointer;
+        .card-shadow {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
-
-        .category-btn:hover,
-        .category-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .art-item {
-                height: 300px;
-            }
+        .card-shadow:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
         }
     </style>
 </head>
-<body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#gallery">艺术展览</a></li>
-            <li><a href="#about">关于我们</a></li>
-            <li><a href="#contact">联系方式</a></li>
-        </ul>
+<body class="tech-grid">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-blur border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <span class="text-xl font-bold tracking-tighter text-black">SNI<span class="text-blue-600">0</span></span>
+                <div class="h-4 w-[1px] bg-gray-200"></div>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tech Lab</span>
+            </div>
+            <div class="hidden md:flex space-x-10 text-xs font-bold uppercase tracking-widest text-gray-500">
+                <a href="#analysis" class="hover:text-blue-600 transition">Analysis</a>
+                <a href="#future" class="hover:text-blue-600 transition">Evolution</a>
+                <a href="#deployment" class="hover:text-blue-600 transition">Deployment</a>
+            </div>
+        </div>
     </nav>
 
-    <header id="home" class="header">
-        <h1>佛教艺术展览</h1>
-        <p>千年艺术，传承文明</p>
+    <!-- Hero Section -->
+    <header class="pt-48 pb-32 px-8 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="section-tag mb-6">Protocol Specification</span>
+                <h1 class="text-5xl md:text-7xl font-semibold tracking-tight text-black mb-8">
+                    Deep Dive into<br>SNI Technology
+                </h1>
+                <p class="text-lg text-gray-500 mb-10 max-w-lg leading-relaxed font-light">
+                    From TLS extensions to modern virtual hosting architectures, SNI is not just a resource saver, but a critical catalyst for global HTTPS adoption.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <button class="bg-black text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-gray-800 transition">Technical Whitepaper</button>
+                    <span class="text-xs font-bold text-gray-400">v2.5 Updated 2026</span>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-white border border-gray-100 rounded-2xl p-8 card-shadow">
+                    <div class="flex justify-between items-start mb-12">
+                        <div class="space-y-1">
+                            <div class="text-xs font-bold text-gray-400 uppercase">Traffic Distribution</div>
+                            <div class="text-2xl font-bold">12.8 Gbps</div>
+                        </div>
+                        <div class="text-blue-600">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Processing Latency</span>
+                            <span class="font-bold">0.12ms</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-1 rounded-full">
+                            <div class="bg-blue-600 h-1 rounded-full w-4/5"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decoration -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+            </div>
+        </div>
     </header>
 
-    <section id="gallery" class="section">
-        <div class="container">
-            <h2 class="section-title">艺术展览</h2>
-
-            <div class="categories">
-                <button class="category-btn active">全部</button>
-                <button class="category-btn">佛像雕塑</button>
-                <button class="category-btn">壁画</button>
-                <button class="category-btn">建筑</button>
-                <button class="category-btn">书法</button>
-            </div>
-
-            <div class="gallery-grid">
-                <div class="art-item">
-                    <img src="https://images.unsplash.com/photo-1552083375-1447ce886485?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛像雕塑">
-                    <div class="art-info">
-                        <h3 class="art-title">释迦牟尼佛像</h3>
-                        <p class="art-description">唐代 青铜佛像，展现了唐代佛教艺术的巅峰水平。</p>
-                    </div>
+    <main class="max-w-7xl mx-auto px-8 space-y-40 pb-40">
+        
+        <!-- Deep Analysis -->
+        <section id="analysis">
+            <div class="grid md:grid-cols-12 gap-12">
+                <div class="md:col-span-4">
+                    <h2 class="text-3xl font-semibold mb-6">Architectural Reconstruction</h2>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        During the TLS handshake's <span class="code-font text-blue-600">Client Hello</span> phase, the client inserts a <span class="code-font text-blue-600">server_name</span> extension to explicitly declare the target host. This occurs before the encrypted tunnel is established, allowing load balancers to perform precise domain sniffing.
+                    </p>
                 </div>
-                <div class="art-item">
-                    <img src="https://images.unsplash.com/photo-1509023464722-18d996393ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教建筑">
-                    <div class="art-info">
-                        <h3 class="art-title">大雄宝殿</h3>
-                        <p class="art-description">明代建筑，体现了中国传统建筑艺术的精髓。</p>
+                <div class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 card-shadow">
+                        <h3 class="font-bold mb-4">Virtual Host Decoupling</h3>
+                        <p class="text-xs text-gray-500">Enables hosting multiple SSL certificates from different entities on a single IP—the cornerstone of multi-tenant cloud environments.</p>
                     </div>
-                </div>
-                <div class="art-item">
-                    <img src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教壁画">
-                    <div class="art-info">
-                        <h3 class="art-title">敦煌壁画</h3>
-                        <p class="art-description">盛唐时期壁画，描绘佛教故事场景。</p>
-                    </div>
-                </div>
-                <div class="art-item">
-                    <img src="https://images.unsplash.com/photo-1464823063530-08f10ed1a2dd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教书法">
-                    <div class="art-info">
-                        <h3 class="art-title">心经书法</h3>
-                        <p class="art-description">当代书法大师作品，展现佛教经典之美。</p>
+                    <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 card-shadow">
+                        <h3 class="font-bold mb-4">On-Demand Distribution</h3>
+                        <p class="text-xs text-gray-500">Leverages pre-handshake identification to implement dynamic backend routing and canary deployment strategies.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="about" class="section">
-        <div class="container">
-            <h2 class="section-title">关于展览</h2>
-            <p style="text-align: center; max-width: 800px; margin: 0 auto;">
-                本展览致力于展示佛教艺术的多样性和深邃内涵，通过精选的艺术品，让观众感受佛教文化的魅力。
-                展品包括历代佛教雕塑、建筑、壁画和书法作品，每件作品都诉说着独特的故事。
-            </p>
-        </div>
-    </section>
+        <!-- The Future: ECH -->
+        <section id="future" class="bg-black rounded-[2.5rem] p-12 md:p-24 text-white overflow-hidden relative">
+            <div class="relative z-10 max-w-3xl">
+                <span class="text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-6 block">Future of Privacy</span>
+                <h2 class="text-4xl md:text-5xl font-semibold mb-10 leading-tight">From SNI to ECH:<br>Closing the Final Privacy Gap</h2>
+                <div class="space-y-6 text-gray-400 text-lg font-light">
+                    <p>While SNI solved the routing problem, its plaintext transmission exposed target hostnames to network observers.</p>
+                    <p class="text-white font-medium">ECH (Encrypted Client Hello) secures the connection by nesting an encrypted inner Client Hello within a public outer one, achieving end-to-end privacy for the target domain.</p>
+                </div>
+                <div class="mt-12 flex space-x-8">
+                    <div>
+                        <div class="text-2xl font-bold text-white">TLS 1.3</div>
+                        <div class="text-[10px] text-gray-500 uppercase">Native Support</div>
+                    </div>
+                    <div class="w-[1px] bg-gray-800"></div>
+                    <div>
+                        <div class="text-2xl font-bold text-white">ZERO</div>
+                        <div class="text-[10px] text-gray-500 uppercase">Metadata Leak</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Abstract Graphic -->
+            <div class="absolute right-0 bottom-0 opacity-20 w-1/2">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#0066FF" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,76.4,-44.7C83.6,-31.3,86.9,-15.6,85.6,-0.7C84.3,14.1,78.5,28.2,70,40.7C61.5,53.2,50.3,64.1,37,70.8C23.7,77.5,8.3,80.1,-6.6,78.7C-21.5,77.3,-35.9,71.9,-48.5,63.7C-61.1,55.5,-71.9,44.5,-77.8,31.4C-83.7,18.3,-84.7,3.1,-81.9,-11.2C-79.1,-25.5,-72.5,-38.9,-62.7,-50.2C-52.9,-61.5,-39.9,-70.7,-26.3,-77.1C-12.7,-83.5,1.5,-87.1,16.6,-83.7C31.7,-80.3,47.7,-69.8,44.7,-76.4Z" transform="translate(100 100)" />
+                </svg>
+            </div>
+        </section>
 
-    <section id="contact" class="section" style="background-color: white;">
-        <div class="container">
-            <h2 class="section-title">联系方式</h2>
-            <div style="text-align: center;">
-                <p>展览地址：佛光市光明区艺术馆</p>
-                <p>联系电话：996-12345678</p>
-                <p>电子邮箱：art@buddhistexhibition.com</p>
+        <!-- Tech Specs Table -->
+        <section id="deployment">
+            <div class="text-center mb-20">
+                <span class="section-tag mb-4">Specs & Compliance</span>
+                <h2 class="text-3xl font-semibold">Technical Compatibility Matrix</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            <th class="py-6 px-4 text-black">Browser / Platform</th>
+                            <th class="py-6 px-4">Minimum Version</th>
+                            <th class="py-6 px-4">ECH Ready</th>
+                            <th class="py-6 px-4 text-right">TLS 1.3 Support</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-medium">
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                <span>Modern Browsers (Chrome/Safari)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">Latest Stable</td>
+                            <td class="py-6 px-4">Yes (Partial)</td>
+                            <td class="py-6 px-4 text-right font-semibold">Full Support</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span>Mobile OS (iOS/Android)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">iOS 10+ / Android 4.4+</td>
+                            <td class="py-6 px-4">In Beta</td>
+                            <td class="py-6 px-4 text-right font-semibold">Full Support</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                                <span>Legacy Systems (Win XP)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">Unsupported / IE Legacy</td>
+                            <td class="py-6 px-4">No</td>
+                            <td class="py-6 px-4 text-right text-gray-300">N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 py-24 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-12 md:space-y-0">
+                <div>
+                    <span class="text-2xl font-bold tracking-tighter text-black">SNI<span class="text-blue-600">0</span></span>
+                    <p class="mt-4 text-sm text-gray-400 font-light max-w-xs leading-relaxed">
+                        The world's leading platform for SNI technical exchange. We focus on every minor advancement in low-level network protocols.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-16">
+                    <div class="space-y-4 text-xs font-bold">
+                        <div class="uppercase tracking-widest text-gray-300">Resources</div>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" class="hover:text-blue-600 transition">RFC Documentation</a></li>
+                            <li><a href="#" class="hover:text-blue-600 transition">Protocol Specs</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4 text-xs font-bold">
+                        <div class="uppercase tracking-widest text-gray-300">Company</div>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" class="hover:text-blue-600 transition">Tech Blog</a></li>
+                            <li><a href="#" class="hover:text-blue-600 transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-24 pt-8 border-t border-gray-200 flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                <span>© 2026 SNI0.COM Infrastructure Lab. All rights reserved.</span>
+                <span class="flex items-center space-x-4">
+                    <a href="#" class="hover:text-blue-600">Privacy Policy</a>
+                    <a href="#" class="hover:text-blue-600">Security Terms</a>
+                </span>
             </div>
         </div>
-    </section>
+    </footer>
 
     <script>
-        // 分类按钮交互
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
             });
-        });
+        }, { threshold: 0.1 });
 
-        // 滚动动画
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        document.querySelectorAll('section, header').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-8');
+            observer.observe(el);
         });
     </script>
 </body>
