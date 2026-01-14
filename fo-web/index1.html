@@ -3,313 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>禅音妙韵 - 佛学音乐传播</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>SNI - Server Name Indication 技术解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #34495e;
-            --text-color: #2c3e50;
-            --bg-color: #f5f6fa;
+            --accent: #8b5cf6;
+            --bg-dark: #050505;
+            --card-dark: #0f0f0f;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: #a1a1aa;
+            scroll-behavior: smooth;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        .header {
-            text-align: center;
-            padding: 4rem 0;
-            background: url('https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80') center/cover;
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .neon-border {
             position: relative;
-            color: white;
+            background: var(--card-dark);
+            border: 1px solid #27272a;
         }
-
-        .header::before {
-            content: '';
+        .neon-border:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+        .bg-grid-white {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.03)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
+        }
+        .blur-orb {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .music-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 4rem 0;
-        }
-
-        .music-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .music-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .music-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .music-info {
-            padding: 1.5rem;
-        }
-
-        .music-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .music-artist {
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .play-button {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background 0.3s ease;
-        }
-
-        .play-button:hover {
-            background: var(--accent-color);
-        }
-
-        .featured-section {
-            background: white;
-            padding: 4rem 0;
-            margin: 2rem 0;
-        }
-
-        .featured-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--primary-color);
-        }
-
-        .playlist {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .playlist-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-            transition: background 0.3s ease;
-        }
-
-        .playlist-item:hover {
-            background: #f8f9fa;
-        }
-
-        .playlist-number {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            margin-right: 1rem;
-            min-width: 40px;
-        }
-
-        .playlist-info {
-            flex: 1;
-        }
-
-        .playlist-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .playlist-duration {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        footer {
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .music-section {
-                grid-template-columns: 1fr;
-            }
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            filter: blur(60px);
+            z-index: -1;
         }
     </style>
 </head>
-<body>
-    <header class="header">
-        <div class="header-content">
-            <h1>禅音妙韵</h1>
-            <p>聆听禅意，感受佛法的智慧与力量</p>
+<body class="bg-grid-white">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/60 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-2 h-2 rounded-full bg-violet-500 animate-pulse"></div>
+                <span class="text-white font-bold tracking-tighter text-xl">SNI0.COM</span>
+            </div>
+            <div class="hidden md:flex space-x-10 text-xs uppercase tracking-widest font-semibold">
+                <a href="#definition" class="text-zinc-500 hover:text-white transition">Definition</a>
+                <a href="#workflow" class="text-zinc-500 hover:text-white transition">Workflow</a>
+                <a href="#benefits" class="text-zinc-500 hover:text-white transition">Benefits</a>
+                <a href="#specs" class="text-zinc-500 hover:text-white transition">Specs</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative pt-40 pb-32 px-6 flex flex-col items-center text-center overflow-hidden">
+        <div class="blur-orb top-0 -left-20"></div>
+        <div class="blur-orb bottom-0 -right-20"></div>
+        
+        <div class="inline-block px-3 py-1 border border-violet-500/30 rounded-full text-[10px] font-bold text-violet-400 uppercase tracking-widest mb-8">
+            Network Infrastructure Layer
+        </div>
+        <h1 class="text-6xl md:text-8xl font-bold text-white tracking-tight mb-8">
+            <span class="text-gradient">Server Name</span><br>Indication
+        </h1>
+        <p class="max-w-2xl text-zinc-500 text-lg md:text-xl leading-relaxed mb-12">
+            SNI 是 TLS 协议的关键扩展，它解决了 HTTPS 在握手初期无法识别目标域名的问题，是现代 Web 虚拟主机架构的基石。
+        </p>
+        <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+            <a href="#workflow" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-zinc-200 transition">
+                探索核心原理
+            </a>
+            <a href="https://tools.ietf.org/html/rfc6066" target="_blank" class="border border-zinc-800 text-zinc-400 px-10 py-4 rounded-full font-bold hover:bg-zinc-900 transition">
+                阅读 RFC 文档
+            </a>
         </div>
     </header>
 
-    <div class="container">
-        <section class="music-section">
-            <div class="music-card">
-                <img src="https://images.unsplash.com/photo-1508264165352-258db2ebd59b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
-                <div class="music-info">
-                    <h3 class="music-title">心经颂</h3>
-                    <p class="music-artist">演唱：法喜法师</p>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                        立即聆听
-                    </button>
+    <main class="max-w-6xl mx-auto px-6 space-y-48 pb-40">
+        
+        <!-- Definition Section -->
+        <section id="definition" class="grid md:grid-cols-2 gap-20 items-center">
+            <div class="order-2 md:order-1">
+                <div class="neon-border rounded-3xl p-10 space-y-6">
+                    <h2 class="text-3xl font-bold text-white">协议背景</h2>
+                    <p class="text-zinc-400 leading-relaxed">
+                        在没有 SNI 之前，服务器在看到加密数据前必须先提供 SSL 证书。但由于一个 IP 可能对应多个域名，服务器无法确定该展示哪个证书。
+                    </p>
+                    <div class="h-px bg-zinc-800 w-full"></div>
+                    <p class="text-zinc-400 leading-relaxed">
+                        SNI 通过在 <span class="text-violet-400 code-font italic">Client Hello</span> 中包含域名字段，完美解决了这一悖论，使得“单 IP 多证书”成为可能。
+                    </p>
                 </div>
             </div>
-
-            <div class="music-card">
-                <img src="https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
-                <div class="music-info">
-                    <h3 class="music-title">六字大明咒</h3>
-                    <p class="music-artist">演唱：智慧法师</p>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                        立即聆听
-                    </button>
-                </div>
+            <div class="order-1 md:order-2 space-y-6">
+                <div class="text-6xl font-black text-zinc-900 opacity-50">01</div>
+                <h3 class="text-4xl font-bold text-white leading-tight">解决 HTTPS 的<br>“先鸡还是先蛋”问题</h3>
             </div>
+        </section>
 
-            <div class="music-card">
-                <img src="https://images.unsplash.com/photo-1501084291732-13b1ba8f0ebc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教音乐">
-                <div class="music-info">
-                    <h3 class="music-title">观音菩萨圣号</h3>
-                    <p class="music-artist">演唱：慈悲法师</p>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                        立即聆听
-                    </button>
+        <!-- Workflow / Visual Diagram -->
+        <section id="workflow" class="space-y-16">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">工作流解析</h2>
+                <p class="text-zinc-500 italic uppercase tracking-widest text-xs">TLS Handshake Sequence with SNI</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="neon-border p-8 rounded-2xl group hover:bg-zinc-900/50 transition">
+                    <div class="text-violet-500 font-mono mb-4">01. TCP Connect</div>
+                    <h4 class="text-white font-bold mb-3">连接建立</h4>
+                    <p class="text-sm text-zinc-500">客户端与服务器 IP 完成标准的三次握手。</p>
+                </div>
+                <div class="neon-border p-8 rounded-2xl ring-1 ring-violet-500/40 bg-violet-500/5 group">
+                    <div class="text-violet-400 font-mono mb-4">02. Client Hello</div>
+                    <h4 class="text-white font-bold mb-3">关键负载</h4>
+                    <p class="text-sm text-zinc-400">客户端发送加密请求，并在扩展字段中显式指明：<br><span class="text-violet-300">"Host: sni0.com"</span></p>
+                </div>
+                <div class="neon-border p-8 rounded-2xl group hover:bg-zinc-900/50 transition">
+                    <div class="text-violet-500 font-mono mb-403. Server Response">03. Response</div>
+                    <h4 class="text-white font-bold mb-3">证书下发</h4>
+                    <p class="text-sm text-zinc-500">服务器根据主机名，从证书库中检索并返回匹配的加密凭据。</p>
                 </div>
             </div>
         </section>
 
-        <section class="featured-section">
-            <h2 class="featured-title">精选佛乐</h2>
-            <div class="playlist">
-                <div class="playlist-item">
-                    <span class="playlist-number">01</span>
-                    <div class="playlist-info">
-                        <h3 class="playlist-title">大悲咒</h3>
-                        <span class="playlist-duration">42:30</span>
+        <!-- Feature List -->
+        <section id="benefits" class="grid md:grid-cols-2 gap-10">
+            <div class="space-y-4">
+                <h2 class="text-3xl font-bold text-white">为什么它如此重要？</h2>
+                <p class="text-zinc-500">它是现代 Web 性能与成本优化的核心手段。</p>
+            </div>
+            <div class="grid gap-4">
+                <div class="flex items-start space-x-6 p-6 border border-zinc-800 rounded-xl">
+                    <div class="text-violet-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
                     </div>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                    </button>
+                    <div>
+                        <h4 class="text-white font-bold">IPv4 资源保护</h4>
+                        <p class="text-sm text-zinc-500 mt-1">无需为每个域名申请昂贵的独立公网 IP。</p>
+                    </div>
                 </div>
-
-                <div class="playlist-item">
-                    <span class="playlist-number">02</span>
-                    <div class="playlist-info">
-                        <h3 class="playlist-title">金刚经</h3>
-                        <span class="playlist-duration">1:15:20</span>
+                <div class="flex items-start space-x-6 p-6 border border-zinc-800 rounded-xl">
+                    <div class="text-violet-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
                     </div>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-
-                <div class="playlist-item">
-                    <span class="playlist-number">03</span>
-                    <div class="playlist-info">
-                        <h3 class="playlist-title">阿弥陀佛圣号</h3>
-                        <span class="playlist-duration">33:15</span>
+                    <div>
+                        <h4 class="text-white font-bold">虚拟主机支持</h4>
+                        <p class="text-sm text-zinc-500 mt-1">在一台物理服务器上安全地隔离成千上万个 HTTPS 站点。</p>
                     </div>
-                    <button class="play-button">
-                        <i class="fas fa-play"></i>
-                    </button>
                 </div>
             </div>
         </section>
-    </div>
 
-    <footer>
-        <p>© 2024 禅音妙韵 版权所有</p>
-        <p>联系我们：zen@chanyinyuyin.com</p>
+        <!-- Technical Specs / Compatibility -->
+        <section id="specs" class="space-y-12">
+            <div class="flex items-center space-x-4">
+                <div class="h-px bg-zinc-800 flex-grow"></div>
+                <h2 class="text-zinc-500 uppercase tracking-widest text-xs font-bold">Compatibility Matrix</h2>
+                <div class="h-px bg-zinc-800 flex-grow"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-2xl font-bold text-white">Windows</div>
+                    <div class="text-zinc-600 text-sm mt-2">Vista or newer</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-white">Android</div>
+                    <div class="text-zinc-600 text-sm mt-2">3.0 (Honeycomb) +</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-white">iOS</div>
+                    <div class="text-zinc-600 text-sm mt-2">All versions</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-white">Chrome</div>
+                    <div class="text-zinc-600 text-sm mt-2">Since 2010</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-900 pt-24 pb-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16">
+                <div class="mb-8 md:mb-0">
+                    <div class="text-2xl font-bold text-white mb-2">SNI0.COM</div>
+                    <p class="text-zinc-600 text-sm">关注网络协议的深度解析与未来趋势</p>
+                </div>
+                <div class="flex space-x-12">
+                    <div class="space-y-4">
+                        <h5 class="text-xs font-bold text-white uppercase tracking-widest">Resources</h5>
+                        <ul class="text-zinc-600 text-sm space-y-2">
+                            <li><a href="#" class="hover:text-violet-400">Protocol RFC</a></li>
+                            <li><a href="#" class="hover:text-violet-400">TLS 1.3 Specs</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h5 class="text-xs font-bold text-white uppercase tracking-widest">Connect</h5>
+                        <ul class="text-zinc-600 text-sm space-y-2">
+                            <li><a href="#" class="hover:text-violet-400">Security Blog</a></li>
+                            <li><a href="#" class="hover:text-violet-400">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between border-t border-zinc-900 pt-8 text-[10px] text-zinc-700 font-bold uppercase tracking-widest">
+                <div>© 2026 INFRASTRUCTURE DESIGN</div>
+                <div class="mt-4 md:mt-0 space-x-6">
+                    <a href="#">Privacy</a>
+                    <a href="#">Term</a>
+                    <a href="#">Status: All Systems Operational</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const playButtons = document.querySelectorAll('.play-button');
-            
-            playButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const icon = this.querySelector('i');
-                    if (icon.classList.contains('fa-play')) {
-                        icon.classList.remove('fa-play');
-                        icon.classList.add('fa-pause');
-                    } else {
-                        icon.classList.remove('fa-pause');
-                        icon.classList.add('fa-play');
-                    }
-                });
+        // Reveal animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
             });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
+            observer.observe(el);
         });
     </script>
 </body>
