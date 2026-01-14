@@ -3,240 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>佛教经典文学 - 智慧之源</title>
+    <title>☆★☆ 欢迎来到 SNI0 的秘密基地 ☆★☆</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #4A3B24;
-            --secondary-color: #C4A484;
-            --text-color: #2C1810;
-            --background-color: #F9F3E9;
-            --accent-color: #8B7355;
-        }
-
+        /* 90年代网页最核心的背景：星空瓷砖 */
         body {
-            font-family: 'Noto Serif SC', 'SimSun', serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            background-color: #000033;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: #ffffff;
+            font-family: "Times New Roman", "宋体", serif;
+            margin: 0;
+            padding: 20px;
+            cursor: default;
         }
 
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(74, 59, 36, 0.7), rgba(74, 59, 36, 0.7)),
-                        url('https://images.unsplash.com/photo-1599254500021-a0c9934c3a66?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #F9F3E9;
-        }
+        /* 传统的蓝紫色链接 */
+        a { color: #00ffff; text-decoration: underline; }
+        a:visited { color: #ff00ff; }
+        a:hover { color: #ffffff; background-color: #0000ff; }
 
-        .header h1 {
-            font-size: 3.8rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.3em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.6rem;
-            max-width: 700px;
+        /* 居中主容器，模拟 640x480 分辨率下的布局 */
+        .main-container {
+            max-width: 760px;
             margin: 0 auto;
-            letter-spacing: 0.1em;
-        }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(74, 59, 36, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-        }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--background-color);
-            text-decoration: none;
-            padding: 0.5rem 2rem;
-            margin: 0 1rem;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-
-        .nav a:hover {
-            border-bottom: 2px solid var(--secondary-color);
-        }
-
-        .section {
-            padding: 6rem 2rem;
-        }
-
-        .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            color: var(--primary-color);
-            position: relative;
         }
 
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: var(--secondary-color);
-            margin: 1rem auto;
-        }
-
-        .classics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .classic-item {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .classic-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .classic-item h3 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 0.5rem;
-        }
-
-        .classic-item p {
-            color: var(--text-color);
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .quote-section {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        .quote {
-            font-size: 1.8rem;
+        /* 3D 效果标题 */
+        .web-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffff00;
+            text-shadow: 3px 3px #ff0000, 6px 6px #000000;
             font-style: italic;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 2;
+            margin: 20px 0;
+            border: 5px ridge #ffd700;
+            padding: 10px;
         }
 
-        footer {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 4rem;
+        /* 霓虹灯闪烁 */
+        .neon-blink {
+            animation: neon 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes neon {
+            from { opacity: 1; text-shadow: 0 0 10px #fff, 0 0 20px #0ff; }
+            to { opacity: 0.7; text-shadow: 0 0 5px #fff, 0 0 10px #0ff; }
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
+        /* 施工中图标容器 */
+        .construction {
+            display: inline-block;
+            margin: 15px;
+            font-weight: bold;
+            color: #ff0;
+        }
 
-            .header p {
-                font-size: 1.2rem;
-            }
+        /* Winamp 样式的播放器模拟 */
+        .winamp-player {
+            width: 275px;
+            background: #333;
+            border: 2px solid #666;
+            margin: 20px auto;
+            padding: 5px;
+            font-family: Arial, sans-serif;
+            text-align: left;
+        }
+        .winamp-title {
+            background: #000080;
+            color: #0ff;
+            font-size: 10px;
+            padding: 2px 5px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
 
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
+        /* 侧边栏布局采用 Table */
+        table.layout-grid {
+            width: 100%;
+            border: none;
+            margin-top: 30px;
+        }
 
-            .nav a {
-                margin: 0.5rem 0;
-            }
+        .sidebar {
+            width: 150px;
+            vertical-align: top;
+            background: #000066;
+            border: 2px outset #3333ff;
+            padding: 10px;
+        }
 
-            .section {
-                padding: 4rem 1rem;
-            }
+        .content {
+            padding-left: 20px;
+            text-align: left;
+            vertical-align: top;
+        }
 
-            .quote {
-                font-size: 1.4rem;
-            }
+        /* 像素访客计数器 */
+        .visitor-counter {
+            background: #000;
+            border: 2px inset #555;
+            padding: 5px 10px;
+            color: #0f0;
+            font-family: "Courier New", monospace;
+            font-size: 20px;
+            letter-spacing: 3px;
+            display: inline-block;
+        }
+
+        /* 分割线 */
+        hr {
+            border: 0;
+            height: 10px;
+            background-image: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            margin: 20px 0;
+        }
+
+        /* 88x31 按钮样式 */
+        .web-button {
+            width: 88px;
+            height: 31px;
+            border: 1px solid #fff;
+            margin: 2px;
+            display: inline-block;
+            background: #666;
+            font-size: 9px;
+            line-height: 31px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* 原始表单样式 */
+        input[type="text"], textarea {
+            background-color: #000;
+            border: 2px inset #fff;
+            color: #0f0;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .fire-text {
+            color: #ff4500;
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#classics">经典著作</a></li>
-            <li><a href="#quotes">经典名句</a></li>
-            <li><a href="#contact">联系我们</a></li>
-        </ul>
-    </nav>
 
-    <header id="home" class="header">
-        <h1>佛教经典文学</h1>
-        <p>千年智慧，照亮人心</p>
-    </header>
+    <div class="main-container">
+        <!-- 头部 -->
+        <div class="web-title">SNI0 互联网加密实验室</div>
+        
+        <marquee scrollamount="8" style="border: 2px solid #0ff; background: #000066; color: #fff; padding: 5px;">
+            欢迎来到我的个人主页！本站最佳浏览环境：Netscape Navigator 3.0 或 Internet Explorer 4.0，分辨率 800x600，64K 色。
+        </marquee>
 
-    <section id="classics" class="section">
-        <h2 class="section-title">经典著作</h2>
-        <div class="classics-grid">
-            <div class="classic-item">
-                <h3>《金刚经》</h3>
-                <p>佛教最重要的经典之一，阐述般若波罗蜜多的精髓，揭示诸法实相的真理。</p>
-                <p>一切有为法，如梦幻泡影，如露亦如电，应作如是观。</p>
+        <div class="construction">
+            <img src="https://img.icons8.com/color/48/000000/under-construction.png" width="32"><br>
+            [ 本站正在施工中 ]
+        </div>
+
+        <hr>
+
+        <!-- 模拟播放器 -->
+        <div class="winamp-player">
+            <div class="winamp-title">1. SNI0 - The Cyber Anthem (Handshaking Mix).mp3</div>
+            <div style="display:flex; justify-content: space-between; margin-top: 5px;">
+                <span style="color:#0f0; font-size: 10px;">03:45</span>
+                <div style="color:#666; font-size: 10px;">kbps: 128 / khz: 44.1</div>
             </div>
-            <div class="classic-item">
-                <h3>《心经》</h3>
-                <p>佛教最简短而精深的经典，包含般若智慧的核心教义。</p>
-                <p>色不异空，空不异色；色即是空，空即是色。</p>
-            </div>
-            <div class="classic-item">
-                <h3>《法华经》</h3>
-                <p>大乘佛教重要经典，阐述一乘佛教思想，展现佛陀的究竟教化。</p>
-                <p>诸法从本来，常自寂灭相。</p>
+            <div style="margin-top: 5px;">
+                <button>■</button> <button>▶</button> <button>||</button> <button>«</button> <button>»</button>
             </div>
         </div>
-    </section>
 
-    <section id="quotes" class="quote-section">
-        <div class="quote">
-            <p>「诸恶莫作，众善奉行，自净其意，是诸佛教。」</p>
-            <p style="font-size: 1.2rem; margin-top: 1rem;">——《法句经》</p>
+        <!-- 主体表格布局 -->
+        <table class="layout-grid">
+            <tr>
+                <td class="sidebar">
+                    <p><b>导航菜单</b></p>
+                    <p><a href="#">关于我</a></p>
+                    <p><a href="#">秘密下载区</a></p>
+                    <p><a href="#">我的日记</a></p>
+                    <p><a href="#">我的收藏夹</a></p>
+                    <p><a href="#">留言板</a></p>
+                    <hr>
+                    <p><b>友情链接</b></p>
+                    <div class="web-button">Yahoo!</div>
+                    <div class="web-button">GeoCities</div>
+                    <div class="web-button">Lycos</div>
+                    <div class="web-button">Altavista</div>
+                </td>
+                <td class="content">
+                    <h2 class="neon-blink">什么是加密连接？</h2>
+                    <p>你好，访客！你是否担心在信息高速公路上裸奔？SNI0 致力于研究最前沿的 <b>TLS 代理</b> 与 <b>加密 SNI</b> 技术。即使在这个拨号上网的时代，隐私也应该是每个人的基本权利。</p>
+                    
+                    <p><span class="fire-text">最新爆料：</span> 我们在加密通道中实现了 128-bit 密钥的完美支持！不再担心黑客嗅探你的账号！</p>
+
+                    <center>
+                        <img src="https://via.placeholder.com/468x60?text=AD:+JOIN+THE+CYBER+REVOLUTION+NOW!" style="border: 1px solid #ff0;">
+                    </center>
+
+                    <h3>给我的留言</h3>
+                    <form onsubmit="alert('谢谢你的留言！'); return false;">
+                        您的昵称：<br>
+                        <input type="text" name="name"><br>
+                        您的电子邮箱 (E-mail)：<br>
+                        <input type="text" name="email"><br>
+                        留言内容：<br>
+                        <textarea rows="4"></textarea><br>
+                        <input type="submit" value=" 点击发送邮件 ">
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <!-- 底部计数器 -->
+        <div>
+            <p>您是来到这个秘密空间的第</p>
+            <div class="visitor-counter">00074219</div>
+            <p>位赛伯成员</p>
         </div>
-    </section>
 
-    <footer id="contact">
-        <h2>联系我们</h2>
-        <p>地址：佛光市南城区法源寺街</p>
-        <p>电话：996-87654321</p>
-        <p>邮箱：info@fojingdian.com</p>
-    </footer>
+        <!-- 底部图标 -->
+        <div style="margin: 20px 0;">
+            <a href="#"><img src="https://via.placeholder.com/88x31?text=Made+with+Notepad" alt="Notepad"></a>
+            <a href="#"><img src="https://via.placeholder.com/88x31?text=Netscape+Ready" alt="Netscape"></a>
+            <a href="#"><img src="https://via.placeholder.com/88x31?text=Best+IE4.0" alt="IE"></a>
+            <a href="#"><img src="https://via.placeholder.com/88x31?text=No+Frames" alt="No Frames"></a>
+        </div>
+
+        <p style="font-size: 10px; color: #888;">
+            (C) 1997 SNI0 Cybernetic Research Group. <br>
+            建议使用 16-bit 增强色查看本站以获得最佳视觉效果。
+        </p>
+    </div>
+
 </body>
 </html>
