@@ -1,212 +1,223 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>禅意空间 - 简约之美</title>
+    <title>SNI0 Research - Protocols & Infrastructures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary-color: #333;
-            --secondary-color: #666;
-            --background-color: #f5f5f5;
-            --text-color: #2c2c2c;
+            --paper-bg: #fdfdfc;
+            --ink-black: #1a1a1a;
+            --accent-gold: #8b7355;
+            --border-light: #e8e8e1;
         }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper-bg);
+            color: var(--ink-black);
+            line-height: 1.6;
+        }
+        h1, h2, h3, .serif {
+            font-family: 'Crimson Pro', serif;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .max-w-academic {
+            max-width: 960px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        /* Academic flourishes */
+        .section-divider {
+            border-top: 1px solid var(--border-light);
+            margin: 4rem 0;
+            position: relative;
+        }
+        .section-divider::after {
+            content: "§";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper-bg);
+            padding: 0 10px;
+            color: var(--accent-gold);
+            font-family: serif;
         }
 
-        .header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-                        url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 4rem;
-            font-weight: 300;
-            letter-spacing: 0.5em;
-            margin-bottom: 2rem;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            letter-spacing: 0.2em;
-        }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-        }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 2rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav a:hover {
-            border: 1px solid var(--primary-color);
-        }
-
-        .section {
-            padding: 8rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 300;
-            letter-spacing: 0.3em;
-            margin-bottom: 4rem;
-        }
-
-        .zen-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 4rem;
-        }
-
-        .zen-item {
-            text-align: center;
+        .abstract-box {
+            background: #f8f8f4;
+            border-left: 2px solid var(--accent-gold);
             padding: 2rem;
+            font-style: italic;
         }
 
-        .zen-item h3 {
-            font-weight: 300;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.2em;
+        .cite-tag {
+            font-size: 0.7rem;
+            vertical-align: super;
+            color: var(--accent-gold);
+            margin-left: 2px;
         }
 
-        .zen-item p {
-            line-height: 2;
-            color: var(--secondary-color);
-        }
-
-        .meditation {
-            background-color: #fff;
-            text-align: center;
-            padding: 8rem 0;
-        }
-
-        .meditation-quote {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            line-height: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 3rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
+        .faded-text {
+            color: #71716a;
         }
     </style>
 </head>
-<body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#about">关于</a></li>
-            <li><a href="#practice">修行</a></li>
-            <li><a href="#contact">联系</a></li>
-        </ul>
-    </nav>
+<body class="antialiased">
 
-    <header id="home" class="header">
-        <h1>禅意空间</h1>
-        <p>寂静中见本性，空明处得自在</p>
+    <!-- Academic Header -->
+    <header class="border-b border-gray-200 py-12 px-6">
+        <div class="max-w-academic mx-auto text-center">
+            <div class="text-[10px] tracking-[0.3em] uppercase mb-4 text-gray-500 font-semibold">
+                International Journal of Network Protocols & Infrastructure
+            </div>
+            <h1 class="text-5xl font-bold tracking-tight mb-4">SNI0: The Evolutionary Paradigm of Server Name Indication in NGINX Environments</h1>
+            <div class="flex justify-center space-x-6 text-sm italic text-gray-600">
+                <span>Research Division: Infrastructure Lab</span>
+                <span>Published: Jan 2026</span>
+            </div>
+        </div>
     </header>
 
-    <section id="about" class="section">
-        <div class="container">
-            <h2 class="section-title">禅修之道</h2>
-            <div class="zen-grid">
-                <div class="zen-item">
-                    <h3>正念</h3>
-                    <p>专注当下，觉知呼吸，安住当前一刻的体验。</p>
-                </div>
-                <div class="zen-item">
-                    <h3>静心</h3>
-                    <p>放下妄想，回归本心，体验内在的宁静与和谐。</p>
-                </div>
-                <div class="zen-item">
-                    <h3>智慧</h3>
-                    <p>透过禅修，开启智慧之眼，了悟生命真谛。</p>
-                </div>
+    <main class="max-w-academic mx-auto px-6 py-16">
+        
+        <!-- Abstract -->
+        <div class="abstract-box mb-16">
+            <span class="not-italic font-bold block mb-2 text-xs uppercase tracking-wider">Abstract</span>
+            This paper explores the critical intersection of Server Name Indication (SNI) and NGINX's reverse-proxy architecture. We analyze how the introduction of SNI transitioned the web from a one-to-one IP mapping to a multi-tenant virtual hosting model, and evaluate the forthcoming impact of Encrypted Client Hello (ECH) on privacy metrics.
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20 text-center border-y border-gray-100 py-8">
+            <div>
+                <div class="text-2xl font-bold serif italic text-amber-900">RFC 6066</div>
+                <div class="text-[10px] uppercase text-gray-400">Core Standard</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold serif italic text-amber-900">0x0000</div>
+                <div class="text-[10px] uppercase text-gray-400">Extension Type</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold serif italic text-amber-900">TLS 1.3</div>
+                <div class="text-[10px] uppercase text-gray-400">Native Support</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold serif italic text-amber-900">High</div>
+                <div class="text-[10px] uppercase text-gray-400">Dispatch Efficiency</div>
             </div>
         </div>
-    </section>
 
-    <section id="practice" class="meditation">
-        <div class="container">
-            <h2 class="section-title">禅语</h2>
-            <div class="meditation-quote">
-                <p>「万法归一，一归何处？」</p>
+        <!-- Section 1: Mechanism -->
+        <section id="mechanism" class="mb-20">
+            <h2 class="text-3xl font-bold mb-6 italic">I. The Handshake Dispatch Paradigm</h2>
+            <div class="grid md:grid-cols-5 gap-12">
+                <div class="md:col-span-3 space-y-4 text-gray-700">
+                    <p>
+                        In the pre-SNI era, the Transport Layer Security (TLS) handshake occurred before the HTTP host header was processed. This created a logical deadlock where the server could not determine which certificate to present. SNI resolves this by embedding the <span class="mono text-sm bg-gray-100 px-1">server_name</span> extension directly into the initial <span class="italic font-semibold">Client Hello</span> packet.
+                    </p>
+                    <p>
+                        Within the NGINX architecture, the SNI extension acts as a routing signal for the virtual host selection logic. This allows for the consolidation of resources where a single master process handles multiple security contexts.
+                    </p>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="p-6 bg-white border border-gray-100 shadow-sm rounded-sm">
+                        <div class="text-[10px] mono text-gray-400 mb-4 tracking-widest uppercase">Protocol Observation</div>
+                        <div class="space-y-3">
+                            
+                            <p class="text-[11px] text-gray-500 italic">Fig 1.1: Packet flow analysis during SNI-based TLS negotiation.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer id="contact">
-        <div class="container">
-            <p>地址：佛光市光明区静心禅院</p>
-            <p>电话：996-12345678</p>
-            <p>邮箱：contact@zenspace.com</p>
-        </div>
-    </footer>
+        <div class="section-divider"></div>
+
+        <!-- Section 2: Implementation -->
+        <section id="implementation" class="mb-20">
+            <h2 class="text-3xl font-bold mb-6 italic">II. NGINX Orchestration & Optimization</h2>
+            <p class="mb-8 text-gray-700">
+                The efficiency of SNI dispatching in NGINX is augmented by several kernel-level and protocol-level optimizations. These ensure that the computational overhead of handling high-density virtual hosts remains negligible.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <span class="text-amber-700 font-bold serif">01.</span>
+                        <div>
+                            <h4 class="font-bold">SSL Session Resumption</h4>
+                            <p class="text-sm text-gray-500">Optimizing subsequent connections through session tickets, bypasses redundant SNI parsing.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="text-amber-700 font-bold serif">02.</span>
+                        <div>
+                            <h4 class="font-bold">OCSP Stapling Coordination</h4>
+                            <p class="text-sm text-gray-500">The server pre-fetches revocation status, stapling it to the SNI-determined handshake response.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-900 text-stone-300 p-8 rounded-sm shadow-inner mono text-xs leading-loose">
+                    <span class="text-stone-500"># Academic reference config</span><br>
+                    server {<br>
+                    &nbsp;&nbsp;listen 443 ssl <span class="text-stone-500">http2</span>;<br>
+                    &nbsp;&nbsp;server_name <span class="text-amber-400">research.sni0.io</span>;<br>
+                    <br>
+                    &nbsp;&nbsp;ssl_certificate <span class="text-stone-400">/pki/fullchain.pem;</span><br>
+                    &nbsp;&nbsp;ssl_session_cache <span class="text-stone-400">shared:SSL:10m;</span><br>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Privacy Evolution -->
+        <section id="privacy" class="mb-20 bg-amber-50/50 p-12 rounded-sm border border-amber-100">
+            <h2 class="text-3xl font-bold mb-6 italic text-amber-900">III. The Privacy Paradox: From ESNI to ECH</h2>
+            <p class="text-gray-700 mb-6">
+                Despite its utility, standard SNI exposes hostnames in plaintext, facilitating metadata surveillance. Current research focuses on <span class="font-bold uppercase tracking-tighter">ECH (Encrypted Client Hello)</span>, a transformative update that wraps the sensitive extension in an encrypted envelope.
+            </p>
+            <div class="text-sm text-amber-800/80 italic leading-relaxed">
+                "The evolution from SNI to ECH represents the final transition from 'identifiable routing' to 'obfuscated delivery', effectively completing the TLS 1.3 privacy promise."
+            </div>
+        </section>
+
+        <!-- Academic Footer / References -->
+        <footer class="mt-32 pt-12 border-t-4 border-double border-gray-200">
+            <h4 class="text-xs uppercase tracking-widest font-bold mb-6">References & Documentation</h4>
+            <ol class="text-[11px] text-gray-500 space-y-3 mono list-decimal pl-4">
+                <li>Eastlake, D., "Transport Layer Security (TLS) Extensions: Extension Definitions", RFC 6066.</li>
+                <li>NGINX Documentation, "Configuring HTTPS servers", F5 Networks.</li>
+                <li>Rescorla, E., et al., "TLS Encrypted Client Hello", IETF Draft.</li>
+            </ol>
+            <div class="mt-12 flex justify-between items-end">
+                <div class="text-[10px] text-gray-400">
+                    © 2026 SNI0 ACADEMIC REPOSITORY. ALL RIGHTS RESERVED.
+                </div>
+                <div class="w-16 h-1 bg-amber-900"></div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // Simple Intersection Observer for elegant reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, .abstract-box').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(15px)";
+            el.style.transition = "all 1s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
