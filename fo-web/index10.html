@@ -3,267 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心灵净土 - 寻找内心的宁静</title>
+    <title>SNI - Server Name Indication 技术解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary-color: #6B4423;
-            --secondary-color: #C8B6A6;
-            --text-color: #2C1810;
-            --background-color: #FDF6E3;
-            --accent-color: #8B7355;
+            --accent-gold: #D4AF37;
+            --accent-light: #F9DF7B;
+            --bg-dark: #050505;
+            --card-dark: #0f0f0f;
         }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            line-height: 2;
-            color: var(--text-color);
-            background-color: var(--background-color);
-        }
-
-        .scroll-container {
-            overflow-y: auto;
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: #a1a1aa;
             scroll-behavior: smooth;
         }
-
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(107, 68, 35, 0.7), rgba(107, 68, 35, 0.7)),
-                        url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: #FDF6E3;
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        .header h1 {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            letter-spacing: 0.5em;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            animation: fadeIn 2s ease-out;
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #FFF 0%, var(--accent-gold) 50%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeIn 2s ease-out 0.5s backwards;
+        .gold-border {
+            position: relative;
+            background: var(--card-dark);
+            border: 1px solid #222;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(253, 246, 227, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        .gold-border:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
         }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
+        .bg-grid-gold {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgba(212, 175, 55, 0.02)'%3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
         }
-
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            margin: 0 1rem;
+        .blur-orb-gold {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+        }
+        .gold-button {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-light));
+            color: #000;
             transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
         }
-
-        .nav a:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .section {
-            padding: 8rem 2rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .meditation-section {
-            background-color: #fff;
-        }
-
-        .meditation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-
-        .meditation-item {
-            padding: 2rem;
-            background: var(--background-color);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .meditation-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .wisdom-section {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-        }
-
-        .wisdom-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .wisdom-quote {
-            font-size: 2rem;
-            margin: 3rem 0;
-            line-height: 1.8;
-        }
-
-        .practice-section {
-            background: linear-gradient(rgba(253, 246, 227, 0.9), rgba(253, 246, 227, 0.9)),
-                        url('https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        .practice-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .practice-steps {
-            margin-top: 3rem;
-        }
-
-        .practice-step {
-            margin-bottom: 2rem;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 3rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
+        .gold-button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
         }
     </style>
 </head>
-<body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#meditation">禅修心得</a></li>
-            <li><a href="#wisdom">智慧开示</a></li>
-            <li><a href="#practice">修行方法</a></li>
-        </ul>
+<body class="bg-grid-gold">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/80 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 bg-gradient-to-tr from-yellow-600 to-yellow-200 rounded-full shadow-[0_0_10px_rgba(212,175,55,0.5)]"></div>
+                <span class="text-white font-bold tracking-tighter text-xl">SNI0.COM</span>
+            </div>
+            <div class="hidden md:flex space-x-10 text-[10px] uppercase tracking-[0.2em] font-bold">
+                <a href="#definition" class="text-zinc-500 hover:text-yellow-500 transition">Definition</a>
+                <a href="#workflow" class="text-zinc-500 hover:text-yellow-500 transition">Workflow</a>
+                <a href="#benefits" class="text-zinc-500 hover:text-yellow-500 transition">Benefits</a>
+                <a href="#specs" class="text-zinc-500 hover:text-yellow-500 transition">Specs</a>
+            </div>
+        </div>
     </nav>
 
-    <header id="home" class="header">
-        <h1>心灵净土</h1>
-        <p>在寂静中寻找内心的安宁，在修行中体悟生命的真谛</p>
+    <!-- Hero -->
+    <header class="relative pt-48 pb-32 px-6 flex flex-col items-center text-center overflow-hidden">
+        <div class="blur-orb-gold top-0 -left-20"></div>
+        <div class="blur-orb-gold bottom-0 -right-20"></div>
+        
+        <div class="inline-block px-4 py-1 border border-yellow-600/30 rounded-full text-[10px] font-bold text-yellow-500 uppercase tracking-[0.3em] mb-10">
+            Professional Network Protocol
+        </div>
+        <h1 class="text-6xl md:text-8xl font-bold text-white tracking-tight mb-8">
+            <span class="text-gradient-gold">Server Name</span><br>Indication
+        </h1>
+        <p class="max-w-2xl text-zinc-500 text-lg md:text-xl leading-relaxed mb-12 font-light">
+            SNI 协议通过在加密握手初期明确目标域名，彻底革新了多站点 HTTPS 部署的逻辑。它是现代云计算与虚拟主机不可或缺的技术底层。
+        </p>
+        <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+            <a href="#workflow" class="gold-button px-12 py-4 rounded-full font-bold">
+                深度技术解析
+            </a>
+            <a href="https://tools.ietf.org/html/rfc6066" target="_blank" class="border border-zinc-800 text-zinc-400 px-12 py-4 rounded-full font-bold hover:bg-zinc-900 transition">
+                RFC 文档
+            </a>
+        </div>
     </header>
 
-    <section id="meditation" class="section meditation-section">
-        <div class="container">
-            <h2 class="section-title">禅修心得</h2>
-            <div class="meditation-grid">
-                <div class="meditation-item">
-                    <h3>呼吸观照</h3>
-                    <p>通过专注呼吸，让心回归当下。每一次呼吸都是新的开始，每一刻觉知都是修行。在呼吸中找到内心的平静，在觉知中体验生命的流动。</p>
-                </div>
-                <div class="meditation-item">
-                    <h3>身心合一</h3>
-                    <p>保持正念，观察身体的感受。让身心在静坐中慢慢沉淀，体会身心合一的状态。通过持续的练习，培养稳定的定力。</p>
-                </div>
-                <div class="meditation-item">
-                    <h3>放下执着</h3>
-                    <p>观察念头的生起和消失，不执着于任何想法。学会放下，让心像明镜一样清澈，反映一切而不染着。</p>
+    <main class="max-w-6xl mx-auto px-6 space-y-48 pb-40">
+        
+        <!-- Definition Section -->
+        <section id="definition" class="grid md:grid-cols-2 gap-20 items-center">
+            <div class="order-2 md:order-1">
+                <div class="gold-border rounded-[2rem] p-12 space-y-8">
+                    <h2 class="text-3xl font-bold text-white">协议背景</h2>
+                    <p class="text-zinc-400 leading-relaxed">
+                        在传统 SSL 架构下，服务器必须在解密流量前出示证书。然而对于共享 IP 的多域名环境，服务器面临着“不知道访客找谁”的困境。
+                    </p>
+                    <div class="h-px bg-gradient-to-r from-yellow-900/50 to-transparent w-full"></div>
+                    <p class="text-zinc-400 leading-relaxed font-light">
+                        SNI 的出现通过在 <span class="text-yellow-500 code-font">Client Hello</span> 包中注入域名字段，赋予了服务器在加密建立前进行“精准分流”的能力。
+                    </p>
                 </div>
             </div>
-        </div>
-    </section>
+            <div class="order-1 md:order-2 space-y-6">
+                <div class="text-7xl font-black text-white/5">01</div>
+                <h3 class="text-4xl font-bold text-white leading-tight">打破单 IP 证书<br><span class="text-yellow-600">部署瓶颈</span></h3>
+            </div>
+        </section>
 
-    <section id="wisdom" class="section wisdom-section">
-        <div class="wisdom-content">
-            <h2 class="section-title">智慧开示</h2>
-            <div class="wisdom-quote">
-                <p>"心若无事，便是禅定；念若不起，便是智慧。"</p>
+        <!-- Workflow Section -->
+        <section id="workflow" class="space-y-20">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">技术执行链路</h2>
+                <p class="text-yellow-600/60 italic uppercase tracking-[0.3em] text-[10px] font-bold">TLS Handshake Sequence</p>
             </div>
-            <p>在日常生活中修行，每个当下都是修行的机会。保持觉知，观察内心的变化，在生活中体现佛法的智慧。</p>
-        </div>
-    </section>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="gold-border p-10 rounded-2xl group">
+                    <div class="text-yellow-600 font-mono text-xs mb-6 tracking-widest">PHASE 01 / TCP</div>
+                    <h4 class="text-white font-bold mb-4">基础连接</h4>
+                    <p class="text-sm text-zinc-500 leading-relaxed">底层的 TCP 连接建立，确定物理链路可达性。</p>
+                </div>
+                <div class="gold-border p-10 rounded-2xl bg-gradient-to-b from-yellow-500/10 to-transparent border-yellow-600/30">
+                    <div class="text-yellow-500 font-mono text-xs mb-6 tracking-widest">PHASE 02 / SNI</div>
+                    <h4 class="text-white font-bold mb-4">域名申明</h4>
+                    <p class="text-sm text-zinc-400 leading-relaxed">客户端发送 Client Hello，在扩展字段中包含 <span class="text-yellow-500">SNI Header</span>。</p>
+                </div>
+                <div class="gold-border p-10 rounded-2xl group">
+                    <div class="text-yellow-600 font-mono text-xs mb-6 tracking-widest">PHASE 03 / CERTS</div>
+                    <h4 class="text-white font-bold mb-4">证书匹配</h4>
+                    <p class="text-sm text-zinc-500 leading-relaxed">服务器解析主机名，从映射表中提取匹配的 SSL 证书进行响应。</p>
+                </div>
+            </div>
+        </section>
 
-    <section id="practice" class="section practice-section">
-        <div class="practice-content">
-            <h2 class="section-title">修行方法</h2>
-            <div class="practice-steps">
-                <div class="practice-step">
-                    <h3>1. 调身</h3>
-                    <p>选择安静的环境，采用舒适的坐姿。保持脊背挺直，双手自然放置，让身体放松但保持警觉。</p>
+        <!-- Feature List -->
+        <section id="benefits" class="grid md:grid-cols-2 gap-16">
+            <div class="space-y-6">
+                <h2 class="text-3xl font-bold text-white">核心优势</h2>
+                <p class="text-zinc-500 font-light">SNI 不仅是技术进步，更是成本与效率的平衡点。</p>
+                <div class="pt-8">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-10 h-10 rounded-full border border-yellow-600/20 flex items-center justify-center text-yellow-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <span class="text-white font-semibold">极致性能分发</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full border border-yellow-600/20 flex items-center justify-center text-yellow-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.407 2.67 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.407-2.67-1M12 16.5V18"></path></svg>
+                        </div>
+                        <span class="text-white font-semibold">大幅降低 IP 开销</span>
+                    </div>
                 </div>
-                <div class="practice-step">
-                    <h3>2. 调息</h3>
-                    <p>关注呼吸，让呼吸自然平和。不刻意改变呼吸的节奏，只是保持觉知。感受气息的出入，体会呼吸的微妙变化。</p>
+            </div>
+            <div class="grid gap-6">
+                <div class="p-8 bg-zinc-900/30 rounded-3xl border border-zinc-800">
+                    <h4 class="text-white font-bold mb-2">云计算基石</h4>
+                    <p class="text-sm text-zinc-500 leading-relaxed">现代负载均衡器（ALB/NLB）均基于 SNI 机制实现多租户证书隔离。</p>
                 </div>
-                <div class="practice-step">
-                    <h3>3. 调心</h3>
-                    <p>将注意力集中于呼吸，当心念散乱时，温和地将它带回呼吸。保持耐心和慈悲，不对妄念产生厌恶或执着。</p>
+                <div class="p-8 bg-zinc-900/30 rounded-3xl border border-zinc-800">
+                    <h4 class="text-white font-bold mb-2">零延迟损耗</h4>
+                    <p class="text-sm text-zinc-500 leading-relaxed">作为 TLS 扩展协议，它不会增加额外的往返时间（RTT）。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Specs Section -->
+        <section id="specs" class="space-y-12">
+            <div class="flex items-center space-x-6">
+                <h2 class="text-zinc-500 uppercase tracking-[0.4em] text-[10px] font-black whitespace-nowrap">Technical Matrix</h2>
+                <div class="h-px bg-zinc-900 flex-grow"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                <div class="space-y-2">
+                    <div class="text-3xl font-bold text-white tracking-tighter italic">RFC 6066</div>
+                    <div class="text-yellow-600/60 text-[10px] font-bold uppercase">Standards</div>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl font-bold text-white tracking-tighter italic">99.8%</div>
+                    <div class="text-yellow-600/60 text-[10px] font-bold uppercase">Support Rate</div>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl font-bold text-white tracking-tighter italic">TLS 1.3+</div>
+                    <div class="text-yellow-600/60 text-[10px] font-bold uppercase">Next Gen</div>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-3xl font-bold text-white tracking-tighter italic">Any IP</div>
+                    <div class="text-yellow-600/60 text-[10px] font-bold uppercase">Flexibility</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-32 pb-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-16 mb-24">
+                <div class="col-span-1">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <span class="text-white font-bold tracking-tighter text-2xl">SNI0.COM</span>
+                    </div>
+                    <p class="text-zinc-600 text-sm font-light">致力于解析最底层、最核心的互联网基础设施协议。</p>
+                </div>
+                <div class="col-span-2 flex justify-end space-x-24">
+                    <div class="space-y-6">
+                        <h5 class="text-[10px] font-bold text-white uppercase tracking-widest">Protocol Docs</h5>
+                        <ul class="text-zinc-500 text-sm space-y-3 font-light">
+                            <li><a href="#" class="hover:text-yellow-500 transition">TLS Extensions</a></li>
+                            <li><a href="#" class="hover:text-yellow-500 transition">ECH Security</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-6">
+                        <h5 class="text-[10px] font-bold text-white uppercase tracking-widest">Contact</h5>
+                        <ul class="text-zinc-500 text-sm space-y-3 font-light">
+                            <li><a href="#" class="hover:text-yellow-500 transition">Infrastructure Blog</a></li>
+                            <li><a href="#" class="hover:text-yellow-500 transition">System Status</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-zinc-900 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-[10px] text-zinc-700 font-bold tracking-[0.2em] uppercase">
+                    © 2026 PRECISION INFRASTRUCTURE DESIGN
+                </div>
+                <div class="flex space-x-8 text-[10px] text-zinc-700 font-bold uppercase tracking-widest">
+                    <a href="#" class="hover:text-zinc-400">Security</a>
+                    <a href="#" class="hover:text-zinc-400">Policy</a>
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
+
+    <script>
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(30px)";
+            el.style.transition = "all 1s cubic-bezier(0.23, 1, 0.32, 1)";
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
