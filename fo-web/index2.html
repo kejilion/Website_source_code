@@ -1,385 +1,211 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>净音禅心 - 佛学音乐传播</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>SNI Technical Overview - Insight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f5f5;
-            --text-color: #333;
-            --accent-color: #2c3e50;
+            --accent-primary: #2563eb;
+            --bg-light: #fcfcfd;
+            --card-white: #ffffff;
+            --border-soft: #e5e7eb;
+            --text-main: #111827;
+            --text-muted: #6b7280;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            color: var(--text-color);
-            line-height: 1.6;
-            background: var(--secondary-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Minimalist Background */
+        .dot-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 32px 32px;
+            z-index: -1;
         }
 
-        .hero {
-            height: 60vh;
-            background: linear-gradient(135deg, #4a90e2 0%, #2c3e50 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::after {
-            content: '';
+        /* Side Indicator */
+        .decor-line {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(45deg);
-            top: -50%;
-            left: -50%;
-            animation: wave 15s infinite linear;
-        }
-
-        @keyframes wave {
-            from { transform: rotate(45deg) translate(-50%, -50%); }
-            to { transform: rotate(405deg) translate(-50%, -50%); }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            letter-spacing: 4px;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-        }
-
-        .player-section {
-            max-width: 1200px;
-            margin: -100px auto 0;
-            padding: 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .player-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .now-playing {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .track-info {
-            margin: 2rem 0;
-        }
-
-        .track-title {
-            font-size: 2rem;
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .track-artist {
-            color: #666;
-            font-size: 1.2rem;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            margin: 2rem 0;
-            cursor: pointer;
-        }
-
-        .progress {
-            width: 30%;
+            left: 2rem;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent-primary), transparent);
             height: 100%;
-            background: var(--primary-color);
-            border-radius: 3px;
-            transition: width 0.1s linear;
         }
 
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
+        /* Clean Cards */
+        .eco-card {
+            background: var(--card-white);
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .eco-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            transform: translateY(-2px);
         }
 
-        .control-button {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .control-button:hover {
-            transform: scale(1.1);
-        }
-
-        .play-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .play-button:hover {
-            transform: scale(1.1);
-            background: var(--accent-color);
-        }
-
-        .lyrics {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(255,255,255,0.8);
-            border-radius: 15px;
-        }
-
-        .current-lyric {
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .next-lyric {
-            font-size: 1.4rem;
-            color: #666;
-            opacity: 0.7;
-        }
-
-        .playlist {
-            margin-top: 4rem;
-        }
-
-        .playlist-title {
-            font-size: 2rem;
-            color: var(--accent-color);
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .playlist-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            background: white;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            transition: transform 0.2s ease;
-            cursor: pointer;
-        }
-
-        .playlist-item:hover {
-            transform: translateX(10px);
-        }
-
-        .playlist-item img {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            margin-right: 1rem;
-        }
-
-        .playlist-info {
-            flex: 1;
-        }
-
-        .playlist-song-title {
-            font-size: 1.2rem;
-            color: var(--accent-color);
-        }
-
-        .playlist-song-artist {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-            background: var(--accent-color);
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .player-section {
-                margin-top: -50px;
-                padding: 1rem;
-            }
-
-            .controls {
-                gap: 1rem;
-            }
-
-            .control-button {
-                font-size: 1.5rem;
-            }
-
-            .play-button {
-                width: 50px;
-                height: 50px;
-            }
+        .data-tag {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            background: #f3f4f6;
+            border-radius: 999px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="hero-content">
-            <h1>净音禅心</h1>
-            <p>让心灵沉浸在佛音的海洋</p>
+
+    <div class="dot-bg"></div>
+
+    <!-- Header -->
+    <header class="p-8 flex justify-between items-center relative z-10 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
+        <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 bg-blue-600 rounded-sm"></div>
+            <span class="text-xl font-extrabold tracking-tight">SNI<span class="text-blue-600 italic">.spec</span></span>
         </div>
-    </div>
-
-    <section class="player-section">
-        <div class="player-card">
-            <div class="now-playing">
-                <div class="track-info">
-                    <h2 class="track-title">大悲咒</h2>
-                    <p class="track-artist">演唱：慈悲法师</p>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress"></div>
-                </div>
-
-                <div class="controls">
-                    <button class="control-button"><i class="fas fa-backward"></i></button>
-                    <button class="play-button"><i class="fas fa-play"></i></button>
-                    <button class="control-button"><i class="fas fa-forward"></i></button>
-                </div>
-            </div>
-
-            <div class="lyrics">
-                <p class="current-lyric">南无大悲观世音</p>
-                <p class="next-lyric">愿以此功德，庄严佛净土</p>
-            </div>
+        <div class="hidden md:flex space-x-8 text-[11px] mono uppercase tracking-widest text-gray-500 font-semibold">
+            <span>RFC_6066</span>
+            <span>TLS_Extensions</span>
+            <span>Infrastructure</span>
         </div>
+    </header>
 
-        <div class="playlist">
-            <h2 class="playlist-title">推荐佛乐</h2>
-            <div class="playlist-item">
-                <img src="https://images.unsplash.com/photo-1465847899084-d164df4dedc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
-                <div class="playlist-info">
-                    <h3 class="playlist-song-title">心经</h3>
-                    <p class="playlist-song-artist">演唱：法喜法师</p>
-                </div>
-                <i class="fas fa-play"></i>
+    <main class="max-w-5xl mx-auto px-8 py-24 relative">
+        <div class="decor-line"></div>
+
+        <!-- Hero Section -->
+        <section class="mb-32 pl-12">
+            <h1 class="text-6xl font-extrabold mb-8 tracking-tight text-gray-900 leading-[1.1]">
+                Protocol <br><span class="text-blue-600">Symbiosis</span>
+            </h1>
+            <p class="text-xl text-gray-500 max-w-2xl font-light leading-relaxed">
+                Server Name Indication (SNI) is not an isolated evolution. Its trajectory mirrors the fundamental shifts in internet architecture—from IPv4 exhaustion to the rise of absolute privacy.
+            </p>
+        </section>
+
+        <!-- Module 1: The IP Crisis -->
+        <section class="mb-40 pl-12">
+            <div class="flex items-center space-x-4 mb-10">
+                <span class="mono text-blue-600 text-sm font-bold">01 / CONCEPT</span>
+                <h2 class="text-2xl font-bold tracking-tight">Virtual Hosting & IP Scarcity</h2>
             </div>
-
-            <div class="playlist-item">
-                <img src="https://images.unsplash.com/photo-1470137237906-d8a4f71e1966?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
-                <div class="playlist-info">
-                    <h3 class="playlist-song-title">六字大明咒</h3>
-                    <p class="playlist-song-artist">演唱：智慧法师</p>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="eco-card p-10 rounded-xl">
+                    <div class="data-tag mb-6">Network Layer</div>
+                    <h3 class="text-xl font-bold mb-4">The IPv4 Bottleneck</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-6">
+                        As public IP addresses became a rare commodity, SNI became the "master key" for shared hosting. By allowing multiple HTTPS sites to coexist on a single IP, it effectively lowered the barrier for secure web adoption.
+                    </p>
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 mono text-[11px] text-gray-400">
+                        Status: CRITICAL_RESOURCE_OPTIMIZED
+                    </div>
                 </div>
-                <i class="fas fa-play"></i>
-            </div>
-
-            <div class="playlist-item">
-                <img src="https://images.unsplash.com/photo-1501084291732-13b1ba8f0ebc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="佛教音乐">
-                <div class="playlist-info">
-                    <h3 class="playlist-song-title">南无阿弥陀佛</h3>
-                    <p class="playlist-song-artist">演唱：净空法师</p>
+                <div class="flex flex-col justify-center space-y-6">
+                    <div class="border-l-4 border-blue-600 pl-6">
+                        <div class="text-4xl font-black text-gray-900">99.9%</div>
+                        <div class="text-xs uppercase tracking-wider text-gray-400 mt-1">Shared IP Efficiency</div>
+                    </div>
+                    <p class="text-xs text-gray-400 italic">Prior to SNI, each SSL certificate required a dedicated IP address, stalling the growth of the secure web.</p>
                 </div>
-                <i class="fas fa-play"></i>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <footer>
-        <p>© 2024 净音禅心 版权所有</p>
-        <p>联系我们：contact@jingyinchaxin.com</p>
+        <!-- Module 2: The Handshake Evolution -->
+        <section class="mb-40 pl-12">
+            <div class="flex items-center space-x-4 mb-10">
+                <span class="mono text-blue-600 text-sm font-bold">02 / MECHANISM</span>
+                <h2 class="text-2xl font-bold tracking-tight">Handshake & CA Democratization</h2>
+            </div>
+            <div class="eco-card p-12 rounded-xl">
+                <div class="flex flex-col md:flex-row gap-12">
+                    <div class="md:w-1/2">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-900">From Luxury to Standard</h3>
+                        <p class="text-gray-500 text-sm leading-loose">
+                            SNI enabled modern CAs like Let's Encrypt to scale. It allowed cloud providers to use automated scripts (ACME) to configure encryption for millions of subdomains simultaneously, effectively "democratizing" the security layer.
+                        </p>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-50 p-8 rounded-lg border border-gray-100 mono text-[12px]">
+                        <div class="text-blue-600 mb-3">// Client Hello Extension</div>
+                        <div class="text-gray-400">Server_Name: <span class="text-gray-900 font-bold">target-app.io</span></div>
+                        <div class="text-gray-400 mt-2">Server selects certificate...</div>
+                        <div class="text-emerald-600 font-bold mt-2">HANDSHAKE_PROCEEDED</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module 3: Privacy & ECH -->
+        <section class="mb-40 pl-12">
+            <div class="flex items-center space-x-4 mb-10">
+                <span class="mono text-blue-600 text-sm font-bold">03 / FUTURE</span>
+                <h2 class="text-2xl font-bold tracking-tight">The Privacy Frontier</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="eco-card p-8 md:col-span-2 rounded-xl">
+                    <h3 class="font-bold mb-4 text-gray-900">Closing the Plaintext Gap</h3>
+                    <p class="text-gray-400 text-sm italic mb-6">"Who is knocking at the door?"</p>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Historically, SNI was transmitted in plaintext, allowing intermediaries (ISPs/middleboxes) to see which domain a user was visiting. The evolution to <strong>ECH (Encrypted Client Hello)</strong> aims to encrypt the entire handshake payload, ensuring absolute metadata privacy.
+                    </p>
+                </div>
+                <div class="bg-blue-600 p-8 rounded-xl flex flex-col justify-center text-white">
+                    <div class="text-4xl font-black mb-2">ECH</div>
+                    <div class="text-[10px] mono text-blue-200 uppercase tracking-widest">Privacy Shield</div>
+                    <p class="text-xs mt-6 text-blue-100 leading-relaxed">The final piece of the puzzle to prevent SNI-based filtering and surveillance.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="mt-40 border-t border-gray-200 pt-20">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                <div class="max-w-xl">
+                    <div class="text-blue-600 mono text-[11px] font-bold mb-4 uppercase tracking-tighter">Summary</div>
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-6">SNI is the pulse of the ecosystem.</h2>
+                    <p class="text-gray-500 font-light leading-relaxed">
+                        Born from resource scarcity, matured in the cloud era, and now evolving toward total invisibility. Understanding SNI is fundamental to understanding the modern web's survival logic.
+                    </p>
+                </div>
+                <div class="mono text-[10px] text-gray-400 text-right uppercase leading-loose">
+                    Protocol: SNI<br>
+                    Standards: RFC 6066 / 9460<br>
+                    Layer: TLS Extension
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="p-16 text-center mono text-[10px] text-gray-300 uppercase tracking-[0.5em]">
+        Technical Architecture Insights // 2026
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const playButton = document.querySelector('.play-button');
-            const playlistButtons = document.querySelectorAll('.playlist-item i');
-            const progressBar = document.querySelector('.progress');
-            let isPlaying = false;
-
-            playButton.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                isPlaying = !isPlaying;
-                if (isPlaying) {
-                    icon.classList.remove('fa-play');
-                    icon.classList.add('fa-pause');
-                } else {
-                    icon.classList.remove('fa-pause');
-                    icon.classList.add('fa-play');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
                 }
             });
+        }, { threshold: 0.1 });
 
-            playlistButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    playlistButtons.forEach(btn => {
-                        btn.classList.remove('fa-pause');
-                        btn.classList.add('fa-play');
-                    });
-                    if (this.classList.contains('fa-play')) {
-                        this.classList.remove('fa-play');
-                        this.classList.add('fa-pause');
-                    } else {
-                        this.classList.remove('fa-pause');
-                        this.classList.add('fa-play');
-                    }
-                });
-            });
-
-            // 进度条模拟
-            let progress = 30;
-            setInterval(() => {
-                if (isPlaying) {
-                    progress = (progress + 1) % 100;
-                    progressBar.style.width = `${progress}%`;
-                }
-            }, 1000);
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = "0";
+            section.style.transform = "translateY(20px)";
+            section.style.transition = "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(section);
         });
     </script>
 </body>
