@@ -1,253 +1,274 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>佛教故事 - 智慧传承</title>
+    <title>sni0 news</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Libre+Franklin:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-color: #5C4033;
-            --secondary-color: #DEB887;
-            --text-color: #3A2618;
-            --background-color: #FFF8DC;
-            --accent-color: #8B7355;
-        }
-
         body {
-            font-family: 'Noto Sans SC', sans-serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'Libre+Franklin', sans-serif;
+            background-color: #fff;
+            color: #000;
+            line-height: 1.5;
         }
 
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(92, 64, 51, 0.7), rgba(92, 64, 51, 0.7)),
-                        url('https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--background-color);
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        header {
+            background-color: #f2f2f2;
+            border-bottom: 2px solid #009900;
+            padding: 10px 0;
         }
 
-        .header p {
-            font-size: 1.6rem;
-            max-width: 700px;
+        .container {
+            max-width: 960px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(92, 64, 51, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-        }
-
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--background-color);
+        .nav-link {
+            color: #000;
             text-decoration: none;
-            padding: 0.5rem 2rem;
-            margin: 0 1rem;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 20px;
         }
 
-        .nav a:hover {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
+        .nav-link:hover {
+            color: #009900;
         }
 
-        .section {
-            padding: 6rem 2rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            color: var(--primary-color);
-        }
-
-        .stories-grid {
+        .main-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            margin-top: 30px;
         }
 
-        .story-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        .sidebar h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
         }
 
-        .story-card:hover {
-            transform: translateY(-10px);
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
         }
 
-        .story-image {
+        .sidebar ul li {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar ul li a {
+            color: #009900;
+            text-decoration: none;
+        }
+
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+
+        h1, h2 {
+            color: #009900;
+            font-weight: normal;
+        }
+
+        .news-item {
+            margin-bottom: 15px;
+        }
+
+        .news-date {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .feature-table {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .story-content {
-            padding: 2rem;
+        .feature-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
         }
 
-        .story-content h3 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .feature-table tr:hover {
+            background-color: #f9f9f9;
         }
 
-        .story-content p {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .moral {
-            font-style: italic;
-            color: var(--accent-color);
-            border-left: 3px solid var(--secondary-color);
-            padding-left: 1rem;
-            margin-top: 1rem;
-        }
-
-        .wisdom-section {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        .wisdom-quote {
-            font-size: 1.8rem;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 2;
+        .status-badge {
+            background-color: #009900;
+            color: #fff;
+            padding: 2px 6px;
+            font-size: 11px;
+            border-radius: 3px;
+            font-weight: bold;
         }
 
         footer {
-            background-color: var(--primary-color);
-            color: var(--background-color);
+            margin-top: 60px;
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #888;
             text-align: center;
-            padding: 3rem 2rem;
-            margin-top: 4rem;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .section {
-                padding: 4rem 1rem;
-            }
-
-            .wisdom-quote {
-                font-size: 1.4rem;
-            }
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#stories">佛教故事</a></li>
-            <li><a href="#wisdom">智慧启示</a></li>
-            <li><a href="#contact">联系我们</a></li>
-        </ul>
-    </nav>
 
-    <header id="home" class="header">
-        <h1>佛教故事</h1>
-        <p>千年智慧，生命启示</p>
+    <header>
+        <div class="container flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div style="background-color: #009900; color: white; padding: 5px 15px; font-weight: bold; font-size: 24px;">
+                    sni0
+                </div>
+                <span class="mono font-bold text-lg">sni0.com</span>
+            </div>
+            <nav>
+                <a href="#" class="nav-link">news</a>
+                <a href="#" class="nav-link">download</a>
+                <a href="#" class="nav-link">documentation</a>
+                <a href="#" class="nav-link">support</a>
+            </nav>
+        </div>
     </header>
 
-    <section id="stories" class="section">
-        <h2 class="section-title">经典故事</h2>
-        <div class="stories-grid">
-            <div class="story-card">
-                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛陀故事" class="story-image">
-                <div class="story-content">
-                    <h3>须达拏太子的布施</h3>
-                    <p>须达拏太子以其无私的布施精神闻名于世。他不仅将自己的财物布施给需要的人，甚至将自己珍爱的白象也布施出去。</p>
-                    <div class="moral">启示：真正的布施在于无私的奉献之心。</div>
-                </div>
-            </div>
-            <div class="story-card">
-                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="禅宗公案" class="story-image">
-                <div class="story-content">
-                    <h3>庄严国王的忏悔</h3>
-                    <p>一位暴虐的国王遇见佛陀后，深刻认识到自己的过错，从此改过自新，成为一位仁慈的君主。</p>
-                    <div class="moral">启示：觉悟的开始在于认识自己的过错。</div>
-                </div>
-            </div>
-            <div class="story-card">
-                <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教寓言" class="story-image">
-                <div class="story-content">
-                    <h3>阿输迦王的转变</h3>
-                    <p>从一位残暴的统治者转变为佛法的护持者，阿输迦王的故事展现了佛法改变人心的力量。</p>
-                    <div class="moral">启示：慈悲与智慧能够转化最顽固的心灵。</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="container main-grid">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Basic Info</h3>
+            <ul>
+                <li><a href="#">About sni0</a></li>
+                <li><a href="#">Roadmap</a></li>
+                <li><a href="#">License</a></li>
+                <li><a href="#">Security</a></li>
+            </ul>
 
-    <section id="wisdom" class="wisdom-section">
-        <div class="wisdom-quote">
-            <p>「善恶之报，如影随形，三世因果，循环不失。」</p>
-        </div>
-    </section>
+            <h3>Download</h3>
+            <ul>
+                <li><a href="#">Mainline version</a></li>
+                <li><a href="#">Stable version</a></li>
+                <li><a href="#">Legacy versions</a></li>
+            </ul>
 
-    <footer id="contact">
-        <h2>联系我们</h2>
-        <p>地址：佛光市烟云区天云广场</p>
-        <p>电话：996-87654321</p>
-        <p>邮箱：stories@fojiao.com</p>
+            <h3>Documentation</h3>
+            <ul>
+                <li><a href="#">Install Guide</a></li>
+                <li><a href="#">ECH Configuration</a></li>
+                <li><a href="#">TLS 1.3 Tuning</a></li>
+                <li><a href="#">Anycast Setup</a></li>
+            </ul>
+
+            <h3>Contribution</h3>
+            <ul>
+                <li><a href="#">GitHub Repository</a></li>
+                <li><a href="#">Mailing Lists</a></li>
+                <li><a href="#">Bug Tracker</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <main>
+            <h1>What is sni0?</h1>
+            <p>
+                <strong>sni0</strong> [pronounced <i>S-N-I-zero</i>] is a high-performance privacy proxy and cryptographic engine 
+                designed to address the visibility of Server Name Indication (SNI) in the TLS handshake. It provides 
+                advanced Encrypted Client Hello (ECH) support, Anycast network routing, and massive throughput 
+                scalability for privacy-conscious infrastructures.
+            </p>
+
+            <h2 class="mt-8">Latest News</h2>
+            <div class="news-item">
+                <span class="news-date">14 Jan 2026</span>
+                <a href="#" class="text-green-700 underline">sni0-1.25.4 mainline version has been released.</a>
+            </div>
+            <div class="news-item">
+                <span class="news-date">02 Dec 2025</span>
+                <a href="#" class="text-green-700 underline">Security advisory: ECH padding vulnerability fixed in 1.25.3.</a>
+            </div>
+            <div class="news-item">
+                <span class="news-date">15 Nov 2025</span>
+                <a href="#" class="text-green-700 underline">sni0-1.24.0 stable version has been released.</a>
+            </div>
+
+            <h2 class="mt-8">Core Features</h2>
+            <table class="feature-table">
+                <tr>
+                    <td><strong>ECH Acceleration</strong></td>
+                    <td>Native support for Encrypted Client Hello with zero latency penalty.</td>
+                    <td><span class="status-badge">STABLE</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TLS 1.3 Hardening</strong></td>
+                    <td>Strict compliance with RFC 8446, disabling legacy insecure suites.</td>
+                    <td><span class="status-badge">STABLE</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Dynamic Anycast</strong></td>
+                    <td>Automatic BGP route optimization for edge nodes.</td>
+                    <td><span class="status-badge">NEW</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Post-Quantum KEM</strong></td>
+                    <td>Experimental support for Kyber hybrid key exchange.</td>
+                    <td><span class="status-badge">BETA</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Lua Scripting</strong></td>
+                    <td>Extendable request handling using embedded LuaJIT.</td>
+                    <td><span class="status-badge">STABLE</span></td>
+                </tr>
+            </table>
+
+            <h2 class="mt-8">Example Configuration</h2>
+            <pre class="bg-gray-100 p-4 rounded mono text-sm overflow-x-auto">
+sni0 {
+    worker_processes  auto;
+
+    security {
+        ech_mode on;
+        ech_config_path /etc/sni0/ech.config;
+        tls_protocols TLSv1.3;
+    }
+
+    upstream edge_nodes {
+        anycast_group global_cluster;
+        keepalive 64;
+    }
+
+    server {
+        listen 443 ssl http2;
+        server_name sni0.com;
+
+        location / {
+            proxy_pass http://edge_nodes;
+            privacy_headers on;
+        }
+    }
+}
+            </pre>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            &copy; 2026 SNI0 Project. All rights reserved. <br>
+            Developed with a focus on privacy and high-performance networking.
+        </div>
     </footer>
+
 </body>
 </html>
