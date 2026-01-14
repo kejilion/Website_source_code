@@ -3,370 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>佛学讲座 - 智慧传承</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>SNI 技术演进全景图 - SNI0.COM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4B0082;
-            --secondary-color: #9370DB;
-            --text-color: #2C1810;
-            --background-color: #F8F4FF;
-            --accent-color: #663399;
+            --pulse-green: #10b981;
+            --deep-space: #0a0a0c;
+            --border-zinc: #27272a;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--deep-space);
+            color: #d1d1d6;
+            overflow-x: hidden;
         }
-
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(75, 0, 130, 0.7), rgba(75, 0, 130, 0.7)),
-                        url('https://images.unsplash.com/photo-1470549638415-0a0755be0619?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.3em;
-            animation: fadeIn 2s ease-out;
-        }
-
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeIn 2s ease-out 0.5s backwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .nav {
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* 脉动背景效果 */
+        .bg-pulse {
             position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* 时间轴核心线 */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
             top: 0;
-            width: 100%;
-            background-color: rgba(248, 244, 255, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--border-zinc) 5%, var(--border-zinc) 95%, transparent);
+            transform: translateX(-50%);
         }
 
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-
-        .nav a:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .section {
-            padding: 6rem 2rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            color: var(--primary-color);
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 1rem auto;
-        }
-
-        .lecture-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .lecture-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .lecture-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .lecture-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .lecture-content {
-            padding: 2rem;
-        }
-
-        .lecture-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .lecture-info {
-            margin-bottom: 1rem;
-            color: var(--accent-color);
-        }
-
-        .lecture-description {
-            margin-bottom: 1.5rem;
-        }
-
-        .speaker-section {
-            background-color: white;
-            padding: 6rem 2rem;
-        }
-
-        .speaker-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .speaker-card {
-            text-align: center;
-            padding: 2rem;
-            background: var(--background-color);
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .speaker-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .speaker-avatar {
-            width: 150px;
-            height: 150px;
+        .pulse-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--pulse-green);
             border-radius: 50%;
-            margin-bottom: 1.5rem;
-            object-fit: cover;
+            box-shadow: 0 0 15px var(--pulse-green);
         }
 
-        .speaker-name {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+        /* 内容卡片 */
+        .tech-card {
+            background: rgba(20, 20, 23, 0.8);
+            border: 1px solid var(--border-zinc);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .tech-card:hover {
+            border-color: var(--pulse-green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
         }
 
-        .speaker-title {
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .register-btn {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-        }
-
-        .register-btn:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .lecture-grid,
-            .speaker-grid {
-                grid-template-columns: 1fr;
-            }
+        /* 故事性文本增强 */
+        .story-text {
+            line-height: 1.8;
+            letter-spacing: 0.02em;
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#lectures">讲座信息</a></li>
-            <li><a href="#speakers">讲师介绍</a></li>
-            <li><a href="#contact">联系我们</a></li>
-        </ul>
+
+    <div class="bg-pulse"></div>
+
+    <!-- 顶部导航 -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-6 bg-emerald-500"></div>
+                <span class="text-white font-bold tracking-tighter text-xl mono">SNI0.LAB</span>
+            </div>
+            <div class="text-[10px] mono text-emerald-500 font-bold uppercase tracking-[0.3em]">
+                SNI: The Soul of Virtual Hosting
+            </div>
+        </div>
     </nav>
 
-    <header id="home" class="header">
-        <h1>佛学讲座</h1>
-        <p>传承智慧，启迪心灵</p>
-    </header>
+    <!-- 巨幕区 -->
+    <section class="relative pt-40 pb-20 px-6 text-center overflow-hidden">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 italic uppercase">
+                SNI <span class="text-emerald-500">Legacy</span>
+            </h1>
+            <p class="text-zinc-400 text-lg md:text-xl font-light leading-relaxed mb-12 story-text">
+                这是一个关于“敲门声”的故事。从最初的盲目寻找，到后来的精准投递，再到未来的隐形通信。
+                SNI 不仅仅是一个协议扩展，它是互联网从昂贵奢侈走向普惠大众的关键推手。
+            </p>
+        </div>
+    </section>
 
-    <section id="lectures" class="section">
-        <div class="container">
-            <h2 class="section-title">近期讲座</h2>
-            <div class="lecture-grid">
-                <div class="lecture-card">
-                    <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="心经讲解" class="lecture-image">
-                    <div class="lecture-content">
-                        <h3 class="lecture-title">《心经》深度解读</h3>
-                        <div class="lecture-info">
-                            <p><i class="fas fa-calendar-alt"></i> 2024年3月15日</p>
-                            <p><i class="fas fa-clock"></i> 14:00-16:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 大讲堂</p>
-                        </div>
-                        <p class="lecture-description">通过深入浅出的讲解，带您领悟《心经》的精髓要义。</p>
-                        <a href="#" class="register-btn">报名参加</a>
-                    </div>
-                </div>
+    <!-- 时间轴区域 -->
+    <section class="relative max-w-6xl mx-auto px-6 pb-40">
+        <div class="timeline-line"></div>
 
-                <div class="lecture-card">
-                    <img src="https://images.unsplash.com/photo-1470549638415-0a0755be0619?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="禅修开示" class="lecture-image">
-                    <div class="lecture-content">
-                        <h3 class="lecture-title">禅修与生活</h3>
-                        <div class="lecture-info">
-                            <p><i class="fas fa-calendar-alt"></i> 2024年3月20日</p>
-                            <p><i class="fas fa-clock"></i> 19:00-21:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 禅修中心</p>
+        <!-- 节点 1: 前世 - 荒蛮时代的代价 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 text-right mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">PAST LIFE / 2000s Early</div>
+                <h2 class="text-3xl font-bold text-white mb-4">前世：昂贵的独立公寓</h2>
+                <p class="text-zinc-500 leading-relaxed story-text">
+                    在 SNI 诞生前，每一个 HTTPS 网站都必须独占一个昂贵的 IPv4 地址。就像每个居民都必须拥有一栋带门牌号的独立别墅，不能共用公寓楼。这导致了 IP 地址的极度浪费和建站成本的居高不下。
+                </p>
+            </div>
+            <div class="md:w-1/2 md:pl-20">
+                <div class="tech-card p-8 rounded-2xl">
+                    <div class="mb-4 text-emerald-500 mono text-xs">Legacy Architecture</div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-white/5 rounded">
+                            <span class="text-zinc-400">1 Domain</span>
+                            <span class="text-white">1 IP Address</span>
                         </div>
-                        <p class="lecture-description">探讨如何将禅修的智慧运用到日常生活中。</p>
-                        <a href="#" class="register-btn">报名参加</a>
-                    </div>
-                </div>
-
-                <div class="lecture-card">
-                    <img src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="佛教艺术" class="lecture-image">
-                    <div class="lecture-content">
-                        <h3 class="lecture-title">佛教艺术赏析</h3>
-                        <div class="lecture-info">
-                            <p><i class="fas fa-calendar-alt"></i> 2024年3月25日</p>
-                            <p><i class="fas fa-clock"></i> 15:00-17:00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> 艺术馆</p>
-                        </div>
-                        <p class="lecture-description">品味佛教艺术之美，感受千年文化传承。</p>
-                        <a href="#" class="register-btn">报名参加</a>
+                        <p class="text-[10px] text-zinc-500 italic">“当时，只有巨头公司才付得起 HTTPS 的门票钱。”</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section id="speakers" class="speaker-section">
-        <div class="container">
-            <h2 class="section-title">主讲法师</h2>
-            <div class="speaker-grid">
-                <div class="speaker-card">
-                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="智慧法师" class="speaker-avatar">
-                    <h3 class="speaker-name">智慧法师</h3>
-                    <p class="speaker-title">佛学研究院院长</p>
-                    <p>专注于佛教经典研究与讲解，著有多部佛学著作。</p>
-                </div>
-
-                <div class="speaker-card">
-                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="觉悟法师" class="speaker-avatar">
-                    <h3 class="speaker-name">觉悟法师</h3>
-                    <p class="speaker-title">禅修指导中心主任</p>
-                    <p>致力于禅修教学与实践指导，具有丰富的禅修经验。</p>
-                </div>
-
-                <div class="speaker-card">
-                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="慈悲法师" class="speaker-avatar">
-                    <h3 class="speaker-name">慈悲法师</h3>
-                    <p class="speaker-title">佛教艺术研究员</p>
-                    <p>专注于佛教艺术研究与鉴赏，对佛教艺术有独到见解。</p>
+        <!-- 节点 2: 今生 - 共享经济的钥匙 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 order-2 md:order-1">
+                <div class="tech-card p-8 rounded-2xl">
+                    
+                    <div class="mt-6 p-4 bg-emerald-500/5 border-l-2 border-emerald-500 text-xs text-emerald-400">
+                        突破：SNI 允许一个 IP 托管无限个域名。
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">联系我们</h2>
-            <div style="text-align: center;">
-                <p>地址：佛光市南城区佛学讲堂</p>
-                <p>电话：996-98765432</p>
-                <p>邮箱：lecture@temple.com</p>
-                <p style="margin-top: 2rem; color: var(--accent-color);">
-                    讲座报名时间：周一至周五 09:00-17:00
+            <div class="md:w-1/2 md:pl-20 order-1 md:order-2 mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">PRESENT / 2011 - NOW</div>
+                <h2 class="text-3xl font-bold text-white mb-4">今生：精准的投递员</h2>
+                <p class="text-zinc-500 leading-relaxed story-text">
+                    SNI (Server Name Indication) 的出现，就像是在公共公寓的大门口增加了一位投递员。客户端在敲门（握手）时，先递上一张小纸条：“我要找的是 302 室的 example.com”。从此，万千网站得以共享同一个 IP，开启了云计算和 CDN 的繁荣时代。
                 </p>
             </div>
         </div>
+
+        <!-- 节点 3: 阴影 - 隐私的裂缝 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 text-right mb-8 md:mb-0">
+                <div class="mono text-rose-500 text-sm font-bold mb-2">SHADOW / 2018 Vulnerability</div>
+                <h2 class="text-3xl font-bold text-white mb-4">阴影：被偷窥的纸条</h2>
+                <p class="text-zinc-500 leading-relaxed story-text">
+                    然而，这张“纸条”是明文书写的。虽然屋里的谈话是加密的，但路过的人都能看到纸条上写的域名。这意味着你的 ISP 甚至监听者，依然知道你去了哪家“公寓”。隐私在最后一公里依然存在裂缝。
+                </p>
+            </div>
+            <div class="md:w-1/2 md:pl-20">
+                <div class="tech-card p-8 rounded-2xl border-rose-500/20">
+                    <div class="text-rose-500 mono text-[10px] mb-4 uppercase">Security Insight</div>
+                    <div class="bg-black/40 p-4 rounded-lg border border-rose-900/30">
+                        <div class="flex justify-between items-center text-xs mono text-zinc-500">
+                            <span>TCP Data Stream</span>
+                            <span class="text-rose-500">SNI Visible</span>
+                        </div>
+                        <div class="mt-2 text-white mono">Target: hidden-service.org</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 节点 4: 未来 - 终极的隐身斗篷 -->
+        <div class="relative flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 order-2 md:order-1">
+                <div class="tech-card p-10 rounded-3xl bg-emerald-500/10 border-emerald-500/40 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl"></div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 016 0h2a5 5 0 00-5-5z"></path></svg>
+                        </div>
+                        <span class="text-white font-bold">ECH 加密模式</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs text-zinc-300">内层 Client Hello 整体加密</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs text-zinc-300">只有最终的服务商能解开真相</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 md:pl-20 order-1 md:order-2 mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">FUTURE / BEYOND 2026</div>
+                <h2 class="text-3xl font-bold text-white mb-4">未来：隐身的信使</h2>
+                <p class="text-zinc-500 leading-relaxed story-text">
+                    未来的 SNI 将进化为 <span class="text-white font-bold italic">ECH (Encrypted Client Hello)</span>。投递员不再通过纸条认人，而是通过一个只有目标公寓才能开启的保险箱。在外部观察者看来，所有人去往的都是同一个“加密迷雾”。
+                </p>
+            </div>
+        </div>
+
     </section>
 
-    <script>
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+    <!-- 总结区 -->
+    <section class="max-w-4xl mx-auto px-6 py-40 text-center">
+        <div class="h-px bg-zinc-800 w-24 mx-auto mb-12"></div>
+        <h3 class="text-3xl font-bold text-white mb-6">演进的终点是隐私</h3>
+        <p class="text-zinc-500 font-light leading-loose story-text max-w-2xl mx-auto">
+            从“一个地址一个人”的奢侈，到“精准投递”的效率，再到“完全加密”的自由。
+            SNI 的故事，本质上是人类在数字世界里，不断追求<span class="text-emerald-500">连接效率</span>与<span class="text-emerald-500">个体隐私</span>极限平衡的过程。
+        </p>
+    </section>
 
-        // 导航栏滚动效果
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.nav');
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(248, 244, 255, 0.98)';
-            } else {
-                nav.style.background = 'rgba(248, 244, 255, 0.95)';
-            }
+    <!-- 页脚 -->
+    <footer class="border-t border-zinc-900 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] mono text-zinc-600 tracking-widest uppercase">
+            <div>© 2026 SNI0.LAB / Infrastructure Story</div>
+            <div class="mt-4 md:mt-0 space-x-8">
+                <a href="#" class="hover:text-emerald-500 transition">GitHub</a>
+                <a href="#" class="hover:text-emerald-500 transition">Whitepaper</a>
+                <a href="#" class="hover:text-emerald-500 transition">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.relative.mb-40, .relative.flex').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
         });
     </script>
 </body>
