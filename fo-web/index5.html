@@ -1,288 +1,377 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>古韵禅心 - 传统佛教文化</title>
+    <title>SNI0 Research - Protocols & Infrastructures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for dynamic visual elements -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary-color: #8B0000;
-            --secondary-color: #DAA520;
-            --text-color: #4A4A4A;
-            --background-color: #FDF5E6;
-            --border-color: #D2691E;
+            --paper-bg: #fdfdfc;
+            --ink-black: #1a1a1a;
+            --accent-gold: #8b7355;
+            --border-light: #e8e8e1;
+            --hover-bg: #f8f8f4;
         }
-
         body {
-            font-family: 'Ma Shan Zheng', 'STKaiti', cursive;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="1" fill="%23DAA520" opacity="0.3"/></svg>');
+            font-family: 'Inter', sans-serif;
+            background-color: var(--paper-bg);
+            color: var(--ink-black);
+            line-height: 1.6;
+        }
+        h1, h2, h3, .serif {
+            font-family: 'Crimson Pro', serif;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .max-w-academic {
+            max-width: 1000px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        /* Animated Section Divider */
+        .section-divider {
+            border-top: 1px solid var(--border-light);
+            margin: 4rem 0;
+            position: relative;
+        }
+        .section-divider::after {
+            content: "§";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper-bg);
+            padding: 0 15px;
+            color: var(--accent-gold);
+            font-family: serif;
+            transition: transform 0.6s ease;
+        }
+        .section-divider:hover::after {
+            transform: translateX(-50%) rotate(180deg);
         }
 
-        .header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .abstract-box {
+            background: var(--hover-bg);
+            border-left: 3px solid var(--accent-gold);
+            padding: 2.5rem;
+            font-style: italic;
+            transition: all 0.3s ease;
+        }
+        .abstract-box:hover {
+            box-shadow: 0 4px 20px rgba(139, 115, 85, 0.05);
+        }
+
+        /* Interactive Icon Styling */
+        .icon-container {
+            display: inline-flex;
             align-items: center;
-            background: linear-gradient(rgba(139, 0, 0, 0.6), rgba(139, 0, 0, 0.6)),
-                        url('https://images.unsplash.com/photo-1550684376-efcbd6e3f031?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            color: #FDF5E6;
-            text-align: center;
-            border-bottom: 8px solid var(--secondary-color);
-        }
-
-        .header h1 {
-            font-size: 4.5rem;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .header p {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(139, 0, 0, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            border-bottom: 3px solid var(--secondary-color);
-        }
-
-        .nav ul {
-            display: flex;
             justify-content: center;
-            list-style: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid var(--border-light);
+            color: var(--accent-gold);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        .metric-card:hover .icon-container {
+            transform: scale(1.1);
+            border-color: var(--accent-gold);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        .nav a {
-            color: var(--background-color);
+        /* Floating Citation Style */
+        .cite-anchor {
+            color: var(--accent-gold);
             text-decoration: none;
-            padding: 0.5rem 2rem;
-            margin: 0 1rem;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            cursor: help;
+            border-bottom: 1px dotted transparent;
+        }
+        .cite-anchor:hover {
+            border-bottom-color: var(--accent-gold);
         }
 
-        .nav a:hover {
-            border: 2px solid var(--secondary-color);
-            background-color: rgba(218, 165, 32, 0.1);
+        /* Dynamic Sidebar for academic navigation */
+        .academic-nav {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
         }
 
-        .section {
-            padding: 6rem 0;
-            position: relative;
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background-color: var(--border-color);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 4rem;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-
-        .culture-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            padding: 2rem;
-        }
-
-        .culture-item {
-            background-color: white;
-            padding: 2rem;
-            border: 2px solid var(--border-color);
-            border-radius: 5px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .culture-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .culture-item h3 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .culture-item p {
-            color: var(--text-color);
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .quote-section {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            padding: 6rem 0;
-            text-align: center;
-        }
-
-        .quote {
-            font-size: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.8;
-            position: relative;
-            padding: 2rem;
-        }
-
-        .quote::before,
-        .quote::after {
-            content: '"';
-            font-size: 4rem;
-            color: var(--secondary-color);
-            position: absolute;
-        }
-
-        .quote::before {
-            top: -20px;
-            left: -20px;
-        }
-
-        .quote::after {
-            bottom: -40px;
-            right: -20px;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-align: center;
-            padding: 3rem 0;
-            border-top: 5px solid var(--secondary-color);
-        }
-
-        footer p {
-            margin: 0.5rem 0;
-            font-size: 1.1rem;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 3rem;
-            }
-
-            .header p {
-                font-size: 1.3rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .quote {
-                font-size: 1.5rem;
-                padding: 1rem;
-            }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
-<body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#culture">文化</a></li>
-            <li><a href="#wisdom">智慧</a></li>
-            <li><a href="#contact">联系</a></li>
-        </ul>
-    </nav>
+<body class="antialiased">
 
-    <header id="home" class="header">
-        <h1>古韵禅心</h1>
-        <p>传承千年智慧，品味禅意人生</p>
+    <!-- Header with Dynamic Top Border -->
+    <div class="h-1.5 w-full bg-gradient-to-r from-stone-200 via-amber-700 to-stone-200"></div>
+    <header class="border-b border-gray-200 py-16 px-6 bg-white/50">
+        <div class="max-w-academic mx-auto text-center">
+            <div class="flex justify-center mb-6">
+                <i data-lucide="scroll-text" class="text-amber-800 w-8 h-8 opacity-50"></i>
+            </div>
+            <div class="text-[10px] tracking-[0.4em] uppercase mb-4 text-gray-400 font-bold">
+                International Journal of Network Protocols & Infrastructure
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">
+                SNI0: The Evolutionary Paradigm of <br>Server Name Indication in NGINX Environments
+            </h1>
+            <div class="flex flex-wrap justify-center gap-8 text-sm italic text-gray-500 serif">
+                <span class="flex items-center gap-2"><i data-lucide="microscope" class="w-4 h-4"></i> Research Division: Infrastructure Lab</span>
+                <span class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> Published: Jan 2026</span>
+                <span class="flex items-center gap-2"><i data-lucide="fingerprint" class="w-4 h-4"></i> DOI: 10.1038/sni0.2026.arch</span>
+            </div>
+        </div>
     </header>
 
-    <section id="culture" class="section">
-        <div class="container">
-            <h2 class="section-title">佛教文化</h2>
-            <div class="culture-grid">
-                <div class="culture-item">
-                    <h3>经典传承</h3>
-                    <p>探索佛教经典的深邃智慧，感悟生命的真谛与意义。</p>
+    <main class="max-w-academic mx-auto px-6 py-16 lg:flex gap-16">
+        
+        <!-- Main Content -->
+        <div class="lg:w-3/4">
+            <!-- Abstract -->
+            <div class="abstract-box mb-16 fade-in">
+                <span class="not-italic font-bold block mb-3 text-xs uppercase tracking-widest text-amber-900">Abstract</span>
+                <p class="text-lg leading-relaxed">
+                    This paper explores the critical intersection of Server Name Indication (SNI) and NGINX's reverse-proxy architecture. We analyze how the introduction of SNI transitioned the web from a one-to-one IP mapping to a multi-tenant virtual hosting model, and evaluate the forthcoming impact of Encrypted Client Hello (ECH) on privacy metrics.
+                </p>
+            </div>
+
+            <!-- Metrics Grid with Icons -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 fade-in">
+                <div class="metric-card p-6 border border-gray-100 rounded-lg text-center hover:bg-white transition-all">
+                    <div class="icon-container mx-auto"><i data-lucide="layers"></i></div>
+                    <div class="text-xl font-bold serif italic text-amber-900">RFC 6066</div>
+                    <div class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Core Standard</div>
                 </div>
-                <div class="culture-item">
-                    <h3>禅修艺术</h3>
-                    <p>通过传统禅修方式，净化心灵，提升精神境界。</p>
+                <div class="metric-card p-6 border border-gray-100 rounded-lg text-center hover:bg-white transition-all">
+                    <div class="icon-container mx-auto"><i data-lucide="binary"></i></div>
+                    <div class="text-xl font-bold serif italic text-amber-900">0x0000</div>
+                    <div class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Extension Type</div>
                 </div>
-                <div class="culture-item">
-                    <h3>文化传承</h3>
-                    <p>弘扬佛教文化精髓，传承千年智慧火种。</p>
+                <div class="metric-card p-6 border border-gray-100 rounded-lg text-center hover:bg-white transition-all">
+                    <div class="icon-container mx-auto"><i data-lucide="shield-check"></i></div>
+                    <div class="text-xl font-bold serif italic text-amber-900">TLS 1.3</div>
+                    <div class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Native Support</div>
+                </div>
+                <div class="metric-card p-6 border border-gray-100 rounded-lg text-center hover:bg-white transition-all">
+                    <div class="icon-container mx-auto"><i data-lucide="zap"></i></div>
+                    <div class="text-xl font-bold serif italic text-amber-900">High</div>
+                    <div class="text-[9px] uppercase tracking-widest text-gray-400 mt-1">Dispatch Speed</div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <section id="wisdom" class="quote-section">
-        <div class="container">
-            <div class="quote">
-                一花一世界，一叶一菩提。
-                心若无尘，方见本性。
+            <!-- Section 1: Mechanism -->
+            <section id="mechanism" class="mb-20 fade-in">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="cpu" class="text-amber-800 w-6 h-6"></i>
+                    <h2 class="text-3xl font-bold italic">I. The Handshake Dispatch Paradigm</h2>
+                </div>
+                <div class="space-y-6 text-gray-700">
+                    <p>
+                        In the pre-SNI era, the Transport Layer Security (TLS) handshake occurred before the HTTP host header was processed. This created a logical deadlock<a href="#ref-1" class="cite-anchor">[1]</a> where the server could not determine which certificate to present. SNI resolves this by embedding the <span class="mono text-sm bg-gray-100 px-1 rounded">server_name</span> extension directly into the initial <span class="italic font-semibold underline decoration-amber-200 underline-offset-4">Client Hello</span> packet.
+                    </p>
+                    
+                    <div class="my-10 p-1 bg-gray-100 rounded-xl">
+                        <div class="bg-white border border-gray-200 shadow-sm rounded-lg p-8">
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-[10px] mono text-gray-400 tracking-widest uppercase flex items-center gap-2">
+                                    <i data-lucide="activity" class="w-3 h-3"></i> Protocol Observation 1.1
+                                </span>
+                                <span class="text-[10px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded">Live Telemetry</span>
+                            </div>
+                            <div class="space-y-4">
+                                
+                                <p class="text-[11px] text-gray-500 italic text-center border-t border-gray-50 pt-4">Fig 1.1: Packet flow analysis during SNI-based TLS negotiation, showing extension injection points.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        Within the NGINX architecture, the SNI extension acts as a routing signal for the virtual host selection logic. This allows for the consolidation of resources where a single master process handles multiple security contexts across distinct memory segments.
+                    </p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <!-- Section 2: Implementation -->
+            <section id="implementation" class="mb-20 fade-in">
+                <div class="flex items-center gap-3 mb-6">
+                    <i data-lucide="server" class="text-amber-800 w-6 h-6"></i>
+                    <h2 class="text-3xl font-bold italic">II. NGINX Orchestration & Optimization</h2>
+                </div>
+                <p class="mb-8 text-gray-700 leading-relaxed">
+                    The efficiency of SNI dispatching in NGINX is augmented by several kernel-level and protocol-level optimizations. These ensure that the computational overhead of handling high-density virtual hosts remains negligible even under peak load conditions<a href="#ref-2" class="cite-anchor">[2]</a>.
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div class="group p-5 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-100 rounded-xl transition-all">
+                            <div class="flex gap-4">
+                                <span class="text-amber-700 font-bold serif text-xl">01.</span>
+                                <div>
+                                    <h4 class="font-bold mb-1">SSL Session Resumption</h4>
+                                    <p class="text-sm text-gray-500 italic">Optimizing subsequent connections through session tickets, significantly bypassing redundant SNI parsing layers.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group p-5 hover:bg-white hover:shadow-sm border border-transparent hover:border-gray-100 rounded-xl transition-all">
+                            <div class="flex gap-4">
+                                <span class="text-amber-700 font-bold serif text-xl">02.</span>
+                                <div>
+                                    <h4 class="font-bold mb-1">OCSP Stapling Coordination</h4>
+                                    <p class="text-sm text-gray-500 italic">Pre-fetching revocation status and stapling it to the SNI-determined handshake response for reduced RTT.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-amber-600/20 to-stone-600/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                        <div class="relative bg-stone-900 text-stone-300 p-8 rounded-lg shadow-2xl mono text-xs leading-loose">
+                            <div class="flex justify-between items-center mb-4 border-b border-stone-800 pb-2">
+                                <span class="text-stone-500 uppercase tracking-tighter">nginx_research.conf</span>
+                                <i data-lucide="terminal" class="w-3 h-3 text-stone-600"></i>
+                            </div>
+                            <span class="text-stone-500"># Production SNI Config</span><br>
+                            server {<br>
+                            &nbsp;&nbsp;listen 443 ssl <span class="text-amber-600">http2</span>;<br>
+                            &nbsp;&nbsp;server_name <span class="text-amber-400">research.sni0.io</span>;<br>
+                            <br>
+                            &nbsp;&nbsp;ssl_certificate <span class="text-stone-400">/pki/fullchain.pem;</span><br>
+                            &nbsp;&nbsp;ssl_session_cache <span class="text-stone-400">shared:SSL:10m;</span><br>
+                            &nbsp;&nbsp;ssl_stapling <span class="text-amber-600">on</span>;<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Privacy Evolution -->
+            <section id="privacy" class="mb-20 bg-amber-50/40 p-12 rounded-2xl border border-amber-100/50 relative overflow-hidden fade-in">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i data-lucide="lock" class="w-32 h-32"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i data-lucide="eye-off" class="text-amber-900 w-6 h-6"></i>
+                        <h2 class="text-3xl font-bold italic text-amber-900">III. The Privacy Paradox: From ESNI to ECH</h2>
+                    </div>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        Despite its utility, standard SNI exposes hostnames in plaintext, facilitating metadata surveillance. Current research focuses on <span class="font-bold uppercase tracking-tighter">ECH (Encrypted Client Hello)</span>, a transformative update that wraps the sensitive extension in an encrypted envelope, effectively neutralizing ISP-level traffic analysis<a href="#ref-3" class="cite-anchor">[3]</a>.
+                    </p>
+                    <div class="pl-6 border-l-2 border-amber-900/20 text-sm text-amber-900/80 italic leading-loose py-2">
+                        "The evolution from SNI to ECH represents the final transition from 'identifiable routing' to 'obfuscated delivery', effectively completing the cryptographic promise of TLS 1.3."
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <aside class="hidden lg:block lg:w-1/4">
+            <nav class="academic-nav space-y-12">
+                <!-- Navigation -->
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2">
+                        <i data-lucide="map" class="w-3 h-3"></i> Contents
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-500 font-medium">
+                        <li><a href="#mechanism" class="hover:text-amber-800 transition flex items-center gap-2 italic">I. Dispatch Paradigm <i data-lucide="chevron-right" class="w-3 h-3"></i></a></li>
+                        <li><a href="#implementation" class="hover:text-amber-800 transition flex items-center gap-2 italic">II. NGINX Orchestration <i data-lucide="chevron-right" class="w-3 h-3"></i></a></li>
+                        <li><a href="#privacy" class="hover:text-amber-800 transition flex items-center gap-2 italic">III. Privacy Paradox <i data-lucide="chevron-right" class="w-3 h-3"></i></a></li>
+                    </ul>
+                </div>
+
+                <!-- Related Research -->
+                <div class="p-6 bg-stone-50 border border-stone-100 rounded-lg">
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-3">Resources</h4>
+                    <div class="space-y-4">
+                        <a href="#" class="block text-xs font-semibold text-stone-600 hover:text-amber-800 flex items-center gap-2">
+                            <i data-lucide="download-cloud" class="w-3 h-3"></i> Download PDF
+                        </a>
+                        <a href="#" class="block text-xs font-semibold text-stone-600 hover:text-amber-800 flex items-center gap-2">
+                            <i data-lucide="github" class="w-3 h-3"></i> Access Source Code
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Keywords -->
+                <div>
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Keywords</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] rounded text-gray-600">TLS 1.3</span>
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] rounded text-gray-600">Reverse Proxy</span>
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] rounded text-gray-600">ECH</span>
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] rounded text-gray-600">Metadata Privacy</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+    </main>
+
+    <!-- Footer / References -->
+    <footer class="mt-32 pt-16 pb-24 border-t-4 border-double border-gray-200 bg-stone-50/50">
+        <div class="max-w-academic mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16">
+                <div>
+                    <h4 class="text-xs uppercase tracking-widest font-bold mb-8 flex items-center gap-2">
+                        <i data-lucide="library" class="w-4 h-4 text-amber-900"></i> References
+                    </h4>
+                    <ol class="text-[11px] text-gray-500 space-y-4 mono list-decimal pl-4">
+                        <li id="ref-1">Eastlake, D., "Transport Layer Security (TLS) Extensions: Extension Definitions", <span class="text-amber-800 italic">RFC 6066</span>, 2011.</li>
+                        <li id="ref-2">NGINX Documentation, "Configuring HTTPS servers", <span class="text-amber-800 italic">F5 Networks Whitepaper</span>.</li>
+                        <li id="ref-3">Rescorla, E., et al., "TLS Encrypted Client Hello", <span class="text-amber-800 italic">IETF Network Working Group Draft</span>, 2024.</li>
+                    </ol>
+                </div>
+                <div class="flex flex-col justify-end items-end">
+                    <div class="text-[10px] text-gray-400 uppercase tracking-widest text-right mb-6">
+                        © 2026 SNI0 Academic Repository <br> 
+                        Infrastructure Intelligence Unit
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center"><i data-lucide="share-2" class="w-3 h-3 text-gray-400"></i></div>
+                        <div class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center"><i data-lucide="mail" class="w-3 h-3 text-gray-400"></i></div>
+                        <div class="w-24 h-1 bg-amber-900 ml-4"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <div class="container">
-            <p>地址：佛光市南城区古刹街108号</p>
-            <p>电话：996-87654321</p>
-            <p>邮箱：info@guyunchanxin.com</p>
         </div>
     </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Intersection Observer for elegant reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Dynamic icon hover effect for section dividers
+        document.querySelectorAll('.section-divider').forEach(div => {
+            div.addEventListener('mouseenter', () => {
+                // Potential extra logic for interactive elements
+            });
+        });
+    </script>
 </body>
 </html>
