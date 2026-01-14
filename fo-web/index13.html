@@ -3,382 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>禅修指导 - 寻找内心的宁静</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>SNI 技术演进全景图 - SNI0.COM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3C4C3C;
-            --secondary-color: #8BA88B;
-            --text-color: #2C3E2C;
-            --background-color: #F5F8F5;
-            --accent-color: #5B795B;
+            --pulse-green: #10b981;
+            --deep-space: #0a0a0c;
+            --border-zinc: #27272a;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Noto Serif SC', serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--deep-space);
+            color: #d1d1d6;
+            overflow-x: hidden;
         }
-
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(60, 76, 60, 0.7), rgba(60, 76, 60, 0.7)),
-                        url('https://images.unsplash.com/photo-1507692049790-de58290a4334?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.2em;
-            animation: fadeIn 2s ease-out;
-        }
-
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeIn 2s ease-out 0.5s backwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .nav {
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* 脉动背景效果 */
+        .bg-pulse {
             position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.03) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* 时间轴核心线 */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
             top: 0;
-            width: 100%;
-            background-color: rgba(245, 248, 245, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--border-zinc) 5%, var(--border-zinc) 95%, transparent);
+            transform: translateX(-50%);
         }
 
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
-
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
-
-        .nav a:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
-
-        .section {
-            padding: 6rem 2rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
-            color: var(--primary-color);
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 1rem auto;
-        }
-
-        .meditation-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .meditation-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .meditation-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .meditation-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .meditation-content {
-            padding: 2rem;
-        }
-
-        .meditation-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .meditation-description {
-            color: var(--text-color);
-            margin-bottom: 1.5rem;
-        }
-
-        .meditation-time {
-            color: var(--accent-color);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .schedule {
-            margin-top: 4rem;
-        }
-
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .schedule-table th,
-        .schedule-table td {
-            padding: 1.5rem;
-            text-align: left;
-            border-bottom: 1px solid var(--background-color);
-        }
-
-        .schedule-table th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .schedule-table tr:hover {
-            background-color: var(--background-color);
-        }
-
-        .instructor {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .instructor-avatar {
-            width: 50px;
-            height: 50px;
+        .pulse-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--pulse-green);
             border-radius: 50%;
-            object-fit: cover;
+            box-shadow: 0 0 15px var(--pulse-green);
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
+        /* 内容卡片 */
+        .tech-card {
+            background: rgba(20, 20, 23, 0.8);
+            border: 1px solid var(--border-zinc);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .tech-card:hover {
+            border-color: var(--pulse-green);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+        }
 
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .schedule-table {
-                font-size: 0.9rem;
-            }
-
-            .schedule-table th,
-            .schedule-table td {
-                padding: 1rem;
-            }
+        /* 标签渐变 */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#courses">禅修课程</a></li>
-            <li><a href="#schedule">课程安排</a></li>
-            <li><a href="#contact">联系我们</a></li>
-        </ul>
+
+    <div class="bg-pulse"></div>
+
+    <!-- 顶部导航 -->
+    <nav class="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-2 h-6 bg-emerald-500"></div>
+                <span class="text-white font-bold tracking-tighter text-xl mono">SNI0.LAB</span>
+            </div>
+            <div class="text-[10px] mono text-emerald-500 font-bold uppercase tracking-[0.3em]">
+                Evolutionary Roadmap v3.0
+            </div>
+        </div>
     </nav>
 
-    <header id="home" class="header">
-        <h1>禅修指导</h1>
-        <p>寻找内心的宁静，体验生命的真谛</p>
-    </header>
+    <!-- 巨幕区 -->
+    <section class="relative pt-40 pb-20 px-6 text-center overflow-hidden">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 italic">
+                INFRA <span class="text-emerald-500">EVOLUTION</span>
+            </h1>
+            <p class="text-zinc-500 text-lg md:text-xl font-light leading-relaxed mb-12">
+                从打破 IP 限制的枷锁，到构建全链路隐私加密，SNI 技术的发展见证了 Web 基础设施的蝶变过程。
+            </p>
+        </div>
+    </section>
 
-    <section id="courses" class="section">
-        <div class="container">
-            <h2 class="section-title">禅修课程</h2>
-            <div class="meditation-grid">
-                <div class="meditation-card">
-                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="初级禅修" class="meditation-image">
-                    <div class="meditation-content">
-                        <h3 class="meditation-title">初级禅修课程</h3>
-                        <p class="meditation-description">适合禅修初学者，学习基本的呼吸法和静坐技巧。</p>
-                        <div class="meditation-time">
-                            <i class="fas fa-clock"></i>
-                            <span>课程时长：2小时/次</span>
+    <!-- 时间轴区域 -->
+    <section class="relative max-w-6xl mx-auto px-6 pb-40">
+        <div class="timeline-line"></div>
+
+        <!-- 节点 1: 起源 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 text-right mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">ORIGIN / 2003</div>
+                <h2 class="text-3xl font-bold text-white mb-4">RFC 3546：协议雏形</h2>
+                <p class="text-zinc-500 leading-relaxed">
+                    在 SSL/TLS 握手早期，客户端无法告知服务器要访问的具体域名。RFC 3546 首次提出了在握手中加入 <span class="mono text-zinc-300">server_name</span> 扩展的构想，为虚拟主机时代的 HTTPS 奠定了基石。
+                </p>
+            </div>
+            <div class="md:w-1/2 md:pl-20">
+                <div class="tech-card p-8 rounded-2xl">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center text-emerald-500">
+                            <i class="fas fa-file-code"></i>
                         </div>
+                        <span class="mono text-xs text-zinc-400">Specification Details</span>
                     </div>
-                </div>
-
-                <div class="meditation-card">
-                    <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="进阶禅修" class="meditation-image">
-                    <div class="meditation-content">
-                        <h3 class="meditation-title">进阶禅修课程</h3>
-                        <p class="meditation-description">深入学习禅修技巧，提升心灵觉知能力。</p>
-                        <div class="meditation-time">
-                            <i class="fas fa-clock"></i>
-                            <span>课程时长：3小时/次</span>
+                    <div class="text-zinc-300 space-y-2 text-sm font-light">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span>Extension Type</span>
+                            <span class="mono text-emerald-500">0x0000</span>
                         </div>
-                    </div>
-                </div>
-
-                <div class="meditation-card">
-                    <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="专题禅修" class="meditation-image">
-                    <div class="meditation-content">
-                        <h3 class="meditation-title">专题禅修课程</h3>
-                        <p class="meditation-description">针对特定主题的深度禅修指导。</p>
-                        <div class="meditation-time">
-                            <i class="fas fa-clock"></i>
-                            <span>课程时长：4小时/次</span>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span>Status</span>
+                            <span class="text-zinc-500">Proposed</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section id="schedule" class="section" style="background-color: white;">
-        <div class="container">
-            <h2 class="section-title">课程安排</h2>
-            <div class="schedule">
-                <table class="schedule-table">
-                    <thead>
-                        <tr>
-                            <th>时间</th>
-                            <th>课程</th>
-                            <th>指导法师</th>
-                            <th>地点</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>周一 09:00-11:00</td>
-                            <td>初级禅修</td>
-                            <td>
-                                <div class="instructor">
-                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="智慧法师" class="instructor-avatar">
-                                    <span>智慧法师</span>
-                                </div>
-                            </td>
-                            <td>禅修室A</td>
-                        </tr>
-                        <tr>
-                            <td>周三 14:00-17:00</td>
-                            <td>进阶禅修</td>
-                            <td>
-                                <div class="instructor">
-                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="觉悟法师" class="instructor-avatar">
-                                    <span>觉悟法师</span>
-                                </div>
-                            </td>
-                            <td>禅修室B</td>
-                        </tr>
-                        <tr>
-                            <td>周六 09:00-13:00</td>
-                            <td>专题禅修</td>
-                            <td>
-                                <div class="instructor">
-                                    <img src="https://images.unsplash.com/photo-1546456073-92b9f0a8d413?ixlib=rb-1.2.1&auto=format&fit=crop&w=80&q=80" alt="慈悲法师" class="instructor-avatar">
-                                    <span>慈悲法师</span>
-                                </div>
-                            </td>
-                            <td>大禅堂</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- 节点 2: 普及 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 order-2 md:order-1">
+                <div class="tech-card p-8 rounded-2xl">
+                    
+                    <div class="mt-6 p-4 bg-emerald-500/5 border-l-2 border-emerald-500 text-xs text-emerald-400">
+                        Impact: IPv4 conservation achieved.
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">联系我们</h2>
-            <div style="text-align: center;">
-                <p>地址：佛光市光明区禅修中心</p>
-                <p>电话：996-87654321</p>
-                <p>邮箱：meditation@temple.com</p>
-                <p style="margin-top: 2rem; color: var(--accent-color);">
-                    开放时间：周一至周日 08:00-18:00
+            <div class="md:w-1/2 md:pl-20 order-1 md:order-2 mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">EXPANSION / 2011 - 2015</div>
+                <h2 class="text-3xl font-bold text-white mb-4">虚拟主机的黄金时代</h2>
+                <p class="text-zinc-500 leading-relaxed">
+                    随着 RFC 6066 的标准化，SNI 在主流浏览器和服务器（Nginx/Apache）中得到全面支持。这直接催生了云服务商的弹性负载均衡（ALB/NLB），让单 IP 托管数万个 HTTPS 站点成为低成本的现实。
                 </p>
             </div>
         </div>
+
+        <!-- 节点 3: 隐私危机 -->
+        <div class="relative mb-40 flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 text-right mb-8 md:mb-0">
+                <div class="mono text-rose-500 text-sm font-bold mb-2">VULNERABILITY / 2018</div>
+                <h2 class="text-3xl font-bold text-white mb-4">明文泄露风险</h2>
+                <p class="text-zinc-500 leading-relaxed">
+                    虽然 SNI 解决了路由问题，但它的明文传输特性成为了隐私的“最后一公里”漏洞。中间人（MITM）或 ISP 可以通过嗅探 Client Hello 包中的 SNI 字段，轻松得知用户正在访问哪个网站。
+                </p>
+            </div>
+            <div class="md:w-1/2 md:pl-20">
+                <div class="tech-card p-8 rounded-2xl border-rose-500/20">
+                    <div class="text-rose-500 mono text-[10px] mb-4 uppercase">Security Alert</div>
+                    <div class="bg-black p-4 rounded-lg mono text-xs text-rose-300">
+                        Packet Sniffed:<br>
+                        TLS Header [SNI: confidential.com]<br>
+                        Status: <span class="underline">Exposed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 节点 4: 未来 -->
+        <div class="relative flex flex-col md:flex-row items-center">
+            <div class="pulse-dot top-0"></div>
+            <div class="md:w-1/2 md:pr-20 order-2 md:order-1">
+                <div class="tech-card p-10 rounded-3xl bg-emerald-500/10 border-emerald-500/40 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl"></div>
+                    <h4 class="text-white font-bold mb-4">ECH 工作流</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs text-zinc-400">使用服务商公钥加密内层 Client Hello</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs text-zinc-400">中间人仅能看见“假外壳”域名</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs text-zinc-400">实现真正的端到端域名加密</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 md:pl-20 order-1 md:order-2 mb-8 md:mb-0">
+                <div class="mono text-emerald-500 text-sm font-bold mb-2">FUTURE / 2024 - BEYOND</div>
+                <h2 class="text-3xl font-bold text-white mb-4">ECH：全链路隐身</h2>
+                <p class="text-zinc-500 leading-relaxed">
+                    从 ESNI 进化到 <span class="text-white font-bold">ECH (Encrypted Client Hello)</span>，这是 TLS 1.3 后的最重磅补丁。它将整个握手负载进行加密，使得外部观察者完全无法窥探访客的真实目的。
+                </p>
+            </div>
+        </div>
+
     </section>
 
-    <script>
-        // 平滑滚动
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+    <!-- 总结区 -->
+    <section class="max-w-4xl mx-auto px-6 py-40 text-center">
+        <div class="h-px bg-zinc-800 w-24 mx-auto mb-12"></div>
+        <h3 class="text-2xl font-bold text-white mb-6">技术总结</h3>
+        <p class="text-zinc-500 font-light leading-loose">
+            SNI 的演进史就是一部互联网在“效率”与“安全”之间不断平衡的历史。<br>
+            从最初为了解决 IPv4 枯竭的无奈之举，到如今成为保护数字人权的关键一环，<br>
+            <span class="mono text-emerald-500">SNI0.COM</span> 邀您共同见证更安全的 Web 未来。
+        </p>
+    </section>
 
-        // 导航栏滚动效果
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.nav');
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(245, 248, 245, 0.98)';
-            } else {
-                nav.style.background = 'rgba(245, 248, 245, 0.95)';
-            }
+    <!-- 页脚 -->
+    <footer class="border-t border-zinc-900 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] mono text-zinc-600 tracking-widest uppercase">
+            <div>© 2026 INFRASTRUCTURE CHRONICLES</div>
+            <div class="mt-4 md:mt-0 space-x-8">
+                <a href="#" class="hover:text-emerald-500 transition">GitHub</a>
+                <a href="#" class="hover:text-emerald-500 transition">RFC Archive</a>
+                <a href="#" class="hover:text-emerald-500 transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 时间轴节点进入视口动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.relative.mb-40, .relative.flex').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
         });
     </script>
 </body>
