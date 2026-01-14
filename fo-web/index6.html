@@ -1,278 +1,227 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>觉悟之道 - 现代佛教文化传播</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNI 技术简介 | sni0.com</title>
+  <meta name="description" content="Server Name Indication（SNI）技术原理、应用场景与安全影响的简要介绍。" />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --border: #1f2937;
+    }
 
-        :root {
-            --primary-color: #8B4513;
-            --secondary-color: #D2B48C;
-            --text-color: #333;
-            --light-bg: #FFF5E6;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-bg);
-        }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #020617 0%, #020617 40%, #020617 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        .header {
-            height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1519677584237-752f8853252e?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-        }
+    header {
+      padding: 80px 24px 60px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
 
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            animation: fadeInDown 1s ease-out;
-        }
+    header h1 {
+      font-size: 42px;
+      margin: 0 0 16px;
+      letter-spacing: 0.5px;
+    }
 
-        .header p {
-            font-size: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-            animation: fadeInUp 1s ease-out;
-        }
+    header p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 18px;
+    }
 
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 1rem 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+    }
 
-        .nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-        }
+    section {
+      margin-bottom: 64px;
+    }
 
-        .nav a {
-            color: var(--primary-color);
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            margin: 0 1rem;
-            transition: all 0.3s ease;
-            border-bottom: 2px solid transparent;
-        }
+    section h2 {
+      font-size: 28px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+    }
 
-        .nav a:hover {
-            border-bottom: 2px solid var(--primary-color);
-        }
+    section p {
+      max-width: 800px;
+      color: var(--text);
+    }
 
-        .section {
-            padding: 5rem 2rem;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
 
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--primary-color);
-        }
+    .card {
+      background: linear-gradient(180deg, #020617, #020617);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
 
-        .culture-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
 
-        .culture-item {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
 
-        .culture-item:hover {
-            transform: translateY(-5px);
-        }
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
 
-        .culture-item h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
+    .code {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 14px;
+      color: #e5e7eb;
+      overflow-x: auto;
+      margin-top: 16px;
+    }
 
-        .wisdom-section {
-            background-color: var(--primary-color);
-            color: white;
-        }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-        .wisdom-quote {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            font-size: 1.5rem;
-            font-style: italic;
-        }
+    footer span {
+      color: var(--accent);
+    }
 
-        .events {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .event-card {
-            background: white;
-            margin-bottom: 2rem;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .event-date {
-            min-width: 100px;
-            text-align: center;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
-
-            .nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .nav a {
-                margin: 0.5rem 0;
-            }
-
-            .event-card {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
+    @media (max-width: 640px) {
+      header h1 {
+        font-size: 32px;
+      }
+      header p {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="nav">
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#culture">佛教文化</a></li>
-            <li><a href="#wisdom">智慧开示</a></li>
-            <li><a href="#events">活动信息</a></li>
-            <li><a href="#contact">联系我们</a></li>
-        </ul>
-    </nav>
+  <header>
+    <h1>Server Name Indication（SNI）</h1>
+    <p>
+      SNI 是 TLS 协议中的一项关键扩展，用于在同一 IP 地址上安全托管多个域名，
+      是现代 HTTPS 基础设施的重要组成部分。
+    </p>
+  </header>
 
-    <header id="home" class="header">
-        <h1>觉悟之道</h1>
-        <p>探索内心的宁静，寻找生命的真谛</p>
-    </header>
-
-    <section id="culture" class="section">
-        <h2 class="section-title">佛教文化</h2>
-        <div class="culture-grid">
-            <div class="culture-item">
-                <h3>禅修冥想</h3>
-                <p>通过禅修，让心灵回归宁静，体验当下的美好。在繁忙的现代生活中找到内心的平衡。</p>
-            </div>
-            <div class="culture-item">
-                <h3>佛法教义</h3>
-                <p>了解佛陀的智慧教导，学习如何在现代生活中实践佛法，获得真实的快乐与解脱。</p>
-            </div>
-            <div class="culture-item">
-                <h3>艺术传承</h3>
-                <p>探索佛教艺术的深邃内涵，感受千年文化的精神传承，体验艺术之美。</p>
-            </div>
-        </div>
+  <main>
+    <section>
+      <h2>什么是 SNI</h2>
+      <p>
+        Server Name Indication（服务器名称指示）是 TLS 握手阶段的一个扩展字段。
+        客户端在建立加密连接之前，会将目标域名以明文形式发送给服务器，
+        使服务器能够选择正确的证书完成 TLS 握手。
+      </p>
     </section>
 
-    <section id="wisdom" class="section wisdom-section">
-        <h2 class="section-title">智慧开示</h2>
-        <div class="wisdom-quote">
-            <p>"心若清净，便是极乐；念若专一，便是菩提。"</p>
+    <section>
+      <h2>为什么需要 SNI</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>虚拟主机</h3>
+          <p>
+            在同一 IP 地址上部署多个 HTTPS 站点时，SNI 允许服务器区分不同域名并返回对应证书。
+          </p>
         </div>
+        <div class="card">
+          <h3>IPv4 资源紧张</h3>
+          <p>
+            SNI 显著减少了对独立 IPv4 地址的依赖，是大规模部署 HTTPS 的现实解决方案。
+          </p>
+        </div>
+        <div class="card">
+          <h3>现代浏览器支持</h3>
+          <p>
+            主流浏览器和操作系统均已支持 SNI，使其成为事实上的行业标准。
+          </p>
+        </div>
+      </div>
     </section>
 
-    <section id="events" class="section">
-        <h2 class="section-title">活动信息</h2>
-        <div class="events">
-            <div class="event-card">
-                <div class="event-date">2024/01/15</div>
-                <div class="event-content">
-                    <h3>新年祈福法会</h3>
-                    <p>在新的一年开始，让我们一起祈福，共同祝愿世界和平，众生安乐。</p>
-                </div>
-            </div>
-            <div class="event-card">
-                <div class="event-date">2024/02/01</div>
-                <div class="event-content">
-                    <h3>禅修工作坊</h3>
-                    <p>为期两天的禅修体验，带您探索内心的宁静，学习正念生活的方法。</p>
-                </div>
-            </div>
-        </div>
+    <section>
+      <h2>SNI 工作流程（简化）</h2>
+      <div class="code">
+ClientHello
+  ├─ TLS Version
+  ├─ Cipher Suites
+  └─ Server Name: example.com
+
+ServerHello
+  ├─ Selected Certificate (example.com)
+  └─ TLS Handshake Continue
+      </div>
     </section>
 
-    <footer id="contact">
-        <h2>联系我们</h2>
-        <p>地址：佛光市光明区和平里北街</p>
-        <p>电话：996-12345678</p>
-        <p>邮箱：info@juewuzhidao.com</p>
-    </footer>
+    <section>
+      <h2>安全与隐私</h2>
+      <p>
+        由于传统 SNI 信息在 TLS 握手阶段是明文的，可能被用于流量分析。
+        为此，TLS 1.3 引入了 ESNI / ECH（Encrypted Client Hello）等机制，
+        用于加密服务器名称字段，进一步提升隐私保护能力。
+      </p>
+    </section>
+
+    <section>
+      <h2>应用场景</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>CDN 与云服务</h3>
+          <p>在同一边缘节点上承载大量域名，实现高效的 HTTPS 分发。</p>
+        </div>
+        <div class="card">
+          <h3>反向代理</h3>
+          <p>基于 SNI 将流量路由至不同后端服务或容器。</p>
+        </div>
+        <div class="card">
+          <h3>网络安全研究</h3>
+          <p>分析 TLS 握手元数据，用于安全监测与协议演进研究。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      © <span>sni0.com</span> · SNI 技术静态展示页面
+    </div>
+  </footer>
 </body>
 </html>
