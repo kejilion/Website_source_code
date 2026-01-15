@@ -3,215 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNI0 - 隐私，就在连接之间</title>
+    <title>SNI - Server Name Indication 前沿技术剖析</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --apple-bg: #f5f5f7;
-            --apple-text: #1d1d1f;
-            --apple-blue: #0071e3;
+            --lab-blue: #0066ff;
+            --lab-gray: #f2f2f7;
+            --lab-text: #1d1d1f;
         }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #fff;
-            color: var(--apple-text);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: var(--lab-text);
+            line-height: 1.6;
         }
-
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        .hero-title {
+        .tech-grid {
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass-blur {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .section-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--lab-gray);
+            border-radius: 4px;
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: -0.022em;
-            line-height: 1.07;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #86868b;
         }
-
-        .apple-card {
-            background: var(--apple-bg);
-            border-radius: 30px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
+        .card-shadow {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
-
-        .apple-card:hover {
-            transform: scale(1.02);
-        }
-
-        .btn-primary {
-            background-color: var(--apple-blue);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 980px;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.8;
-        }
-
-        .section-padding {
-            padding: 120px 20px;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .card-shadow:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
         }
     </style>
 </head>
-<body>
+<body class="tech-grid">
 
-    <!-- 导航栏 -->
-    <nav class="glass-nav fixed top-0 w-full z-50 h-12 flex items-center justify-center">
-        <div class="max-w-[1024px] w-full px-6 flex justify-between items-center text-[12px] font-normal text-zinc-600">
-            <div class="flex items-center gap-1 font-bold text-black text-sm">
-                <i data-lucide="shield" class="w-4 h-4"></i> SNI0
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-blur border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <span class="text-xl font-bold tracking-tighter text-black">SNI<span class="text-blue-600">0</span></span>
+                <div class="h-4 w-[1px] bg-gray-200"></div>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tech Lab</span>
             </div>
-            <div class="flex gap-8">
-                <a href="#" class="hover:text-black transition">技术</a>
-                <a href="#" class="hover:text-black transition">性能</a>
-                <a href="#" class="hover:text-black transition">安全</a>
-                <a href="#" class="hover:text-black transition">支持</a>
+            <div class="hidden md:flex space-x-10 text-xs font-bold uppercase tracking-widest text-gray-500">
+                <a href="#analysis" class="hover:text-blue-600 transition">深度剖析</a>
+                <a href="#future" class="hover:text-blue-600 transition">前沿演进</a>
+                <a href="#deployment" class="hover:text-blue-600 transition">部署实践</a>
             </div>
-            <a href="#" class="bg-black text-white px-3 py-1 rounded-full text-[11px]">立即开始</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 text-center bg-white overflow-hidden">
-        <div class="max-w-4xl mx-auto px-6">
-            <h2 class="text-xl font-semibold mb-4">SNI0 Pro</h2>
-            <h1 class="hero-title text-6xl md:text-8xl mb-6 gradient-text">强劲。私密。<br>由内而外。</h1>
-            <p class="text-2xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-tight">
-                全新的加密 Client Hello 架构。不仅隐藏你的目的地，更重塑你的连接方式。
-            </p>
-            <div class="flex justify-center gap-8 text-xl">
-                <a href="#" class="text-blue-600 hover:underline flex items-center gap-1">了解更多 <i data-lucide="chevron-right" class="w-5 h-5"></i></a>
-                <a href="#" class="text-blue-600 hover:underline flex items-center gap-1">立即购买 <i data-lucide="chevron-right" class="w-5 h-5"></i></a>
-            </div>
-        </div>
-        
-        <!-- 核心视觉展示 -->
-        <div class="mt-20 relative flex justify-center">
-            <div class="w-full max-w-[1200px] h-[500px] bg-[#f5f5f7] rounded-[40px] flex items-center justify-center overflow-hidden">
-                 <div class="relative w-full h-full">
-                    <!-- 模拟硬件/协议核心的抽象视觉 -->
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="w-64 h-64 rounded-full border-[20px] border-zinc-200 animate-pulse"></div>
-                        <div class="absolute w-48 h-48 rounded-full border-[1px] border-blue-400 opacity-50 scale-150"></div>
-                        <i data-lucide="cpu" class="w-24 h-24 text-zinc-300"></i>
-                    </div>
-                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Bento Grid 技术板块 -->
-    <section class="bg-black text-white section-padding">
-        <div class="max-w-[1200px] mx-auto px-6">
-            <div class="mb-20">
-                <h2 class="text-5xl md:text-7xl font-bold tracking-tight">不仅仅是安全。<br><span class="text-zinc-500">更是极致。</span></h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <!-- 大卡片 -->
-                <div class="md:col-span-8 h-[500px] bg-zinc-900 rounded-[35px] p-12 flex flex-col justify-between group overflow-hidden relative">
-                    <div class="relative z-10">
-                        <span class="text-blue-500 font-bold mb-4 block">ECH 技术</span>
-                        <h3 class="text-4xl font-bold">完全加密握手</h3>
-                        <p class="text-zinc-400 mt-4 max-w-sm">
-                            利用 Encrypted Client Hello，域名在传输过程中将处于完全加密状态，告别明文泄漏。
-                        </p>
-                    </div>
-                    <!-- 装饰性元素 -->
-                    <div class="absolute right-[-50px] bottom-[-50px] w-96 h-96 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-600/30 transition-all"></div>
+    <header class="pt-48 pb-32 px-8 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="section-tag mb-6">Protocol Specification</span>
+                <h1 class="text-5xl md:text-7xl font-semibold tracking-tight text-black mb-8">
+                    SNI 技术<br>深度剖析
+                </h1>
+                <p class="text-lg text-gray-500 mb-10 max-w-lg leading-relaxed font-light">
+                    从 TLS 扩展到现代 Web 虚拟主机架构，SNI 不仅是资源的节省者，更是 HTTPS 普及的关键推手。
+                </p>
+                <div class="flex items-center space-x-6">
+                    <button class="bg-black text-white px-8 py-3 rounded-full text-sm font-bold hover:bg-gray-800 transition">技术白皮书</button>
+                    <span class="text-xs font-bold text-gray-400">v2.5 Updated 2026</span>
                 </div>
+            </div>
+            <div class="relative">
+                <div class="bg-white border border-gray-100 rounded-2xl p-8 card-shadow">
+                    <div class="flex justify-between items-start mb-12">
+                        <div class="space-y-1">
+                            <div class="text-xs font-bold text-gray-400 uppercase">Traffic Distribution</div>
+                            <div class="text-2xl font-bold">12.8 Gbps</div>
+                        </div>
+                        <div class="text-blue-600">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-xs">
+                            <span class="text-gray-400">Processing Latency</span>
+                            <span class="font-bold">0.12ms</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-1 rounded-full">
+                            <div class="bg-blue-600 h-1 rounded-full w-4/5"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decoration -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+            </div>
+        </div>
+    </header>
 
-                <!-- 小卡片 1 -->
-                <div class="md:col-span-4 h-[500px] bg-zinc-900 rounded-[35px] p-12 flex flex-col justify-end">
-                    <i data-lucide="zap" class="text-yellow-400 w-12 h-12 mb-6"></i>
-                    <h3 class="text-3xl font-bold">1ms 延迟</h3>
-                    <p class="text-zinc-400 mt-4">
-                        Anycast 全球加速，连接速度快到不可思议。
+    <main class="max-w-7xl mx-auto px-8 space-y-40 pb-40">
+        
+        <!-- Deep Analysis -->
+        <section id="analysis">
+            <div class="grid md:grid-cols-12 gap-12">
+                <div class="md:col-span-4">
+                    <h2 class="text-3xl font-semibold mb-6">原理性重构</h2>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        在 TLS 握手的 Client Hello 阶段，客户端通过插入 <span class="code-font text-blue-600">server_name</span> 扩展，向服务器显式宣告其访问的目标主机。这一过程发生在加密隧道建立之前，允许负载均衡器进行精准的域名嗅探。
                     </p>
                 </div>
+                <div class="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                        <h3 class="font-bold mb-4">虚拟主机解耦</h3>
+                        <p class="text-xs text-gray-500">实现了同一 IP 托管不同机构的 SSL 证书，是多租户云环境的基础架构。</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                        <h3 class="font-bold mb-4">资源按需分发</h3>
+                        <p class="text-xs text-gray-500">通过 SNI 进行预判断，实现动态后端分流与灰度发布策略。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <!-- 小卡片 2 -->
-                <div class="md:col-span-4 h-[500px] bg-white text-black rounded-[35px] p-12 flex flex-col justify-between">
+        <!-- The Future: ECH -->
+        <section id="future" class="bg-black rounded-[2.5rem] p-12 md:p-24 text-white overflow-hidden relative">
+            <div class="relative z-10 max-w-3xl">
+                <span class="text-blue-400 text-[10px] font-bold uppercase tracking-widest mb-6 block">Future of Privacy</span>
+                <h2 class="text-4xl md:text-5xl font-semibold mb-10 leading-tight">从 SNI 到 ECH：<br>填补最后的隐私漏洞</h2>
+                <div class="space-y-6 text-gray-400 text-lg font-light">
+                    <p>尽管 SNI 解决了握手问题，但其明文传输的特性导致了域名泄露（中间人可嗅探）。</p>
+                    <p class="text-white font-medium">ECH (Encrypted Client Hello) 通过在公开的 Client Hello 中嵌套加密的内部 Hello，彻底隐藏了目标站点名称，实现了全链路隐私保护。</p>
+                </div>
+                <div class="mt-12 flex space-x-8">
                     <div>
-                        <h3 class="text-3xl font-bold">开源</h3>
-                        <p class="text-zinc-500 mt-4">
-                            透明是信任的基础。
-                        </p>
+                        <div class="text-2xl font-bold text-white">TLS 1.3</div>
+                        <div class="text-[10px] text-gray-500 uppercase">Native Support</div>
                     </div>
-                    <i data-lucide="github" class="w-12 h-12"></i>
-                </div>
-
-                <!-- 大卡片 2 -->
-                <div class="md:col-span-8 h-[500px] bg-[#1d1d1f] rounded-[35px] p-12 flex flex-col justify-center text-center">
-                    <h3 class="text-4xl font-bold mb-6">多端同步，无缝体验</h3>
-                    <div class="flex justify-center gap-12 mt-8">
-                        <div class="flex flex-col items-center gap-2">
-                            <i data-lucide="smartphone" class="w-10 h-10"></i>
-                            <span class="text-xs text-zinc-500 font-medium uppercase">iOS</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-2">
-                            <i data-lucide="monitor" class="w-10 h-10"></i>
-                            <span class="text-xs text-zinc-500 font-medium uppercase">macOS</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-2">
-                            <i data-lucide="tablet" class="w-10 h-10"></i>
-                            <span class="text-xs text-zinc-500 font-medium uppercase">iPadOS</span>
-                        </div>
+                    <div class="w-[1px] bg-gray-800"></div>
+                    <div>
+                        <div class="text-2xl font-bold text-white">ZERO</div>
+                        <div class="text-[10px] text-gray-500 uppercase">Metadata Leak</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 底部召唤 -->
-    <section class="section-padding bg-[#f5f5f7] text-center">
-        <div class="max-w-2xl mx-auto px-6">
-            <h2 class="text-5xl font-bold mb-8">准备好迎接<br>未来的网络了吗？</h2>
-            <div class="flex justify-center gap-4">
-                <button class="btn-primary px-8 py-4">免费开始试用</button>
+            <!-- Abstract Graphic -->
+            <div class="absolute right-0 bottom-0 opacity-20 w-1/2">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#0066FF" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,76.4,-44.7C83.6,-31.3,86.9,-15.6,85.6,-0.7C84.3,14.1,78.5,28.2,70,40.7C61.5,53.2,50.3,64.1,37,70.8C23.7,77.5,8.3,80.1,-6.6,78.7C-21.5,77.3,-35.9,71.9,-48.5,63.7C-61.1,55.5,-71.9,44.5,-77.8,31.4C-83.7,18.3,-84.7,3.1,-81.9,-11.2C-79.1,-25.5,-72.5,-38.9,-62.7,-50.2C-52.9,-61.5,-39.9,-70.7,-26.3,-77.1C-12.7,-83.5,1.5,-87.1,16.6,-83.7C31.7,-80.3,47.7,-69.8,44.7,-76.4Z" transform="translate(100 100)" />
+                </svg>
             </div>
-            <p class="text-zinc-500 mt-8">无需信用卡，即刻部署全球隐私节点。</p>
-        </div>
-    </section>
+        </section>
+
+        <!-- Tech Specs Table -->
+        <section id="deployment">
+            <div class="text-center mb-20">
+                <span class="section-tag mb-4">Specs & Compliance</span>
+                <h2 class="text-3xl font-semibold">技术兼容性矩阵</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            <th class="py-6 px-4 text-black">Browser / Platform</th>
+                            <th class="py-6 px-4">Minimum Version</th>
+                            <th class="py-6 px-4">ECH Ready</th>
+                            <th class="py-6 px-4 text-right">TLS 1.3</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-medium">
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                <span>Modern Browsers (Chrome/Safari)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">Latest stable</td>
+                            <td class="py-6 px-4">Yes (Partial)</td>
+                            <td class="py-6 px-4 text-right">Full Support</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span>Mobile OS (iOS/Android)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">iOS 10+ / Android 4.4+</td>
+                            <td class="py-6 px-4">In Beta</td>
+                            <td class="py-6 px-4 text-right">Full Support</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                            <td class="py-6 px-4 flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                                <span>Legacy Systems (Win XP)</span>
+                            </td>
+                            <td class="py-6 px-4 text-gray-500 font-light">IE not supported</td>
+                            <td class="py-6 px-4">No</td>
+                            <td class="py-6 px-4 text-right">N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-[#f5f5f7] py-12 border-t border-zinc-200">
-        <div class="max-w-[1024px] mx-auto px-6 text-[12px] text-zinc-500 leading-relaxed">
-            <div class="pb-8 border-bottom border-zinc-300">
-                1. 加密效果取决于目标服务器是否支持 TLS 1.3 及相应 ECH 扩展。<br>
-                2. 延迟测试基于全球核心骨干网络平均值，实际体验可能因运营商而异。
+    <footer class="bg-gray-50 py-24 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-12 md:space-y-0">
+                <div>
+                    <span class="text-2xl font-bold tracking-tighter text-black">SNI<span class="text-blue-600">0</span></span>
+                    <p class="mt-4 text-sm text-gray-400 font-light max-w-xs leading-relaxed">
+                        全球领先的 SNI 技术交流平台。我们关注网络底层协议的每一次微小进步。
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-16">
+                    <div class="space-y-4 text-xs font-bold">
+                        <div class="uppercase tracking-widest text-gray-300">Resources</div>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" class="hover:text-blue-600 transition">RFC Documentation</a></li>
+                            <li><a href="#" class="hover:text-blue-600 transition">Protocol Specs</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4 text-xs font-bold">
+                        <div class="uppercase tracking-widest text-gray-300">About</div>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" class="hover:text-blue-600 transition">Tech Blog</a></li>
+                            <li><a href="#" class="hover:text-blue-600 transition">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="flex flex-wrap gap-x-8 gap-y-2 mt-8 py-4 border-t border-zinc-300">
-                <span class="text-black font-semibold">SNI0.COM</span>
-                <a href="#" class="hover:underline">版权所有</a>
-                <a href="#" class="hover:underline">隐私政策</a>
-                <a href="#" class="hover:underline">使用条款</a>
-                <a href="#" class="hover:underline">网站地图</a>
-            </div>
-            <div class="mt-2">
-                Copyright © 2026 SNI0 Inc. 保留所有权利。
+            <div class="mt-24 pt-8 border-t border-gray-200 flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                <span>© 2026 SNI0.COM Infrastructure Lab.</span>
+                <span class="flex items-center space-x-4">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Security Terms</a>
+                </span>
             </div>
         </div>
     </footer>
 
     <script>
-        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section, header').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'ease-out', 'opacity-0', 'translate-y-8');
+            observer.observe(el);
+        });
     </script>
 </body>
 </html>
